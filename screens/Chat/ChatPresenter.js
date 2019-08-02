@@ -1,48 +1,73 @@
 import React from "react";
-import { Text, KeyboardAvoidingView } from "react-native";
+import { View, Text, KeyboardAvoidingView } from "react-native";
 import styled from "styled-components";
 import { BG_COLOR, GREY_COLOR } from "../../constants/Colors";
-import Layout from "../../constants/Layout";
 import propType from "prop-types";
 
-const ChatContainer = styled.ScrollView`
+const Container = styled.ScrollView`
   background-color: yellow;
 `;
 
 const InputContainer = styled.View`
+  flex-direction: row;
   align-items: center;
   background-color: rgba(255, 255, 255, 1);
 `;
 const Input = styled.TextInput`
-  background-color: rgba(200, 200, 200, 2);
-  width: ${Layout.width / 1.6};
-  border-radius: 20px;
+  background-color: #f2f2f2;
+  width: 82%;
+  border-radius: 10px;
   padding: 10px;
+  margin: 8px;
+`;
+
+const Btn = styled.TouchableOpacity`
+  background-color: yellow;
+  border: 2px solid black;
+  border-radius: 10px;
+  width: 45px;
+  height: 30px;
+  margin-right: 20px;
+  align-items: center;
+  justify-content: center;
+`;
+
+const BtnText = styled.Text`
+  font-size: 13px;
+  font-weight: 600;
 `;
 
 const ChatPresenter = () => (
-  <KeyboardAvoidingView style={{ flex: 1 }} enabled behavior="padding">
-    <ChatContainer
+  <KeyboardAvoidingView
+    style={{ flex: 1 }}
+    enabled
+    behavior="height"
+    keyboardVerticalOffset={65}
+  >
+    <Container
       contentContainerStyle={{
-        justifyContent: "flex-end",
-        flex: 1,
-        paddingVertical: 50
+        // justifyContent: "flex-end",
+        flex: 1
       }}
     >
-      <Text>abc</Text>
-
-      <InputContainer>
+      <View style={{ backgroundColor: "red" }}>
+        <Text>abc</Text>
+      </View>
+      
+    </Container>
+    <InputContainer>
         <Input
           // onChangeText={handleSearchUpdate}
           // value={searchTerm}
-          autoFocus={true}
-          placeholder="Search Movies and tv"
-          placeholderTextColor="black"
+          autoFocus={false}
+          placeholder="Type a message"
           multiline={true}
           // onSubmitEditing={onSubmitEditing}
         />
+        <Btn onPress={()=>{}}>
+          <BtnText>Send</BtnText>
+        </Btn>
       </InputContainer>
-    </ChatContainer>
   </KeyboardAvoidingView>
 );
 
