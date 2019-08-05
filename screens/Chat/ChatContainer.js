@@ -1,13 +1,29 @@
 import React from "react";
 import ChatPresenter from "./ChatPresenter";
 import { StyleSheet } from "react-native";
+import { DanbeeApi} from "../../api";
 import uuidv1 from "uuid/v1";
 
 export default class ChatContainer extends React.Component {
   state = {
     newMsg: "",
-    Messages: {}
+    Messages: {},
+    welcomeResult: null,
+    error: null
   };
+  async componentWillMount() {
+    let welcomeResult, error;
+    try {
+      welcomeResult = await DanbeeApi.getWelcome();
+    } catch (error) {
+      error = "Can't get Welcome.";
+    } finally {
+      this.setState({
+        welcomeResult,
+        error
+      });
+    }
+  }
 
   controllNewMsg = text => {
     this.setState({
@@ -41,10 +57,11 @@ export default class ChatContainer extends React.Component {
   };
 
   render() {
-    const { newMsg, Messages } = this.state;
+    const { newMsg, Messages, welcomeResult } = this.state;
     console.log(Messages);
     return (
       <ChatPresenter
+      welcomeResult={welcomeResult}
         newMsg={newMsg}
         controllNewMsg={this.controllNewMsg}
         addMsg={this.addMsg}

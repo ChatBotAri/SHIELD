@@ -38,9 +38,12 @@ const BtnText = styled.Text`
   font-weight: 600;
 `;
 
+const DanbeeChatView = styled.View``;
 
+const DanbeeChat = styled.Text``;
 
-const ChatPresenter = ({newMsg,controllNewMsg,addMsg,Messages}) => (
+const ChatPresenter = ({newMsg,controllNewMsg,addMsg,Messages,welcomeResult}) => (
+
   <KeyboardAvoidingView
     style={{ flex: 1 }}
     enabled
@@ -52,6 +55,13 @@ const ChatPresenter = ({newMsg,controllNewMsg,addMsg,Messages}) => (
         flex: 1
       }}
     >
+      <DanbeeChatView>
+        <DanbeeChat>
+          {welcomeResult
+            ? welcomeResult.data.responseSet.result.result[1].message
+            : null}
+        </DanbeeChat>
+      </DanbeeChatView>
       <View style={{ backgroundColor: "red" }}>
         <Text>abc</Text>
       </View>
