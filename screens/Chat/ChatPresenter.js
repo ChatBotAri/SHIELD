@@ -37,7 +37,10 @@ const BtnText = styled.Text`
   font-weight: 600;
 `;
 
-const ChatPresenter = () => (
+const DanbeeChatView = styled.View``;
+const DanbeeChat = styled.Text``;
+
+const ChatPresenter = ({ welcomeResult }) => (
   <KeyboardAvoidingView
     style={{ flex: 1 }}
     enabled
@@ -50,24 +53,30 @@ const ChatPresenter = () => (
         flex: 1
       }}
     >
+      <DanbeeChatView>
+        <DanbeeChat>
+          {welcomeResult
+            ? welcomeResult.data.responseSet.result.result[1].message
+            : null}
+        </DanbeeChat>
+      </DanbeeChatView>
       <View style={{ backgroundColor: "red" }}>
         <Text>abc</Text>
       </View>
-      
     </Container>
     <InputContainer>
-        <Input
-          // onChangeText={handleSearchUpdate}
-          // value={searchTerm}
-          autoFocus={false}
-          placeholder="Type a message"
-          multiline={true}
-          // onSubmitEditing={onSubmitEditing}
-        />
-        <Btn onPress={()=>{}}>
-          <BtnText>Send</BtnText>
-        </Btn>
-      </InputContainer>
+      <Input
+        // onChangeText={handleSearchUpdate}
+        // value={searchTerm}
+        autoFocus={false}
+        placeholder="Type a message"
+        multiline={true}
+        // onSubmitEditing={onSubmitEditing}
+      />
+      <Btn onPress={() => {}}>
+        <BtnText>Send</BtnText>
+      </Btn>
+    </InputContainer>
   </KeyboardAvoidingView>
 );
 
