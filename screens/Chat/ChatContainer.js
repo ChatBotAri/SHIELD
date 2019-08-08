@@ -1,7 +1,7 @@
 import React from "react";
 import ChatPresenter from "./ChatPresenter";
 import { StyleSheet } from "react-native";
-import { DanbeeApi} from "../../api";
+import { DanbeeApi } from "../../api";
 import uuidv1 from "uuid/v1";
 
 export default class ChatContainer extends React.Component {
@@ -9,8 +9,10 @@ export default class ChatContainer extends React.Component {
     newMsg: "",
     Messages: {},
     welcomeResult: null,
-    error: null
+    error: null,
+    date:new Date()
   };
+
   async componentWillMount() {
     let welcomeResult, error;
     try {
@@ -24,6 +26,7 @@ export default class ChatContainer extends React.Component {
       });
     }
   }
+
 
   controllNewMsg = text => {
     this.setState({
@@ -40,7 +43,7 @@ export default class ChatContainer extends React.Component {
           [ID]: {
             id: ID,
             text: newMsg,
-            createAt: Date.now()
+            createAt: new Date()
           }
         };
         const newState = {
@@ -57,11 +60,12 @@ export default class ChatContainer extends React.Component {
   };
 
   render() {
-    const { newMsg, Messages, welcomeResult } = this.state;
+    const { newMsg, Messages, welcomeResult,date } = this.state;
     console.log(Messages);
     return (
       <ChatPresenter
-      welcomeResult={welcomeResult}
+        welcomeResult={welcomeResult}
+        date={date}
         newMsg={newMsg}
         controllNewMsg={this.controllNewMsg}
         addMsg={this.addMsg}
