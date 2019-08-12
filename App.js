@@ -1,6 +1,7 @@
 import React from "react";
 import { StatusBar } from "react-native";
-import { AppLoading, Font } from "expo";
+import { AppLoading } from "expo";
+import * as Font from "expo-font";
 import * as Permissions from "expo-permissions";
 import { Ionicons } from "@expo/vector-icons";
 import MainNavigation from "./navigation/MainNavigation";
@@ -16,7 +17,7 @@ export default class App extends React.Component {
 
   loadAssets = async () => {
     await Font.loadAsync({
-      Ionicons
+      ...Ionicons.font
     });
   };
 

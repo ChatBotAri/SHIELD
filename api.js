@@ -9,7 +9,13 @@ export const DanbeeApi = {
   getWelcome: () =>
     api.post("/welcome.do", {
       chatbot_id: "46099720-2e0b-4341-b6c3-cc747e6636c3"
+    }),
+  getAnswer: req =>
+    api.post("/engine.do", {
+      chatbot_id: "46099720-2e0b-4341-b6c3-cc747e6636c3",
+      input_sentence: req
     })
+
   // getUpComing: () => api.get("/movie/upcoming"),
   // getPopular: () => api.get("/movie/popular"),
   // getMovie: id =>

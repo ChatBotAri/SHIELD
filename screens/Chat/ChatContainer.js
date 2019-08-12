@@ -1,7 +1,7 @@
 import React from "react";
 import ChatPresenter from "./ChatPresenter";
 import { StyleSheet } from "react-native";
-import { DanbeeApi} from "../../api";
+import { DanbeeApi } from "../../api";
 import uuidv1 from "uuid/v1";
 
 export default class ChatContainer extends React.Component {
@@ -9,6 +9,7 @@ export default class ChatContainer extends React.Component {
     newMsg: "",
     Messages: {},
     welcomeResult: null,
+    sendResult: null,
     error: null
   };
   async componentWillMount() {
@@ -56,15 +57,50 @@ export default class ChatContainer extends React.Component {
     }
   };
 
+  sendMsg = async (sendResult, error) => {
+    const { newMsg } = this.state;
+    console.log(newMsg);
+    if (newMsg !== "") {
+      try {
+        sendResult = await DanbeeApi.getAnswer(newMsg);
+      } catch (error) {
+        error = "Can't get Answer";
+      } finally {
+        this.setState({ sendResult, error });
+      }
+      this.setState(prevState => {
+        const ID = uuidv1();
+        const newMsgObj = {
+          [ID]: {
+            id: ID,
+            text: sendResult.data.responseSet.result.result[1].message,
+            createAt: Date.now()
+          }
+        };
+        const newState = {
+          ...prevState,
+          newMsg: "",
+          Messages: {
+            ...prevState.Messages,
+            ...newMsgObj
+          }
+        };
+        return { ...newState };
+      });
+    }
+  };
+
   render() {
-    const { newMsg, Messages, welcomeResult } = this.state;
-    console.log(Messages);
+    const { newMsg, Messages, welcomeResult, sendResult } = this.state;
+    // console.log(Messages);
     return (
       <ChatPresenter
-      welcomeResult={welcomeResult}
+        welcomeResult={welcomeResult}
+        sendResult={sendResult}
         newMsg={newMsg}
         controllNewMsg={this.controllNewMsg}
         addMsg={this.addMsg}
+        sendMsg={this.sendMsg}
         Messages={Messages}
       />
     );

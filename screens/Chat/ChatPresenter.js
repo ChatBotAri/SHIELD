@@ -1,5 +1,5 @@
 import React from "react";
-import { Alert,View, Text, KeyboardAvoidingView } from "react-native";
+import { Alert, View, Text, KeyboardAvoidingView } from "react-native";
 import styled from "styled-components";
 import { BG_COLOR, GREY_COLOR } from "../../constants/Colors";
 import propType from "prop-types";
@@ -42,8 +42,15 @@ const DanbeeChatView = styled.View``;
 
 const DanbeeChat = styled.Text``;
 
-const ChatPresenter = ({newMsg,controllNewMsg,addMsg,Messages,welcomeResult}) => (
-
+const ChatPresenter = ({
+  newMsg,
+  controllNewMsg,
+  addMsg,
+  sendMsg,
+  Messages,
+  welcomeResult,
+  sendResult
+}) => (
   <KeyboardAvoidingView
     style={{ flex: 1 }}
     enabled
@@ -65,21 +72,28 @@ const ChatPresenter = ({newMsg,controllNewMsg,addMsg,Messages,welcomeResult}) =>
       <View style={{ backgroundColor: "red" }}>
         <Text>abc</Text>
       </View>
-      {Object.values(Messages).map(message=><Message key={message.id} {...message}/>)}
+      {Object.values(Messages).map(message => (
+        <Message key={message.id} {...message} />
+      ))}
     </Container>
 
     <InputContainer>
-        <Input
-          onChangeText={controllNewMsg}
-          value={newMsg}
-          autoFocus={false}
-          placeholder="Type a message"
-          multiline={true}
-        />
-        <Btn onPress={()=>{addMsg()}} >
-          <BtnText>Send</BtnText>
-        </Btn>
-      </InputContainer>
+      <Input
+        onChangeText={controllNewMsg}
+        value={newMsg}
+        autoFocus={false}
+        placeholder="Type a message"
+        multiline={true}
+      />
+      <Btn
+        onPress={() => {
+          addMsg();
+          sendMsg();
+        }}
+      >
+        <BtnText>Send</BtnText>
+      </Btn>
+    </InputContainer>
   </KeyboardAvoidingView>
 );
 

@@ -1,6 +1,6 @@
 import { createAppContainer, createStackNavigator } from "react-navigation";
 import TabNavigation from "./TabNavigation";
-import MedicineContainer from "../screens/Medicine/MedicineContainer"
+import MedicineContainer from "../screens/Medicine/MedicineContainer";
 import { headerStyles } from "../constants/HeaderStyle";
 import ChatContainer from "../screens/Chat/ChatContainer";
 
@@ -17,12 +17,12 @@ const MainNavigation = createStackNavigator(
         title: "Chat Bot"
       }
     },
-    MedicineScreen:{
-        screen:MedicineContainer,
-        navigationOptions:{
-            title:"Medicine",
-            ...headerStyles
-        }
+    MedicineScreen: {
+      screen: MedicineContainer,
+      navigationOptions: {
+        title: "Medicine",
+        ...headerStyles
+      }
     }
   },
   {

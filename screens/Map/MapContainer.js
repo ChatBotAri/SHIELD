@@ -2,10 +2,10 @@ import React from "react";
 import MapPresenter from "./MapPresenter";
 export default class MapContainer extends React.Component {
   state = {
-    latitude:null,
-    longitude:null,
+    latitude: null,
+    longitude: null
   };
-  
+
   componentDidMount() {
     navigator.geolocation.getCurrentPosition(
       ({ coords: { latitude, longitude } }) =>
@@ -16,11 +16,6 @@ export default class MapContainer extends React.Component {
 
   render() {
     const { latitude, longitude } = this.state;
-    return (
-      <MapPresenter
-        latitude={latitude}
-        longitude={longitude}
-      />
-    );
+    return <MapPresenter latitude={latitude} longitude={longitude} />;
   }
 }

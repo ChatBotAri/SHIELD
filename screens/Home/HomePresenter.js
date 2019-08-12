@@ -12,19 +12,18 @@ const Container = styled.View`
 
 const Column = styled.View`
   flex-direction: row;
-  justify-content:space-around;
+  justify-content: space-around;
 `;
 const BtnContainer = styled.TouchableOpacity`
   padding: 5px;
-  justify-content:center;
-  align-items:center;
-  
+  justify-content: center;
+  align-items: center;
 `;
 
 const Btn = styled.View`
   background-color: yellowgreen;
   border-radius: 50px;
-  width:100px;
+  width: 100px;
   height: 100px;
 `;
 

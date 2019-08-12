@@ -50,7 +50,7 @@ const TabNavigation = createBottomTabNavigator(
       style: {
         backgroundColor: TAB_COLOR,
         paddingTop: 3,
-        borderTopWidth:0
+        borderTopWidth: 0
       }
     }
   }

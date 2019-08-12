@@ -13,7 +13,7 @@ export default class Message extends React.Component {
   };
 
   render() {
-    const {toDoValue } = this.state;
+    const { toDoValue } = this.state;
     const { text, id } = this.props;
     return (
       <View>
