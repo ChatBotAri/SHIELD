@@ -11,16 +11,17 @@ export default class Message extends React.Component {
   static propTypes = {
     text: PropTypes.string.isRequired,
     id: PropTypes.string.isRequired,
-    createAt: PropTypes.object.isRequired
+    createAt: PropTypes.object.isRequired,
+    isDanbee: PropTypes.bool.isRequired
   };
 
   render() {
     const { toDoValue } = this.state;
-    const { text, id, createAt } = this.props;
+    const { text, id, createAt, isDanbee } = this.props;
     const styles = StyleSheet.create({
       Main: {
         alignItems: "center",
-        flexDirection: "row-reverse"
+        flexDirection: isDanbee ? "row" : "row-reverse"
       },
       Msg: {
         borderRadius: 10,

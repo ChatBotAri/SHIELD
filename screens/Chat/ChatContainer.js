@@ -43,7 +43,8 @@ export default class ChatContainer extends React.Component {
           [ID]: {
             id: ID,
             text: newMsg,
-            createAt: new Date()
+            createAt: new Date(),
+            isDanbee: false
           }
         };
         const newState = {
@@ -77,7 +78,8 @@ export default class ChatContainer extends React.Component {
           [ID]: {
             id: ID,
             text: sendResult.data.responseSet.result.result[1].message,
-            createAt: new Date()
+            createAt: new Date(),
+            isDanbee: true
           }
         };
         const newState = {
@@ -97,8 +99,8 @@ export default class ChatContainer extends React.Component {
     const { newMsg, Messages, welcomeResult, sendResult, date } = this.state;
     return (
       <ChatPresenter
-        sendResult={sendResult}
         welcomeResult={welcomeResult}
+        sendResult={sendResult}
         date={date}
         newMsg={newMsg}
         controllNewMsg={this.controllNewMsg}

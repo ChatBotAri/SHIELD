@@ -72,7 +72,8 @@ const ChatPresenter = ({
   sendMsg,
   welcomeResult,
   Messages,
-  date
+  date,
+  sendResult
 }) => (
   <KeyboardAvoidingView
     style={{ flex: 1 }}
