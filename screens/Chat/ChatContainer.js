@@ -10,8 +10,10 @@ export default class ChatContainer extends React.Component {
     Messages: {},
     welcomeResult: null,
     sendResult: null,
-    error: null
+    error: null,
+    date: new Date()
   };
+
   async componentWillMount() {
     let welcomeResult, error;
     try {
@@ -41,7 +43,7 @@ export default class ChatContainer extends React.Component {
           [ID]: {
             id: ID,
             text: newMsg,
-            createAt: Date.now()
+            createAt: new Date()
           }
         };
         const newState = {
@@ -59,7 +61,7 @@ export default class ChatContainer extends React.Component {
 
   sendMsg = async (sendResult, error) => {
     const { newMsg } = this.state;
-    console.log(newMsg);
+    console.log("1");
     if (newMsg !== "") {
       try {
         sendResult = await DanbeeApi.getAnswer(newMsg);
@@ -67,6 +69,7 @@ export default class ChatContainer extends React.Component {
         error = "Can't get Answer";
       } finally {
         this.setState({ sendResult, error });
+        console.log(sendResult);
       }
       this.setState(prevState => {
         const ID = uuidv1();
@@ -74,7 +77,7 @@ export default class ChatContainer extends React.Component {
           [ID]: {
             id: ID,
             text: sendResult.data.responseSet.result.result[1].message,
-            createAt: Date.now()
+            createAt: new Date()
           }
         };
         const newState = {
@@ -91,12 +94,12 @@ export default class ChatContainer extends React.Component {
   };
 
   render() {
-    const { newMsg, Messages, welcomeResult, sendResult } = this.state;
-    // console.log(Messages);
+    const { newMsg, Messages, welcomeResult, sendResult, date } = this.state;
     return (
       <ChatPresenter
-        welcomeResult={welcomeResult}
         sendResult={sendResult}
+        welcomeResult={welcomeResult}
+        date={date}
         newMsg={newMsg}
         controllNewMsg={this.controllNewMsg}
         addMsg={this.addMsg}

@@ -1,12 +1,19 @@
 import React from "react";
-import { Alert, View, Text, KeyboardAvoidingView } from "react-native";
+import {
+  StyleSheet,
+  View,
+  Text,
+  KeyboardAvoidingView,
+  ScrollView
+} from "react-native";
 import styled from "styled-components";
 import { BG_COLOR, GREY_COLOR } from "../../constants/Colors";
 import propType from "prop-types";
 import Message from "../../components/Message";
 
 const Container = styled.ScrollView`
-  background-color: yellow;
+  background-color: ${BG_COLOR};
+  /* flex-direction: column-reverse; */
 `;
 
 const InputContainer = styled.View`
@@ -38,51 +45,80 @@ const BtnText = styled.Text`
   font-weight: 600;
 `;
 
-const DanbeeChatView = styled.View``;
+const DanbeeContainer = styled.View`
+  align-items: center;
+  flex-direction: row;
+`;
 
-const DanbeeChat = styled.Text``;
+const DanbeeMsg = styled.View`
+  background-color: #2ff7ed;
+  padding: 10px;
+  border-radius: 10;
+  margin: 10px;
+  max-width: 220px;
+`;
+
+const DanbeeText = styled.Text``;
+
+const TimeText = styled.Text`
+  font-size: 10px;
+  color: ${GREY_COLOR};
+`;
 
 const ChatPresenter = ({
   newMsg,
   controllNewMsg,
   addMsg,
   sendMsg,
-  Messages,
   welcomeResult,
-  sendResult
+  Messages,
+  date
 }) => (
   <KeyboardAvoidingView
     style={{ flex: 1 }}
     enabled
-    behavior="height"
+    behavior="padding"
     keyboardVerticalOffset={65}
   >
     <Container
-      contentContainerStyle={{
-        flex: 1
+      ref={ref => (this.Container = ref)}
+      onContentSizeChange={() => {
+        this.Container.scrollToEnd({ animated: false });
       }}
     >
-      <DanbeeChatView>
-        <DanbeeChat>
-          {welcomeResult
-            ? welcomeResult.data.responseSet.result.result[1].message
-            : null}
-        </DanbeeChat>
-      </DanbeeChatView>
-      <View style={{ backgroundColor: "red" }}>
-        <Text>abc</Text>
-      </View>
+      <DanbeeContainer>
+        <DanbeeMsg>
+          <Text>
+            {welcomeResult
+              ? welcomeResult.data.responseSet.result.result[1].message
+              : null}
+          </Text>
+        </DanbeeMsg>
+        <TimeText>
+          {date.getHours() < 13
+            ? `오전 ${
+                date.getHours() < 10 ? `0${date.getHours()}` : date.getHours()
+              }`
+            : `오후 ${
+                date.getHours() - 12 < 10
+                  ? `0${date.getHours() - 12}`
+                  : date.getHours() - 12
+              }`}
+          {date.getMinutes() < 10
+            ? `:0${date.getMinutes()}`
+            : `:${date.getMinutes()}`}
+        </TimeText>
+      </DanbeeContainer>
       {Object.values(Messages).map(message => (
         <Message key={message.id} {...message} />
       ))}
     </Container>
-
     <InputContainer>
       <Input
         onChangeText={controllNewMsg}
         value={newMsg}
         autoFocus={false}
-        placeholder="Type a message"
+        placeholder="Type a message ..."
         multiline={true}
       />
       <Btn
@@ -97,6 +133,15 @@ const ChatPresenter = ({
   </KeyboardAvoidingView>
 );
 
-ChatPresenter.propType = {};
+ChatPresenter.propType = {
+  newMsg: propType.string.isRequired,
+  controllNewMsg: propType.func.isRequired,
+  addMsg: propType.func.isRequired,
+  Messages: propType.object.isRequired,
+  welcomeResult: propType.string.isRequired,
+  date: propType.object.isRequired
+};
+
+const styles = StyleSheet.create({});
 
 export default ChatPresenter;
