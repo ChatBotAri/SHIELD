@@ -8,7 +8,7 @@ const MainNavigation = createStackNavigator(
   {
     TabNavigation: {
       screen: TabNavigation,
-      navigationOptions: { title: "App Name", ...headerStyles }
+      navigationOptions: { title: "SHIELD", ...headerStyles }
     },
     ChatScreen: {
       screen: ChatContainer,

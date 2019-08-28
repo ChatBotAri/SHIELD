@@ -140,7 +140,8 @@ ChatPresenter.propType = {
   addMsg: propType.func.isRequired,
   Messages: propType.object.isRequired,
   welcomeResult: propType.string.isRequired,
-  date: propType.object.isRequired
+  date: propType.object.isRequired,
+  sendMsg : propType.func.isRequired
 };
 
 const styles = StyleSheet.create({});

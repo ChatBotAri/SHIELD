@@ -6,6 +6,7 @@ import MapContainer from "../screens/Map/MapContainer";
 import PushContainer from "../screens/Push/PushContainer";
 import { TAB_COLOR, GREY_COLOR, TINT_COLOR } from "../constants/Colors";
 import TabBarIcon from "../components/TabBarIcon";
+import ChatContainer from "../screens/Chat/ChatContainer";
 
 const TabNavigation = createBottomTabNavigator(
   {
