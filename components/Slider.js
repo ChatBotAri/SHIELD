@@ -18,7 +18,7 @@ const SliderContainer = styled.View`
 
 const Text = styled.Text``;
 
-const Slider = ({ name, temperature, sunrise, sunset, area, fineDust }) => (
+const Slider = ({ fineDust,Weather,CurrentPosition }) => (
   <SliderContainer>
     <Swiper
       // height={40}
@@ -27,11 +27,8 @@ const Slider = ({ name, temperature, sunrise, sunset, area, fineDust }) => (
       autoplayTimeout={3}
     >
       <WeatherSlide
-        name={name}
-        temperature={temperature}
-        sunrise={sunrise}
-        sunset={sunset}
-        area={area}
+        Weather={Weather}
+        CurrentPosition={CurrentPosition}
       />
       <Text>{fineDust}</Text>
       <Text>Third</Text>

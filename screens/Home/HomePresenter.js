@@ -68,22 +68,16 @@ const StateValue = styled.Text`
 
 const HomePresenter = ({
   navigation,
-  name,
-  temperature,
-  sunrise,
-  sunset,
-  area,
-  fineDust
+  fineDust,
+  Weather,
+  CurrentPosition
 }) => (
   <LinearGradient colors={["#43C6AC", "#F8FFAE"]} style={{ flex: 1 }}>
     {/* <Container> */}
     <Slider
-      name={name}
-      temperature={temperature}
       fineDust={fineDust}
-      sunrise={sunrise}
-      sunset={sunset}
-      area={area}
+      Weather={Weather}
+      CurrentPosition={CurrentPosition}
     />
     <Column style={styles.shadow}>
       <LinearGradient colors={["#49ab87", "#36c994"]} style={styles.btn}>

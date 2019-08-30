@@ -2,9 +2,9 @@ import React from "react";
 import styled from "styled-components";
 import propType from "prop-types";
 import Layout from "../constants/Layout";
-import { View, Text, StyleSheet } from "react-native";
+import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
-
+import { Day, Time } from "../constants/Time";
 const Container = styled.View`
   flex: 1;
   position: relative;
@@ -19,141 +19,111 @@ const BgImage = styled.Image`
   border-radius: 40;
 `;
 
-const date = new Date();
+/*
+item[0] = POP =강수확률 %
+item[1] = PTY = 강수형태 (없음(0), 비(1), 비/눈(2), 눈(3), 소나기(4))
+item[5] = SKY = 하늘상태 (맑음(1), 구름많음(3), 흐림(4) )
+item[6] = T3H = 기온 
+*/
 
-const day = ["일", "월", "화", "수", "목", "금", "토"];
+const Cheak = (pty, sky) => {
+  if (pty == 0) {
+    if (sky == 1) return "맑음";
+    else if (sky == 3) return "구름많음";
+    else if (sky == 4) return "흐림";
+    else return "x";
+  } else if (pty == 1) return "비";
+  else if (pty == 2) return "진눈개비";
+  else if (pty == 3) return "눈";
+  else if (pty == 4) return "소나기";
+  else return "X";
+};
+const Btn = styled.TouchableOpacity`
+  justify-content: center;
+  align-items: center;
+  background-color: yellow;
+  /* width:10px; */
+`;
 
-const WeatherSlide = ({ name, temperature, sunset, sunrise, area }) => (
+const WeatherSlide = ({ Weather, CurrentPosition }) => (
   <Container>
     <BgImage source={require("../constants/Images/sunny.jpg")} />
-    <View style={styles.leftContainer}>
-      <View
+    <View
+      style={{
+        width: "50%",
+        alignItems: "center",
+        justifyContent: "space-around",
+        paddingBottom: 20
+      }}
+    >
+      <MaterialCommunityIcons
+        size={120}
+        name={
+          WeatherOptions[
+            Cheak(Weather.item[1].fcstValue, Weather.item[5].fcstValue)
+          ].iconName
+        }
+        color="white"
+      />
+      <Text style={{ color: "white", fontSize: 25, fontWeight: "bold" }}>
+        {Cheak(Weather.item[1].fcstValue, Weather.item[5].fcstValue)}
+      </Text>
+    </View>
+    <View style={{ width: "50%", alignItems: "center", paddingVertical: 20 }}>
+      <Text style={{ color: "white", paddingBottom: 10 }}>
+        {CurrentPosition}
+      </Text>
+      <Text style={{color:"white"}}>{Day}</Text>
+      <View style={{flexDirection:"row"}}>
+        <Text style={{color:"white"}}>{Time}</Text>
+        <Btn>
+          <Text>UPDATE</Text>
+        </Btn>
+      </View>
+      <Text
         style={{
-          flexDirection: "row",
-          alignItems: "center",
-          height: "50%",
-          justifyContent: "space-around"
+          fontSize: 55,
+          color: "white",
+          paddingBottom: 20,
+          fontWeight: "bold"
         }}
       >
-        <Text style={styles.temperature}>
-          {temperature}
-          <MaterialCommunityIcons
-            size={45}
-            name="temperature-celsius"
-            color="white"
-          />
-        </Text>
+        {Weather.item[6].fcstValue}
         <MaterialCommunityIcons
-          size={70}
-          name={WeatherOptions[name].iconName}
+          size={45}
+          name="temperature-celsius"
           color="white"
         />
-      </View>
-      <View style={{ height: "50%", flexDirection: "row" }}>
-        <View style={styles.sunrise}>
-          <Text style={styles.nameText}>일출</Text>
-          <MaterialCommunityIcons
-            size={50}
-            name="weather-sunset-up"
-            color="white"
-          />
-          <Text style={styles.nameText}>
-            0{new Date(sunrise * 1000).getHours()} :{" "}
-            {new Date(sunrise * 1000).getMinutes()}
-          </Text>
-        </View>
-        <View style={styles.sunset}>
-          <Text style={styles.nameText}>일몰</Text>
-
-          <MaterialCommunityIcons
-            size={50}
-            name="weather-sunset-down"
-            color="white"
-          />
-          <Text style={styles.nameText}>
-            {new Date(sunset * 1000).getHours()} :{" "}
-            {new Date(sunset * 1000).getMinutes()}
-          </Text>
-        </View>
-      </View>
-    </View>
-    <View style={styles.rightContainer}>
-      <View style={styles.dateContainer}>
-        <Text style={styles.date}>
-          {date.getMonth() + 1} / {date.getDate()}{" "}
-        </Text>
-        <Text style={styles.date}>{day[date.getDay()]}요일</Text>
-      </View>
-      <View style={styles.areaContainer}>
-        <Text style={styles.date}>{area}</Text>
-      </View>
+      </Text>
+      <Text style={{ fontSize: 15, color: "white" }}>
+        강수확률 : {Weather.item[0].fcstValue}%
+      </Text>
     </View>
   </Container>
 );
-
-const styles = StyleSheet.create({
-  temperature: {
-    color: "white",
-    fontSize: 70
-  },
-  date: {
-    fontSize: 20,
-    color: "white",
-    fontWeight:"bold"
-  },
-  leftContainer: {
-    width: "70%"
-  },
-  rightContainer: {
-    width: "30%",
-    justifyContent:"space-around"
-  },
-  sunrise: {
-    alignItems: "center",
-    justifyContent: "center",
-    width: "50%"
-  },
-  sunset: {
-    alignItems: "center",
-    justifyContent: "center",
-    width: "50%"
-  },
-  nameText: {
-    color: "white",
-    fontSize: 15,
-    fontWeight: "bold"
-  },
-  dateContainer:{
-    alignItems:"center",
-    justifyContent:"center"
-  },
-  areaContainer:{
-    alignItems:"center",
-    justifyContent:"center"
-  }
-
-});
-
 const WeatherOptions = {
-  Thunderstorm: {
+  맑음: {
     iconName: "weather-lighting"
   },
   Drizzle: {
     iconName: "weather-hail"
   },
-  Rain: {
+  비: {
     iconName: "weather-pouring"
   },
-  Snow: {
+  X: {
     iconName: "weather-snowy"
   },
-  Clear: {
+  x: {
+    iconName: "weather-snowy"
+  },
+  맑음: {
     iconName: "weather-sunny"
   },
-  Clouds: {
+  구름많음: {
     iconName: "weather-cloudy"
   },
-  Dust: {
+  흐림: {
     iconName: "weather-fog"
   },
   Haze: {
