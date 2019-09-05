@@ -8,7 +8,7 @@ import MainNavigation from "./navigation/MainNavigation";
 
 export default class App extends React.Component {
   state = {
-    loaded: false
+    loaded: false,
   };
 
   handleError = error => console.log(error);
@@ -17,7 +17,7 @@ export default class App extends React.Component {
 
   loadAssets = async () => {
     await Font.loadAsync({
-      ...Ionicons.font
+      ...Ionicons.font,
     });
   };
 

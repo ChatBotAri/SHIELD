@@ -10,6 +10,7 @@ import styled from "styled-components";
 import { BG_COLOR, GREY_COLOR } from "../../constants/Colors";
 import propType from "prop-types";
 import Message from "../../components/Message";
+import { HELLO } from "../../constants/Intent";
 
 const Container = styled.ScrollView`
   background-color: ${BG_COLOR};
@@ -91,7 +92,7 @@ const ChatPresenter = ({
         <DanbeeMsg>
           <Text>
             {welcomeResult
-              ? welcomeResult.data.responseSet.result.result[1].message
+              ? welcomeResult.data.responseSet.result.result[0].message
               : null}
           </Text>
         </DanbeeMsg>
@@ -126,6 +127,13 @@ const ChatPresenter = ({
         onPress={() => {
           addMsg();
           sendMsg();
+          
+            // sendResult
+            //   ? sendResult.data.responseSet.result.intent_id == HELLO
+            //     ? sendMsg(HELLO, "필요한기능판단")
+            //     : sendMsg()
+            //   : null;
+          
         }}
       >
         <BtnText>Send</BtnText>
@@ -141,7 +149,7 @@ ChatPresenter.propType = {
   Messages: propType.object.isRequired,
   welcomeResult: propType.string.isRequired,
   date: propType.object.isRequired,
-  sendMsg : propType.func.isRequired
+  sendMsg: propType.func.isRequired
 };
 
 const styles = StyleSheet.create({});
