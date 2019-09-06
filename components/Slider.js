@@ -5,6 +5,7 @@ import Swiper from "react-native-swiper";
 import Layout from "../constants/Layout";
 import WeatherSlide from "../components/WeatherSlide";
 import { StyleSheet } from "react-native";
+import DustSlide from "./DustSlide";
 
 const SWIPER_HEIGHT = Layout.height / 3.3;
 
@@ -18,7 +19,7 @@ const SliderContainer = styled.View`
 
 const Text = styled.Text``;
 
-const Slider = ({ fineDust,Weather,CurrentPosition }) => (
+const Slider = ({ Dust,Weather,CurrentPosition,refresh }) => (
   <SliderContainer>
     <Swiper
       // height={40}
@@ -27,10 +28,12 @@ const Slider = ({ fineDust,Weather,CurrentPosition }) => (
       autoplayTimeout={3}
     >
       <WeatherSlide
+        refresh={refresh}
         Weather={Weather}
         CurrentPosition={CurrentPosition}
       />
-      <Text>{fineDust}</Text>
+      <DustSlide Dust={Dust}
+       CurrentPosition={CurrentPosition}/>
       <Text>Third</Text>
     </Swiper>
   </SliderContainer>
@@ -44,19 +47,10 @@ const styles = StyleSheet.create({
 });
 
 Slider.propType = {
-  name: propType.oneOf([
-    "Thunderstorm",
-    "Drizzle",
-    "Rain",
-    "Snow",
-    "Clear",
-    "Clouds",
-    "Dust",
-    "Haze",
-    "Mist"
-  ]).isRequired,
-  temperature: propType.number.isRequired,
-  fineDust: propType.number.isRequired
+  Dust:propType.object.isRequired,
+  Weather:propType.object.isRequired,
+  CurrentPosition:propType.string.isRequired,
+  refresh:propType.func.isRequired
 };
 
 export default Slider;

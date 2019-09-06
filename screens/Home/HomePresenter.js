@@ -68,14 +68,16 @@ const StateValue = styled.Text`
 
 const HomePresenter = ({
   navigation,
-  fineDust,
+  Dust,
   Weather,
-  CurrentPosition
+  CurrentPosition,
+  refresh
 }) => (
   <LinearGradient colors={["#43C6AC", "#F8FFAE"]} style={{ flex: 1 }}>
     {/* <Container> */}
     <Slider
-      fineDust={fineDust}
+      refresh={refresh}
+      Dust={Dust}
       Weather={Weather}
       CurrentPosition={CurrentPosition}
     />
@@ -150,19 +152,10 @@ const styles = StyleSheet.create({
 });
 
 HomePresenter.propType = {
-  name: propType.oneOf([
-    "Thunderstorm",
-    "Drizzle",
-    "Rain",
-    "Snow",
-    "Clear",
-    "Clouds",
-    "Dust",
-    "Haze",
-    "Mist"
-  ]).isRequired,
-  temperature: propType.number.isRequired,
-  fineDust: propType.number.isRequired
+  Weather:propType.object.isRequired,
+  CurrentPosition:propType.string.isRequired,
+  refresh:propType.func.isRequired,
+  Dust: propType.object.isRequired
 };
 
 export default withNavigation(HomePresenter);
