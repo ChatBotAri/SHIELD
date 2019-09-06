@@ -3,7 +3,6 @@ import ChatPresenter from "./ChatPresenter";
 import { StyleSheet } from "react-native";
 import { DanbeeApi } from "../../api";
 import uuidv1 from "uuid/v1";
-import { HELLO } from "../../constants/Intent";
 
 export default class ChatContainer extends React.Component {
   state = {
@@ -17,7 +16,6 @@ export default class ChatContainer extends React.Component {
     node_id: "",
     param_id: "",
     parameters: "",
-    param_state: "",
     session_id: "",
     error: null,
     date: new Date(),
@@ -78,7 +76,6 @@ export default class ChatContainer extends React.Component {
       node_id,
       ins_id,
       chatflow_id,
-      param_state,
     } = this.state;
     let parameters;
     console.log(intent_id, param_id);
@@ -144,7 +141,6 @@ export default class ChatContainer extends React.Component {
       welcomeResult,
       sendResult,
       date,
-      parameters,
     } = this.state;
     return (
       <ChatPresenter

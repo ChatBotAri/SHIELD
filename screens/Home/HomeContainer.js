@@ -64,11 +64,11 @@ export default class HomeContainer extends React.Component {
     const { data: Station } = await axios.get(
       `http://openapi.airkorea.or.kr/openapi/services/rest/MsrstnInfoInqireSvc/getNearbyMsrstnList?tmX=${TM.documents[0].x}&tmY=${TM.documents[0].y}&ServiceKey=${DATA_KEY}&_returnType=json`
     );
-    console.log(Station.list[1].stationName);
+    console.log(Station.list[0].stationName);
     console.log(Station);
     const { data: Dust } = await axios.get(
       `http://openapi.airkorea.or.kr/openapi/services/rest/ArpltnInforInqireSvc/getMsrstnAcctoRltmMesureDnsty?stationName=${encodeURI(
-        Station.list[1].stationName
+        Station.list[0].stationName
       )}&dataTerm=daily&pageNo=1&numOfRows=1&ServiceKey=${DATA_KEY}&ver=1.3&_returnType=json`
     );
     return Dust;

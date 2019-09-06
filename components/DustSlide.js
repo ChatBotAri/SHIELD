@@ -131,7 +131,13 @@ const DustOptions = {
     Color: "red",
     State: "매우나쁨",
     iconName:"emoji-sad"
+  },
+  "":{
+    Color: "green",
+    State: "좋음",
+    iconName:"emoji-flirt"
   }
+
 };
 
 export default DustSlide;

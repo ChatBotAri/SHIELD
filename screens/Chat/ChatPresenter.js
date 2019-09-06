@@ -10,7 +10,6 @@ import styled from "styled-components";
 import { BG_COLOR, GREY_COLOR } from "../../constants/Colors";
 import propType from "prop-types";
 import Message from "../../components/Message";
-import { HELLO } from "../../constants/Intent";
 
 const Container = styled.ScrollView`
   background-color: ${BG_COLOR};
@@ -127,12 +126,7 @@ const ChatPresenter = ({
         onPress={() => {
           addMsg();
           sendMsg();
-          
-            // sendResult
-            //   ? sendResult.data.responseSet.result.intent_id == HELLO
-            //     ? sendMsg(HELLO, "필요한기능판단")
-            //     : sendMsg()
-            //   : null;
+        
           
         }}
       >
