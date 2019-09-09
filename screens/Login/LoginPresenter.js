@@ -9,10 +9,10 @@ const Container =styled.ScrollView`
 `; 
 
 
-const MedicinePresenter=()=>
+const LoginPresenter=()=>
 <Container>
-<Text>Medicine</Text>
+<Text>Login</Text>
 </Container>;
 
 
-export default MedicinePresenter;
+export default LoginPresenter;

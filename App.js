@@ -5,7 +5,7 @@ import * as Font from "expo-font";
 import * as Permissions from "expo-permissions";
 import { Ionicons } from "@expo/vector-icons";
 import MainNavigation from "./navigation/MainNavigation";
-import client from "./mqtt";
+
 
 export default class App extends React.Component {
   state = {
@@ -29,19 +29,7 @@ export default class App extends React.Component {
     if (status != "granted") {
       const res = await Permissions.askAsync(Permissions.LOCATION);
     }
-    client.on("connect", function() {
-      client.subscribe("presence", function(err) {
-        if (!err) {
-          client.publish("presence", "Hello mqtt");
-        }
-      });
-    });
-
-    client.on("message", function(topic, message) {
-      // message is Buffer
-      console.log(message.toString());
-      client.end();
-    });
+  
   };
 
   render() {
