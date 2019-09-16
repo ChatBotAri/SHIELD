@@ -1,6 +1,6 @@
 import React from "react";
 import { StyleSheet, Text, TouchableOpacity } from "react-native";
-import { LinearGradient } from "expo";
+import { LinearGradient } from "expo-linear-gradient";
 import { withNavigation } from "react-navigation";
 import styled from "styled-components";
 import Slider from "../../components/Slider";
