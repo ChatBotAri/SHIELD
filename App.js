@@ -6,6 +6,7 @@ import * as Permissions from "expo-permissions";
 import { Ionicons } from "@expo/vector-icons";
 import MainNavigation from "./navigation/MainNavigation";
 
+
 export default class App extends React.Component {
   state = {
     loaded: false,

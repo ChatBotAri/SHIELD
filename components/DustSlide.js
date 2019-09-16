@@ -3,7 +3,7 @@ import styled from "styled-components";
 import propType from "prop-types";
 import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
 import Layout from "../constants/Layout";
-import SemiCircleProgress from "./SemiCircleProgress";
+import SemiCircleProgress from "../constants/SemiCircleProgress/SemiCircleProgress";
 import { Entypo } from "@expo/vector-icons";
 
 const Container = styled.View`
