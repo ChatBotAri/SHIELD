@@ -4,16 +4,19 @@ import Loader from "../../components/Loader";
 import axios from "axios";
 import { BaseDate, Hours } from "../../constants/Time";
 
+
 const KAKAO_KEY = "d8d67d3d69ab7f44bc09d1ecf85da1f8";
 const DATA_KEY =
   "ok5U7zvwJ2BXvndun5rYy%2BaKAKoWXLE0XXQAU5hAM7AWUimTgWQsEbsPf%2FOzPeegE3jn6iae6On07VQuTW8ZZA%3D%3D";
+const GOOGLE_KEY = "097d07bd00774c47988512cbecace037";
 
 export default class HomeContainer extends React.Component {
   state = {
     weatherLoaded: false,
     Dust: null,
     CurrentPosition: null,
-    Weather: null
+    Weather: null,
+    News: null,
   };
 
   refresh = () => {
@@ -21,55 +24,63 @@ export default class HomeContainer extends React.Component {
   };
 
   componentDidMount() {
-    console.log(1);
     navigator.geolocation.getCurrentPosition(
       async position => {
         const local = await this.getLocalname(
           position.coords.latitude,
-          position.coords.longitude
-        )
-        CurrentPosition=local.documents[1].address_name;
+          position.coords.longitude,
+        );
+        CurrentPosition = local.documents[1].address_name;
         console.log(CurrentPosition);
 
         const Weather = await this.getWeather(
           local.documents[1].code,
-          local.documents[1].region_3depth_name
-
+          local.documents[1].region_3depth_name,
         );
         console.log(Weather);
 
         const Dust = await this.getDust(
           position.coords.latitude,
-          position.coords.longitude
+          position.coords.longitude,
         );
         console.log(Dust);
 
-        this.setState({ Weather, Dust , CurrentPosition,weatherLoaded: true});
+        const News = await this.getNews();
+
+
+
+        this.setState({
+          Weather,
+          Dust,
+          CurrentPosition,
+          weatherLoaded: true,
+          News,
+        });
       },
-      error => console.log(error)
+      error => console.log(error),
     );
   }
 
-
+  
   getDust = async (lat, long) => {
     const { data: TM } = await axios.get(
       `https://dapi.kakao.com/v2/local/geo/transcoord.json?x=${long}&y=${lat}&input_coord=WGS84&output_coord=TM`,
       {
         headers: {
-          Authorization: `KakaoAK ${KAKAO_KEY}`
-        }
-      }
+          Authorization: `KakaoAK ${KAKAO_KEY}`,
+        },
+      },
     );
     console.log(TM.documents[0].x, TM.documents[0].y);
     const { data: Station } = await axios.get(
-      `http://openapi.airkorea.or.kr/openapi/services/rest/MsrstnInfoInqireSvc/getNearbyMsrstnList?tmX=${TM.documents[0].x}&tmY=${TM.documents[0].y}&ServiceKey=${DATA_KEY}&_returnType=json`
+      `http://openapi.airkorea.or.kr/openapi/services/rest/MsrstnInfoInqireSvc/getNearbyMsrstnList?tmX=${TM.documents[0].x}&tmY=${TM.documents[0].y}&ServiceKey=${DATA_KEY}&_returnType=json`,
     );
     console.log(Station.list[0].stationName);
     console.log(Station);
     const { data: Dust } = await axios.get(
       `http://openapi.airkorea.or.kr/openapi/services/rest/ArpltnInforInqireSvc/getMsrstnAcctoRltmMesureDnsty?stationName=${encodeURI(
-        Station.list[0].stationName
-      )}&dataTerm=daily&pageNo=1&numOfRows=1&ServiceKey=${DATA_KEY}&ver=1.3&_returnType=json`
+        Station.list[0].stationName,
+      )}&dataTerm=daily&pageNo=1&numOfRows=1&ServiceKey=${DATA_KEY}&ver=1.3&_returnType=json`,
     );
     return Dust;
   };
@@ -79,9 +90,9 @@ export default class HomeContainer extends React.Component {
       `https://dapi.kakao.com/v2/local/geo/coord2regioncode.json?x=${long}&y=${lat}`,
       {
         headers: {
-          Authorization: `KakaoAK ${KAKAO_KEY}`
-        }
-      }
+          Authorization: `KakaoAK ${KAKAO_KEY}`,
+        },
+      },
     );
     return local;
   };
@@ -90,8 +101,8 @@ export default class HomeContainer extends React.Component {
     const { data: XY } = await axios.get(
       `http://www.kma.go.kr/DFSROOT/POINT/DATA/leaf.${localCode.substring(
         0,
-        5
-      )}.json.txt`
+        5,
+      )}.json.txt`,
     );
 
     console.log(XY);
@@ -122,22 +133,33 @@ export default class HomeContainer extends React.Component {
 
     const { data: Weather } = await axios.get(
       `http://newsky2.kma.go.kr/service/SecndSrtpdFrcstInfoService2/ForecastSpaceData?base_date=${BaseDate}&base_time=${baseTime(
-        Hours
-      )}&nx=${x}&ny=${y}&_type=json&ServiceKey=${DATA_KEY}&numOfRows=10`
+        Hours,
+      )}&nx=${x}&ny=${y}&_type=json&ServiceKey=${DATA_KEY}&numOfRows=10`,
     );
     // console.log(BaseDate);
     console.log(Weather);
     return Weather.response.body.items;
   };
 
+  getNews = async () => {
+    const {
+      data: { articles: news },
+    } = await axios.get(
+      `https://newsapi.org/v2/top-headlines?country=kr&category=health&apiKey=${GOOGLE_KEY}`,
+    );
+    console.log(news);
+    return news;
+  };
+
   render() {
-    const { weatherLoaded, Weather, Dust, CurrentPosition } = this.state;
+    const { weatherLoaded, Weather, Dust, CurrentPosition, News } = this.state;
     return weatherLoaded ? (
       <HomePresenter
         CurrentPosition={CurrentPosition}
         Dust={Dust}
         Weather={Weather}
         refresh={this.refresh}
+        News={News}
       />
     ) : (
       <Loader />

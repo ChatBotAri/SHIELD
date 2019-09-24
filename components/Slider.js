@@ -10,8 +10,8 @@ import DustSlide from "./DustSlide";
 const SWIPER_HEIGHT = Layout.height / 3.3;
 
 const SliderContainer = styled.View`
-  margin-top: 20;
-  margin-bottom: 15;
+  margin-top: 10;
+  margin-bottom: 10;
   padding-left: 10;
   padding-right: 10;
   height: ${SWIPER_HEIGHT};

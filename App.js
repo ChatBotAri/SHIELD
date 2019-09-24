@@ -6,7 +6,6 @@ import * as Permissions from "expo-permissions";
 import { Ionicons } from "@expo/vector-icons";
 import MainNavigation from "./navigation/MainNavigation";
 
-
 export default class App extends React.Component {
   state = {
     loaded: false,
@@ -29,8 +28,6 @@ export default class App extends React.Component {
     if (status != "granted") {
       const res = await Permissions.askAsync(Permissions.LOCATION);
     }
-  
-    
   };
 
   render() {
@@ -38,8 +35,9 @@ export default class App extends React.Component {
     if (loaded) {
       return (
         <>
-          <StatusBar barStyle="light-content" />
+          <StatusBar barStyle="dark-content" />
           <MainNavigation />
+          
         </>
       );
     } else {

@@ -2,6 +2,7 @@ import React from "react";
 import { ActivityIndicator } from "react-native";
 import { TAB_COLOR, BG_COLOR } from "../constants/Colors";
 import styled from "styled-components";
+import {PacmanIndicator} from "react-native-indicators";
 
 const Container = styled.View`
   flex: 1;
@@ -11,6 +12,6 @@ const Container = styled.View`
 
 export default () => (
   <Container>
-    <ActivityIndicator color={TAB_COLOR} />
+    <PacmanIndicator size={60} color={TAB_COLOR} />
   </Container>
 );
