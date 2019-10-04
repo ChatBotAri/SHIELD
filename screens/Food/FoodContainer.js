@@ -3,6 +3,7 @@ import FoodPresenter from "./FoodPresenter";
 import axios from "axios";
 import Loader from "../../components/Loader";
 import {AsyncStorage} from "react-native";
+import { createIconSetFromFontello } from "@expo/vector-icons";
 
 export default class FoodContainer extends React.Component {
   constructor() {
@@ -25,9 +26,15 @@ export default class FoodContainer extends React.Component {
     AsyncStorage.setItem("Nut",JSON.stringify(nutrient));
   };
   loadData =async()=>{
-    const Data =await AsyncStorage.getItem("Nut");
-    const JsonData = JSON.parse(Data);
-    this.setState({nutrient:JsonData}) 
+      const Data =await AsyncStorage.getItem("Nut");
+      const JsonData = JSON.parse(Data);
+      if(JsonData){
+        this.setState({nutrient:JsonData});
+      }
+      else{
+        this.setState({nutrient:{kcal:0,carbs:0,protein:0,fat:0},});
+      }
+    
   };
 
   render() {

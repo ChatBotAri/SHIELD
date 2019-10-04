@@ -11,6 +11,7 @@ import SearchContainer from "../screens/Search/SearchContainer";
 import SearchDetailContainer from "../screens/SearchDetail/SearchDetailContainer";
 import {Alert,Button} from "react-native";
 import React from "react";
+import HealthContainer from "../screens/Health/HealthContainer";
 
 const MainNavigation = createStackNavigator(
   {
@@ -75,6 +76,13 @@ const MainNavigation = createStackNavigator(
         title: "상세정보",
       },
     },
+    HealthScreen:{
+      screen: HealthContainer,
+      navigationOptions:{
+        ...headerStyles,
+        title: "걸음수",
+      }
+    }
   },
   {
     headerBackTitleVisible: false,
