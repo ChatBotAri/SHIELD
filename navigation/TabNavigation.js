@@ -24,13 +24,13 @@ const TabNavigation = createBottomTabNavigator(
         ),
       },
     },
-    Push: {
+    Health: {
       screen: PushContainer,
       navigationOptions: {
         tabBarIcon: ({ focused }) => (
           <TabBarIcon
             focused={focused}
-            name={Platform.OS == "ios" ? "ios-alarm" : "md-alarm"}
+            name={Platform.OS == "ios" ? "ios-heart-half" : "md-heart-half"}
           />
         ),
       },
@@ -41,12 +41,12 @@ const TabNavigation = createBottomTabNavigator(
         tabBarIcon: ({ focused }) => (
           <TabBarIcon
             focused={focused}
-            name={Platform.OS == "ios" ? "ios-beer" : "md-beer"}
+            name={Platform.OS == "ios" ? "ios-restaurant" : "md-restaurant"}
           />
         ),
       },
     },
-    Chat: {
+    Exercise: {
       // screen: () => null,
       screen: ChatContainer,
       backBehavior: "order",
@@ -59,7 +59,7 @@ const TabNavigation = createBottomTabNavigator(
         tabBarIcon: ({ focused }) => (
           <TabBarIcon
             focused={focused}
-            name={Platform.OS == "ios" ? "ios-map" : "md-map"}
+            name={Platform.OS == "ios" ? "ios-walk" : "md-walk"}
           />
         ),
       },
@@ -72,8 +72,9 @@ const TabNavigation = createBottomTabNavigator(
         <MyTabBar {...props} />
       ) : (
         <TabBar
-          activeColors={["#e6b580", "#8e87d6", "#c095c9"]}
-          activeTabBackgrounds={["#ede7e6", "#eae3f6", "#eae4f6"]}
+          activeColors={"white"}
+          activeTabBackgrounds={"#2dcf93"}
+          tabBarBackground={"white"}
           {...props}
         />
       ),

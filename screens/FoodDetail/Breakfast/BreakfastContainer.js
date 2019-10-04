@@ -24,7 +24,7 @@ export default class BreakfastContainer extends React.Component {
     this.setState({
       BreakfastNut
     });
-    // this.state.changeValue(Sum);
+    this.state.changeValue(BreakfastNut);
   };
 
   render() {
