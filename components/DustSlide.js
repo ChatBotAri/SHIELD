@@ -45,7 +45,7 @@ const DustSlide = ({ Dust, CurrentPosition }) => (
         <LeftContainer>
           <Text style={styles.text}>미세먼지</Text>
           <Entypo
-            name={DustOptions[Dust.list[0].pm10Grade].iconName}
+            name={DustOptions[Dust.list[0].pm10Grade1h].iconName}
             size={70}
             color="white"
             style={{ paddingBottom: 5 }}
@@ -56,7 +56,7 @@ const DustSlide = ({ Dust, CurrentPosition }) => (
             progressShadowColor="#d4d4d4"
             interiorCircleColor="#0f73d1"
             percentage={Number(Dust.list[0].pm10Value) / 1.8}
-            progressColor={DustOptions[Dust.list[0].pm10Grade].Color}
+            progressColor={DustOptions[Dust.list[0].pm10Grade1h].Color}
             interiorCircleStyle={{ paddingBottom: 3 }}
           >
             <Text style={{ fontSize: 25, fontWeight: "bold", color: "white" }}>
@@ -64,13 +64,13 @@ const DustSlide = ({ Dust, CurrentPosition }) => (
             </Text>
           </SemiCircleProgress>
           <Text style={styles.text}>
-            {DustOptions[Dust.list[0].pm10Grade].State}
+            {DustOptions[Dust.list[0].pm10Grade1h].State}
           </Text>
         </LeftContainer>
         <RightContainer>
           <Text style={styles.text}>초미세먼지</Text>
           <Entypo
-            name={DustOptions[Dust.list[0].pm25Grade].iconName}
+            name={DustOptions[Dust.list[0].pm25Grade1h].iconName}
             size={70}
             color="white"
             style={{ paddingBottom: 5 }}
@@ -81,7 +81,7 @@ const DustSlide = ({ Dust, CurrentPosition }) => (
             progressShadowColor="#d4d4d4"
             interiorCircleColor="#0f73d1"
             percentage={Number(Dust.list[0].pm25Value)}
-            progressColor={DustOptions[Dust.list[0].pm25Grade].Color}
+            progressColor={DustOptions[Dust.list[0].pm25Grade1h].Color}
             interiorCircleStyle={{ paddingBottom: 3 }}
           >
             <Text style={{ fontSize: 25, fontWeight: "bold", color: "white" }}>
@@ -89,7 +89,7 @@ const DustSlide = ({ Dust, CurrentPosition }) => (
             </Text>
           </SemiCircleProgress>
           <Text style={styles.text}>
-            {DustOptions[Dust.list[0].pm25Grade].State}
+            {DustOptions[Dust.list[0].pm25Grade1h].State}
           </Text>
         </RightContainer>
       </MiddleContainer>

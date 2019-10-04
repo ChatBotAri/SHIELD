@@ -21,14 +21,14 @@ const BgImage = styled.Image`
 `;
 
 const Btn = styled.TouchableOpacity`
-  padding:3px;
+  padding: 3px;
   justify-content: center;
   align-items: center;
   background-color: yellow;
-  border-radius:30px;
-  border-width:1px;
-  border-style:solid;
-  border-color:black;
+  border-radius: 30px;
+  border-width: 1px;
+  border-style: solid;
+  border-color: black;
 `;
 /*
 POP = 강수확률 %
@@ -53,52 +53,44 @@ const CheakTEM = Weather => {
 const CheakSKY = Weather => {
   for (let i = 0; i < 10; i++) {
     if (Weather.item[i].category == "PTY") {
-      if(Weather.item[i].fcstValue == 0) {
+      if (Weather.item[i].fcstValue == 0) {
         for (let j = 0; j < 10; j++) {
-          if(Weather.item[j].category=="SKY"){
-            if(Weather.item[j].fcstValue==1)
-            return "맑음";
-            else if(Weather.item[j].fcstValue==3)
-            return "구름많음";
-            else if(Weather.item[j].fcstValue==4)
-            return "흐림";
-            else
-            return "error2";
+          if (Weather.item[j].category == "SKY") {
+            if (Weather.item[j].fcstValue == 1) return "맑음";
+            else if (Weather.item[j].fcstValue == 3) return "구름많음";
+            else if (Weather.item[j].fcstValue == 4) return "흐림";
+            else return "error2";
           }
         }
-      } else if(Weather.item[i].fcstValue==1)
-        return "비";
-        else if(Weather.item[i].fcstValue==2)
-        return "진눈개비";
-        else if(Weather.item[i].fcstValue==3)
-        return "눈";
-        else if(Weather.item[i].fcstValue==4)
-        return "소나기";
-        else 
-        return "error";
+      } else if (Weather.item[i].fcstValue == 1) return "비";
+      else if (Weather.item[i].fcstValue == 2) return "진눈개비";
+      else if (Weather.item[i].fcstValue == 3) return "눈";
+      else if (Weather.item[i].fcstValue == 4) return "소나기";
+      else return "error";
     }
   }
 };
 
-
-const WeatherSlide = ({ Weather, CurrentPosition,refresh }) => (
+const WeatherSlide = ({ Weather, CurrentPosition, refresh }) => (
   <Container>
-    <BgImage source={require("../constants/Images/rain.jpg")} />
+    <BgImage
+      source={{
+        uri:
+          "https://images.unsplash.com/photo-1500740516770-92bd004b996e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1952&q=80",
+      }}
+      resizeMode="cover"
+    />
     <View
       style={{
         width: "50%",
         alignItems: "center",
         justifyContent: "space-around",
-        paddingBottom: 20
+        paddingBottom: 20,
       }}
     >
       <MaterialCommunityIcons
         size={120}
-        name={
-          WeatherOptions[
-            CheakSKY(Weather)
-          ].iconName
-        }
+        name={WeatherOptions[CheakSKY(Weather)].iconName}
         color="white"
       />
       <Text style={{ color: "white", fontSize: 25, fontWeight: "bold" }}>
@@ -110,9 +102,19 @@ const WeatherSlide = ({ Weather, CurrentPosition,refresh }) => (
         {CurrentPosition}
       </Text>
       <Text style={{ color: "white" }}>{Day}</Text>
-      <View style={{ flexDirection: "row",justifyContent:"center",alignItems:"center"}}>
-        <Text style={{ color: "white",paddingRight:5 }}>{Time}</Text>
-        <Btn onPress={()=>{refresh()}}>
+      <View
+        style={{
+          flexDirection: "row",
+          justifyContent: "center",
+          alignItems: "center",
+        }}
+      >
+        <Text style={{ color: "white", paddingRight: 5 }}>{Time}</Text>
+        <Btn
+          onPress={() => {
+            refresh();
+          }}
+        >
           <Text>UPDATE</Text>
         </Btn>
       </View>
@@ -121,7 +123,7 @@ const WeatherSlide = ({ Weather, CurrentPosition,refresh }) => (
           fontSize: 55,
           color: "white",
           paddingBottom: 20,
-          fontWeight: "bold"
+          fontWeight: "bold",
         }}
       >
         {CheakTEM(Weather)}
@@ -139,32 +141,32 @@ const WeatherSlide = ({ Weather, CurrentPosition,refresh }) => (
 );
 const WeatherOptions = {
   맑음: {
-    iconName: "weather-sunny"
+    iconName: "weather-sunny",
   },
   비: {
-    iconName: "weather-rainy"
+    iconName: "weather-rainy",
   },
   소나기: {
-    iconName: "weather-pouring"
+    iconName: "weather-pouring",
   },
   눈: {
-    iconName: "weather-snowy"
+    iconName: "weather-snowy",
   },
   구름많음: {
-    iconName: "weather-cloudy"
+    iconName: "weather-cloudy",
   },
   흐림: {
-    iconName: "weather-fog"
+    iconName: "weather-fog",
   },
-  error:{
-    iconName: "alert"
-  }
+  error: {
+    iconName: "alert",
+  },
 };
 
 WeatherSlide.propType = {
-  Weather:propType.object.isRequired,
-  CurrentPosition:propType.string.isRequired,
-  refresh:propType.func.isRequired
+  Weather: propType.object.isRequired,
+  CurrentPosition: propType.string.isRequired,
+  refresh: propType.func.isRequired,
 };
 
 export default WeatherSlide;

@@ -12,14 +12,14 @@ export default class extends React.Component {
       this.props.navigation.navigate("Home");
       this.setState({focused:0})
     } else if (tabIndex == 1) {
-      this.props.navigation.navigate("Chat");
+      this.props.navigation.navigate("Push");
       this.setState({focused:1})
     } else if (tabIndex == 2) {
-      this.props.navigation.navigate("Map");
+      this.props.navigation.navigate("Food");
       this.setState({focused:2})
 
     } else if (tabIndex == 3) {
-      this.props.navigation.navigate("Push");
+      this.props.navigation.navigate("Chat");
       this.setState({focused:3})
     } else return null;
   };
@@ -47,20 +47,20 @@ export default class extends React.Component {
               tintColor: focused== 0 ?   "#2dcf93":"white",
             },
             {
-              title: "Chat",
-              icon: require("../assets/chat.png"),
-              tintColor: focused == 1 ? "#2dcf93":"white",
+              title: "Health",
+              icon: require("../assets/health.png"),
+              tintColor: focused == 1 ?  "#2dcf93":"white",
             },
             {
-              title: "Map",
-              icon: require("../assets/map.png"),
+              title: "Food",
+              icon: require("../assets/food.png"),
               tintColor:focused == 2 ?  "#2dcf93":"white",
             },
             {
-              title: "Health",
-              icon: require("../assets/health.png"),
-              tintColor: focused == 3 ?  "#2dcf93":"white",
-            },
+              title: "Chat",
+              icon: require("../assets/chat.png"),
+              tintColor: focused == 3 ? "#2dcf93":"white",
+            }
           ]}
         />
       </View>

@@ -6,7 +6,7 @@ import {PacmanIndicator} from "react-native-indicators";
 
 const Container = styled.View`
   flex: 1;
-  background-color: ${BG_COLOR};
+  /* background-color: ${BG_COLOR}; */
   justify-content: center;
 `;
 
