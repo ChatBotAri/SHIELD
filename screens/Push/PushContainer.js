@@ -33,23 +33,15 @@ export default class PushContainer extends Component {
       text: ["..."],
       client,
       connect: false,
-      gas: null,
-      temp: null,
-      dust: null,
+      currentGas: 0,
+      currentTemp: 0,
+      currentDust: 0,
     };
   }
-  refresh = () => {
-    this.componentDidMount();
-  };
 
   Subconsole = entry => {
     const { text } = this.state;
     console.log(text);
-  };
-  pushText = entry => {
-    const { text } = this.state;
-    //this.setState({ text: [...text, entry] });
-    this.setState({ text: [...text, entry] });
   };
 
   onConnect = () => {
@@ -57,7 +49,6 @@ export default class PushContainer extends Component {
     console.log("success");
     client.subscribe("sensor/#");
     //client.publish('aaa','bbb');
-    this.pushText("connected");
   };
   onFailure = error => {
     console.log(error);
@@ -66,32 +57,50 @@ export default class PushContainer extends Component {
 
   onConnectionLost = responseObject => {
     if (responseObject.errorCode !== 0) {
-      this.pushText(`connection lost: ${responseObject.errorMessage}`);
+      console.log("connection lost");
     }
   };
 
   onMessageArrived = message => {
     if (message.destinationName === "sensor/gas") {
-      this.pushText(`gas: ${message.payloadString}`);
+      this.updatePayload(`${parseInt(message.payloadString)}`, "gas");
       t_gas = message.payloadString;
     } else if (message.destinationName === "sensor/temp") {
-      this.pushText(`temp: ${message.payloadString}`);
+      this.updatePayload(`${parseInt(message.payloadString)}`, "temp");
       t_temp = message.payloadString;
     } else if (message.destinationName === "sensor/dust") {
-      this.pushText(`dust: ${message.payloadString}`);
+      this.updatePayload(`${parseInt(message.payloadString)}`, "dust");
       t_dust = message.payloadString;
     }
-
-    if (t_dust !== 0) {
-      console.log(t_gas, t_temp, t_dust);
+  };
+  updatePayload = (Message, topic) => {
+    const Current = {
+      Data: ({ currentTemp, currentGas, currentDust } = this.state),
+    };
+    if (topic === "gas") {
+      if (Current.Data.currentGas !== Message) {
+        this.setState({
+          currentGas: Message,
+        });
+      }
+    }
+    if (topic === "temp") {
+      if (Current.Data.currentTemp !== Message) {
+        this.setState({
+          currentTemp: Message,
+        });
+      }
+    }
+    if (topic === "dust") {
+      if (Current.Data.currentDust !== Message) {
+        this.setState({
+          currentDust: Message,
+        });
+      }
     }
   };
-  componentDidMount() {
-    this.setState({ gas: t_gas, temp: t_temp, dust: t_dust });
-  }
-
   render() {
-    const { text, client, gas, temp, dust } = this.state;
+    const { text, client, currentGas, currentDust, currentTemp } = this.state;
     console.log(text);
 
     return (
@@ -99,9 +108,9 @@ export default class PushContainer extends Component {
         Subconsole={this.Subconsole}
         refresh={this.refresh}
         text={this.text}
-        gas={gas}
-        temp={temp}
-        dust={dust}
+        currentGas={currentGas}
+        currentTemp={currentTemp}
+        currentDust={currentDust}
       />
     );
   }

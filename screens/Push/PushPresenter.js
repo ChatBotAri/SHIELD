@@ -75,14 +75,17 @@ const StateValue = styled.Text`
 `;
 
 //navigation.navigate("MqttScreen")  언제쓸지모름
-const PushPresenter = ({navigation, Subconsole, gas, temp, dust, refresh}) => (
+const PushPresenter = ({navigation, Subconsole, currentGas,currentTemp, currentDust, }) => (
   <Container>
     <Column style={styles.shadow}>
       <LinearGradient colors={["#49ab87", "#36c994"]} style={styles.btn}>
-        <Btn onPress={() => {
-          Subconsole();
-          refresh();
-          }}>
+        <Btn onPress={() =>
+            navigation.navigate({
+              routeName: "HealthScreen"
+            })
+          } 
+        >
+          
           <BtnText>콘솔 찍기</BtnText>
           
         </Btn>
@@ -101,7 +104,7 @@ const PushPresenter = ({navigation, Subconsole, gas, temp, dust, refresh}) => (
         />
         <StateView>
           <StateTitle>가스</StateTitle>
-          <StateValue>{gas}</StateValue>
+        <StateValue>{currentGas}</StateValue>
         </StateView>
       </StateContainer>
       <StateContainer>
@@ -113,7 +116,7 @@ const PushPresenter = ({navigation, Subconsole, gas, temp, dust, refresh}) => (
 
         <StateView>
           <StateTitle>온도</StateTitle>
-          <StateValue>{temp}</StateValue>
+          <StateValue>{currentTemp}</StateValue>
         </StateView>
       </StateContainer>
       <StateContainer>
@@ -125,11 +128,11 @@ const PushPresenter = ({navigation, Subconsole, gas, temp, dust, refresh}) => (
 
         <StateView>
           <StateTitle>미세먼지</StateTitle>
-          <StateValue>{dust}</StateValue>
+          <StateValue>{currentDust}</StateValue>
         </StateView>
       </StateContainer>
     </Column>
   </Container>
   
 );
-export default PushPresenter;
+export default withNavigation(PushPresenter);

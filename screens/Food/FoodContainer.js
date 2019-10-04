@@ -28,15 +28,16 @@ export default class FoodContainer extends React.Component {
     });
     AsyncStorage.setItem("Nut", JSON.stringify(nutrient));
   };
-
-  loadData = async () => {
-    const Data = await AsyncStorage.getItem("Nut");
-    const JsonData = JSON.parse(Data);
-    if (JsonData) {
-      this.setState({ nutrient: JsonData });
-    } else {
-      return;
-    }
+  loadData =async()=>{
+      const Data =await AsyncStorage.getItem("Nut");
+      const JsonData = JSON.parse(Data);
+      if(JsonData){
+        this.setState({nutrient:JsonData});
+      }
+      else{
+        this.setState({nutrient:{kcal:0,carbs:0,protein:0,fat:0},});
+      }
+    
   };
 
   render() {
