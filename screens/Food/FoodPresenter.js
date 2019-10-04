@@ -77,22 +77,31 @@ const CycleText = styled.Text`
   font-weight: 600;
 `;
 
-const FoodPresenter = ({ fill, navigation, nutrient,changeValue,BreakfastNut,LunchNut }) => (
+const FoodPresenter = ({
+  navigation,
+  nutrient,
+  changeValue,
+  BreakfastNut,
+  LunchNut,
+  DinnerNut,
+  SnackNut,
+  myNut = 2500,
+}) => (
   <Container>
     <TitleContainer>
-      <Title>권장칼로리 : {nutrient.kcal} kcal</Title>
+      <Title>권장칼로리 : {myNut} kcal</Title>
     </TitleContainer>
     <CircleContainer>
       <AnimatedCircularProgress
         size={200}
         width={15}
-        fill={fill}
+        fill={(nutrient.kcal / myNut) * 100}
         backgroundWidth={25}
         backgroundColor="#eeffcc"
         tintColor="#2dcf93"
         rotation={0}
       >
-        {fill => <CircleText>{Math.floor(fill)} kcal</CircleText>}
+        {fill => <CircleText>{Math.floor(nutrient.kcal)} kcal</CircleText>}
       </AnimatedCircularProgress>
     </CircleContainer>
     <NutContainer>
@@ -116,9 +125,9 @@ const FoodPresenter = ({ fill, navigation, nutrient,changeValue,BreakfastNut,Lun
             navigation.navigate({
               routeName: "BreakfastScreen",
               params: {
-                nutrient,
                 changeValue,
-                BreakfastNut
+                BreakfastNut,
+                myNut,
               },
             })
           }
@@ -132,7 +141,7 @@ const FoodPresenter = ({ fill, navigation, nutrient,changeValue,BreakfastNut,Lun
           onPress={() =>
             navigation.navigate({
               routeName: "LunchScreen",
-              params: { nutrient, changeValue ,LunchNut },
+              params: { changeValue, LunchNut, myNut },
             })
           }
         >
@@ -141,13 +150,35 @@ const FoodPresenter = ({ fill, navigation, nutrient,changeValue,BreakfastNut,Lun
         <CycleText>점심</CycleText>
       </CycleBox>
       <CycleBox>
-        <CycleBtn onPress={() => navigation.navigate("DinnerScreen")}>
+        <CycleBtn
+          onPress={() =>
+            navigation.navigate({
+              routeName: "DinnerScreen",
+              params: {
+                changeValue,
+                DinnerNut,
+                myNut,
+              },
+            })
+          }
+        >
           <Image source={require("../../assets/dinner.png")} />
         </CycleBtn>
         <CycleText>저녁</CycleText>
       </CycleBox>
       <CycleBox>
-        <CycleBtn onPress={() => navigation.navigate("SnackScreen")}>
+        <CycleBtn
+          onPress={() =>
+            navigation.navigate({
+              routeName: "SnackScreen",
+              params: {
+                changeValue,
+                SnackNut,
+                myNut,
+              },
+            })
+          }
+        >
           <Image source={require("../../assets/snack.png")} />
         </CycleBtn>
         <CycleText>간식</CycleText>

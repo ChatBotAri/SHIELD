@@ -1,37 +1,53 @@
 import React from "react";
 import FoodPresenter from "./FoodPresenter";
-import axios from "axios";
-import Loader from "../../components/Loader";
-import {AsyncStorage} from "react-native";
+import { AsyncStorage } from "react-native";
 
 export default class FoodContainer extends React.Component {
   constructor() {
     super();
+    // AsyncStorage.clear();
     this.loadData();
     this.state = {
-      fill:60,
-      nutrient:{kcal:0,carbs:0,protein:0,fat:0},
-      BreakfastNut:{kcal:20,carbs:0,protein:0,fat:0},
-      LunchNut:{kcal:25,carbs:0,protein:0,fat:0}
-
+      fill: 60,
+      nutrient: { kcal: 0, carbs: 0, protein: 0, fat: 0 },
+      BreakfastNut: { kcal: 0, carbs: 0, protein: 0, fat: 0 },
+      LunchNut: { kcal: 0, carbs: 0, protein: 0, fat: 0 },
+      DinnerNut: { kcal: 0, carbs: 0, protein: 0, fat: 0 },
+      SnackNut: { kcal: 0, carbs: 0, protein: 0, fat: 0 },
     };
   }
-  changeValue = (nutrient) => {
+
+  changeValue = (kcal, carbs, protein, fat) => {
+    const { nutrient } = this.state;
+    nutrient.kcal += kcal;
+    nutrient.carbs += carbs;
+    nutrient.protein += protein;
+    nutrient.fat += fat;
     this.setState({
       nutrient,
-      BreakfastNut:nutrient
-
     });
-    AsyncStorage.setItem("Nut",JSON.stringify(nutrient));
+    AsyncStorage.setItem("Nut", JSON.stringify(nutrient));
   };
-  loadData =async()=>{
-    const Data =await AsyncStorage.getItem("Nut");
+
+  loadData = async () => {
+    const Data = await AsyncStorage.getItem("Nut");
     const JsonData = JSON.parse(Data);
-    this.setState({nutrient:JsonData}) 
+    if (JsonData) {
+      this.setState({ nutrient: JsonData });
+    } else {
+      return;
+    }
   };
 
   render() {
-    const { nutrient,fill,BreakfastNut,LunchNut } = this.state;
+    const {
+      nutrient,
+      fill,
+      BreakfastNut,
+      LunchNut,
+      DinnerNut,
+      SnackNut,
+    } = this.state;
     return (
       <FoodPresenter
         changeValue={this.changeValue.bind(this)}
@@ -39,6 +55,8 @@ export default class FoodContainer extends React.Component {
         nutrient={nutrient}
         BreakfastNut={BreakfastNut}
         LunchNut={LunchNut}
+        DinnerNut={DinnerNut}
+        SnackNut={SnackNut}
       />
     );
   }

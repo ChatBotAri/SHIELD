@@ -12,14 +12,14 @@ export default class extends React.Component {
       this.props.navigation.navigate("Home");
       this.setState({focused:0})
     } else if (tabIndex == 1) {
-      this.props.navigation.navigate("Push");
+      this.props.navigation.navigate("Health");
       this.setState({focused:1})
     } else if (tabIndex == 2) {
       this.props.navigation.navigate("Food");
       this.setState({focused:2})
 
     } else if (tabIndex == 3) {
-      this.props.navigation.navigate("Chat");
+      this.props.navigation.navigate("Exercise");
       this.setState({focused:3})
     } else return null;
   };

@@ -6,6 +6,7 @@ import { withNavigation } from "react-navigation";
 import ProgressBarAnimated from "react-native-progress-bar-animated";
 import Layout from "../../../constants/Layout";
 import AwesomeButton from "react-native-really-awesome-button";
+import FoodItem from "../../../components/FoodItem";
 
 const MainContainer = styled.View`
   flex: 1;
@@ -16,7 +17,6 @@ const Container = styled.View`
 `;
 const ResultContainer = styled.ScrollView`
   height: 60%;
-  border: 2px solid red;
 `;
 
 const Header = styled.View`
@@ -82,17 +82,21 @@ const LunchPresenter = ({
   navigation,
   LunchNut,
   changePartValue,
+  changeValue,
+  addLunch,
+  FoodList,
+  myNut
 }) => (
   <MainContainer>
     <Container>
       <Header>
         <KcalBax>
           <MyKcal>{LunchNut.kcal}</MyKcal>
-          <Kcal> / 000 kcal(권장)</Kcal>
+          <Kcal> / {myNut*0.4} kcal(권장)</Kcal>
         </KcalBax>
         <ProgressBarAnimated
           width={Layout.width / 1.2}
-          value={50}
+          value={LunchNut.kcal>myNut*0.4?100:LunchNut.kcal/(myNut*0.4/100)}
           maxValue={500}
           height={20}
           backgroundColor="#2dcf93"
@@ -124,9 +128,10 @@ const LunchPresenter = ({
             navigation.navigate({
               routeName: "SearchScreen",
               params: {
-                // LunchNut,
+                changeValue,
                 changePartValue,
-                partNut:LunchNut
+                partNut: LunchNut,
+                addFood: addLunch,
               },
             })
           }
@@ -135,7 +140,11 @@ const LunchPresenter = ({
         </AwesomeButton>
       </Body>
     </Container>
-    <ResultContainer></ResultContainer>
+    <ResultContainer>
+      {Object.values(FoodList).map(food => (
+        <FoodItem key={food.id} result={food.obj} isMine={true} />
+      ))}
+    </ResultContainer>
   </MainContainer>
 );
 

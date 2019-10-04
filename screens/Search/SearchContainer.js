@@ -12,14 +12,16 @@ export default class FoodContainer extends React.Component {
     const {
       navigation: {
         state: {
-          params: { changePartValue , partNut },
+          params: { changePartValue , partNut,changeValue ,addFood},
         },
       },
     } = props;
 
     this.state = {
       changePartValue,
+      changeValue,
       partNut,
+      addFood,
 
       loading: false,
       searchTerm: "",
@@ -74,7 +76,9 @@ export default class FoodContainer extends React.Component {
       searchTerm,
       results,
       changePartValue,
-      partNut  
+      partNut,
+      changeValue,
+      addFood 
     } = this.state;
 
     return (
@@ -85,7 +89,9 @@ export default class FoodContainer extends React.Component {
         results={results}
         loading={loading}
         changePartValue={changePartValue}
+        changeValue={changeValue}
         partNut={partNut}
+        addFood={addFood}
         />
     );
   }

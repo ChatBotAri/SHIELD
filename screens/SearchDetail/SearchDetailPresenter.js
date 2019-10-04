@@ -79,6 +79,8 @@ const SearchDetailPresenter = ({
   result,
   changePartValue,
   partNut,
+  changeValue,
+  addFood
 }) => (
   <Container>
     <Header>
@@ -130,25 +132,22 @@ const SearchDetailPresenter = ({
           width={160}
           height={50}
           onPress={() => {
+            partNut.kcal += parseInt(result.NUTR_CONT1[0]);
+            partNut.carbs += parseInt(result.NUTR_CONT2[0]);
+            partNut.protein += parseInt(result.NUTR_CONT3[0]);
+            partNut.fat += parseInt(result.NUTR_CONT4[0]);
 
-            // BreakfastNut=addNutValue(partNut,BreakfastNut);
-            // if (partNut === "Breakfast") {
-            //   BreakfastNut.kcal += parseInt(result.NUTR_CONT1[0]);
-            //   BreakfastNut.carbs += parseInt(result.NUTR_CONT2[0]);
-            //   BreakfastNut.protein += parseInt(result.NUTR_CONT3[0]);
-            //   BreakfastNut.fat += parseInt(result.NUTR_CONT4[0]);
-              partNut.kcal += parseInt(result.NUTR_CONT1[0]);
-              partNut.carbs += parseInt(result.NUTR_CONT2[0]);
-              partNut.protein += parseInt(result.NUTR_CONT3[0]);
-              partNut.fat += parseInt(result.NUTR_CONT4[0]);
+            console.log(partNut.kcal, partNut.carbs);
 
-              console.log(partNut.kcal, partNut.carbs);
-
-              navigation.navigate({ routeName: "SearchScreen" });
-              changePartValue(partNut);
-            // } else {
-              // console.log("다름");
-            // }
+            navigation.navigate({ routeName: "SearchScreen" });
+            changePartValue(partNut);
+            changeValue(
+              parseInt(result.NUTR_CONT1[0]),
+              parseInt(result.NUTR_CONT2[0]),
+              parseInt(result.NUTR_CONT3[0]),
+              parseInt(result.NUTR_CONT4[0]),
+            );
+            addFood(result);
           }}
         >
           <Text>+ 추가하기</Text>

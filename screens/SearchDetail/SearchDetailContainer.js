@@ -7,13 +7,15 @@ export default class SearchDetailContainer extends React.Component {
     const {
       navigation: {
         state: {
-          params: { changePartValue, result,partNut  },
+          params: { changePartValue, result,partNut ,changeValue,addFood  },
         },
       },
     } = props;
 
     this.state = {
       changePartValue,
+      changeValue,
+      addFood,
       
       result,
       partNut
@@ -21,12 +23,14 @@ export default class SearchDetailContainer extends React.Component {
   }
 
   render() {
-    const { result,changePartValue,partNut } = this.state;
+    const { result,changePartValue,partNut,changeValue,addFood } = this.state;
     return (
       <SearchDetailPresenter
         result={result}
         changePartValue={changePartValue}
+        changeValue={changeValue}
         partNut={partNut}
+        addFood={addFood}
       />
     );
   }

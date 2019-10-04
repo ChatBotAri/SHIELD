@@ -27,25 +27,25 @@ const CheckBtn = styled.TouchableOpacity``;
 
 const CheckText = styled.Text`
   font-size: 20px;
-  color: red;
+  padding-right:10px;
 `;
-
-
 
 const FoodItem = ({
   result,
-  index,
   navigation,
   changePartValue,
-  
-  partNut
+  changeValue,
+  addFood,
+  isMine,
+
+  partNut,
 }) => (
   <Container>
     <FoodBtn
       onPress={() =>
         navigation.navigate({
           routeName: "SearchDetailScreen",
-          params: { result,changePartValue,partNut }
+          params: { result, changePartValue, partNut, changeValue, addFood },
         })
       }
     >
@@ -55,7 +55,8 @@ const FoodItem = ({
           navigation.goBack();
         }}
       >
-        <CheckText>☑</CheckText>
+         {/* <CheckText>☑</CheckText> */}
+         <CheckText>{isMine?"✖":"☑"}</CheckText>
       </CheckBtn>
     </FoodBtn>
   </Container>

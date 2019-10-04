@@ -6,6 +6,7 @@ import { withNavigation } from "react-navigation";
 import ProgressBarAnimated from "react-native-progress-bar-animated";
 import Layout from "../../../constants/Layout";
 import AwesomeButton from "react-native-really-awesome-button";
+import FoodItem from "../../../components/FoodItem";
 
 const MainContainer = styled.View`
   flex: 1;
@@ -16,7 +17,6 @@ const Container = styled.View`
 `;
 const ResultContainer = styled.ScrollView`
   height: 60%;
-  border: 2px solid red;
 `;
 
 const Header = styled.View`
@@ -64,6 +64,7 @@ const Body = styled.View`
   padding-left: 30px;
   padding-right: 25px;
   justify-content: space-between;
+  align-items:center;
 `;
 
 const TitleBox = styled.View``;
@@ -82,18 +83,22 @@ const BreakfastPresenter = ({
   navigation,
   BreakfastNut,
   changePartValue,
+  changeValue,
+  addBreakfast,
+  FoodList,
+  myNut
 }) => (
   <MainContainer>
     <Container>
       <Header>
         <KcalBax>
           <MyKcal>{BreakfastNut.kcal}</MyKcal>
-          <Kcal> / 000 kcal(권장)</Kcal>
+          <Kcal> / {myNut*0.3} kcal(권장)</Kcal>
         </KcalBax>
         <ProgressBarAnimated
           width={Layout.width / 1.2}
-          value={50}
-          maxValue={500}
+          value={BreakfastNut.kcal>myNut*0.3?100:BreakfastNut.kcal/(myNut*0.3/100)}
+          maxValue={myNut*0.3}
           height={20}
           backgroundColor="#2dcf93"
           borderColor="#2dcf93"
@@ -124,9 +129,10 @@ const BreakfastPresenter = ({
             navigation.navigate({
               routeName: "SearchScreen",
               params: {
-                // BreakfastNut,
                 changePartValue,
-                partNut:BreakfastNut
+                changeValue,
+                partNut: BreakfastNut,
+                addFood: addBreakfast,
               },
             })
           }
@@ -135,7 +141,12 @@ const BreakfastPresenter = ({
         </AwesomeButton>
       </Body>
     </Container>
-    <ResultContainer></ResultContainer>
+    <ResultContainer>
+      {Object.values(FoodList).map(food => (
+        <FoodItem key={food.id} result={food.obj} isMine={true} />
+      ))}
+
+    </ResultContainer>
   </MainContainer>
 );
 
