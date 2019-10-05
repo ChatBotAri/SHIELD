@@ -1,12 +1,11 @@
 import React from "react";
-import { Text, Platform } from "react-native";
 import styled from "styled-components";
-import Layout from "../../constants/Layout";
-import Loader from "../../components/Loader";
 import { AnimatedCircularProgress } from "react-native-circular-progress";
 import { withNavigation } from "react-navigation";
 
-const Container = styled.View``;
+const Container = styled.View`
+  flex:1;
+`;
 
 const TitleContainer = styled.View`
   align-items: center;
@@ -26,8 +25,13 @@ const CircleContainer = styled.View`
 
 const CircleText = styled.Text`
   color: #2dcf93;
-  font-size: 25px;
+  font-size: 50px;
   font-weight: bold;
+`;
+const SubText = styled.Text`
+  color: #2dcf93;
+  font-size: 20px;
+  font-weight: 400;
 `;
 
 const NutContainer = styled.View`
@@ -41,9 +45,16 @@ const NutBox = styled.View`
   justify-content: center;
 `;
 
-const NutText = styled.Text`
-  font-size: 15px;
+const NutName = styled.Text`
+  font-size: 20px;
   font-weight: 600;
+  text-decoration-line:underline;
+  text-decoration-color:green;
+  padding-bottom:10px;
+`;
+const NutValue = styled.Text`
+  font-size:17px;
+  font-weight:400;
 `;
 
 const CycleContainer = styled.View`
@@ -61,8 +72,9 @@ const CycleBtn = styled.TouchableOpacity`
   border-radius: 50;
   background-color: #eeffcc;
   /* border-style:solid; */
-  /* border-width:2px; */
+  /* border-width:1px; */
   /* border-color:#2dcf93; */
+  /* border-color:yellow; */
   align-items: center;
   justify-content: center;
 `;
@@ -93,29 +105,34 @@ const FoodPresenter = ({
     </TitleContainer>
     <CircleContainer>
       <AnimatedCircularProgress
-        size={200}
-        width={15}
+        size={230}
+        width={20}
         fill={(nutrient.kcal / myNut) * 100}
         backgroundWidth={25}
         backgroundColor="#eeffcc"
         tintColor="#2dcf93"
         rotation={0}
       >
-        {fill => <CircleText>{Math.floor(nutrient.kcal)} kcal</CircleText>}
+        {fill => (
+          <>
+            <CircleText>{Math.floor(nutrient.kcal)}</CircleText>
+            <SubText>kcal</SubText>
+          </>
+        )}
       </AnimatedCircularProgress>
     </CircleContainer>
     <NutContainer>
       <NutBox>
-        <NutText>탄수화물</NutText>
-        <NutText>{nutrient.carbs} g</NutText>
+        <NutName>탄수화물</NutName>
+        <NutValue>{nutrient.carbs} g</NutValue>
       </NutBox>
       <NutBox>
-        <NutText>단백질</NutText>
-        <NutText>{nutrient.protein} g</NutText>
+        <NutName>단백질</NutName>
+        <NutValue>{nutrient.protein} g</NutValue>
       </NutBox>
       <NutBox>
-        <NutText>지방</NutText>
-        <NutText>{nutrient.fat} g</NutText>
+        <NutName>지방</NutName>
+        <NutValue>{nutrient.fat} g</NutValue>
       </NutBox>
     </NutContainer>
     <CycleContainer>

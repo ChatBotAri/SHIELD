@@ -62,25 +62,14 @@ const BtnContainer = styled.View`
   align-items: center;
 `;
 
-const addNutValue = (partNut, BreakfastNut) => {
-  console.log(partNut);
-  BreakfastNut.kcal += parseInt(result.NUTR_CONT1[0]);
-  BreakfastNut.carbs += parseInt(result.NUTR_CONT2[0]);
-  BreakfastNut.protein += parseInt(result.NUTR_CONT3[0]);
-  BreakfastNut.fat += parseInt(result.NUTR_CONT4[0]);
-
-  console.log(BreakfastNut.kcal, BreakfastNut.carbs);
-
-  return BreakfastNut;
-};
-
 const SearchDetailPresenter = ({
   navigation,
   result,
   changePartValue,
   partNut,
   changeValue,
-  addFood
+  addFood,
+  isMine,
 }) => (
   <Container>
     <Header>
@@ -128,30 +117,42 @@ const SearchDetailPresenter = ({
         <NutValue>{result.NUTR_CONT9[0]}(g)</NutValue>
       </NutBox>
       <BtnContainer>
-        <AwesomeButton
-          width={160}
-          height={50}
-          onPress={() => {
-            partNut.kcal += parseInt(result.NUTR_CONT1[0]);
-            partNut.carbs += parseInt(result.NUTR_CONT2[0]);
-            partNut.protein += parseInt(result.NUTR_CONT3[0]);
-            partNut.fat += parseInt(result.NUTR_CONT4[0]);
+        {!isMine ? (
+          <AwesomeButton
+            width={160}
+            height={50}
+            onPress={() => {
+              partNut.kcal += parseInt(result.NUTR_CONT1[0]);
+              partNut.carbs += parseInt(result.NUTR_CONT2[0]);
+              partNut.protein += parseInt(result.NUTR_CONT3[0]);
+              partNut.fat += parseInt(result.NUTR_CONT4[0]);
 
-            console.log(partNut.kcal, partNut.carbs);
+              console.log(partNut.kcal, partNut.carbs);
 
-            navigation.navigate({ routeName: "SearchScreen" });
-            changePartValue(partNut);
-            changeValue(
-              parseInt(result.NUTR_CONT1[0]),
-              parseInt(result.NUTR_CONT2[0]),
-              parseInt(result.NUTR_CONT3[0]),
-              parseInt(result.NUTR_CONT4[0]),
-            );
-            addFood(result);
-          }}
-        >
-          <Text>+ 추가하기</Text>
-        </AwesomeButton>
+              navigation.navigate({ routeName: "SearchScreen" });
+              changePartValue(partNut);
+              changeValue(
+                parseInt(result.NUTR_CONT1[0]),
+                parseInt(result.NUTR_CONT2[0]),
+                parseInt(result.NUTR_CONT3[0]),
+                parseInt(result.NUTR_CONT4[0]),
+              );
+              addFood(result);
+            }}
+          >
+            <Text>+ 추가하기</Text>
+          </AwesomeButton>
+        ) : (
+          <AwesomeButton
+            width={160}
+            height={50}
+            onPress={() => {
+              navigation.goBack();
+            }}
+          >
+            <Text>+ 뒤로가기</Text>
+          </AwesomeButton>
+        )}
       </BtnContainer>
     </Body>
     <Footer>

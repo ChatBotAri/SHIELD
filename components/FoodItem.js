@@ -1,10 +1,10 @@
 import React from "react";
-import { Text } from "react-native";
+import { Text,TouchableOpacity,Button } from "react-native";
 import propType from "prop-types";
 import styled from "styled-components";
-import { TouchableOpacity } from "react-native-gesture-handler";
-import { withNavigation, touch } from "react-navigation";
+import { withNavigation } from "react-navigation";
 import Layout from "../constants/Layout";
+
 
 const Container = styled.View`
   align-items: center;
@@ -27,37 +27,76 @@ const CheckBtn = styled.TouchableOpacity``;
 
 const CheckText = styled.Text`
   font-size: 20px;
-  padding-right:10px;
+  padding-right: 10px;
 `;
 
 const FoodItem = ({
+  id,
   result,
   navigation,
   changePartValue,
   changeValue,
   addFood,
+  deleteFood,
   isMine,
 
   partNut,
 }) => (
   <Container>
+    
     <FoodBtn
       onPress={() =>
         navigation.navigate({
           routeName: "SearchDetailScreen",
-          params: { result, changePartValue, partNut, changeValue, addFood },
+          params: { result, changePartValue, partNut, changeValue, addFood,isMine },
         })
       }
     >
       <BtnText>{result.DESC_KOR[0]}</BtnText>
-      <CheckBtn
-        onPress={() => {
-          navigation.goBack();
-        }}
-      >
-         {/* <CheckText>☑</CheckText> */}
-         <CheckText>{isMine?"✖":"☑"}</CheckText>
-      </CheckBtn>
+      {isMine ? (
+        <CheckBtn
+          onPress={() => {
+          
+            partNut.kcal -= parseInt(result.NUTR_CONT1[0]);
+            partNut.carbs -= parseInt(result.NUTR_CONT2[0]);
+            partNut.protein -= parseInt(result.NUTR_CONT3[0]);
+            partNut.fat -= parseInt(result.NUTR_CONT4[0]);
+
+            changePartValue(partNut);
+            changeValue(
+              -parseInt(result.NUTR_CONT1[0]),
+              -parseInt(result.NUTR_CONT2[0]),
+              -parseInt(result.NUTR_CONT3[0]),
+              -parseInt(result.NUTR_CONT4[0]),
+            );
+            deleteFood(id);
+          }}
+        >
+          <CheckText>✖</CheckText>
+        </CheckBtn>
+      ) : (
+        <CheckBtn
+          onPress={() => {
+         
+
+            partNut.kcal += parseInt(result.NUTR_CONT1[0]);
+            partNut.carbs += parseInt(result.NUTR_CONT2[0]);
+            partNut.protein += parseInt(result.NUTR_CONT3[0]);
+            partNut.fat += parseInt(result.NUTR_CONT4[0]);
+
+            changePartValue(partNut);
+            changeValue(
+              parseInt(result.NUTR_CONT1[0]),
+              parseInt(result.NUTR_CONT2[0]),
+              parseInt(result.NUTR_CONT3[0]),
+              parseInt(result.NUTR_CONT4[0]),
+            );
+            addFood(result);
+          }}
+        >
+          <CheckText>☑</CheckText>
+        </CheckBtn>
+      )}
     </FoodBtn>
   </Container>
 );

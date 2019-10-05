@@ -10,7 +10,6 @@ import { Ionicons } from "@expo/vector-icons";
 
 const Container = styled.ScrollView`
   flex: 1;
-  background-color: ${BG_COLOR};
 `;
 const Btn = styled.TouchableOpacity`
   justify-content: center;
@@ -91,43 +90,41 @@ const PushPresenter = ({navigation, Subconsole, currentGas,currentTemp, currentD
         </Btn>
       </LinearGradient>
     </Column>
-    <Text> gdgd</Text>
     <TitleContainer>
-      <TitleText>우리집 한눈에</TitleText>
     </TitleContainer>
     <Column>
       <StateContainer>
-        <Ionicons
+        {/* <Ionicons
           name={Platform.OS == "ios" ? "ios-thermometer" : "md-thermometer"}
           size={30}
           color="red"
-        />
+        /> */}
         <StateView>
-          <StateTitle>가스</StateTitle>
+          <StateTitle>키</StateTitle>
         <StateValue>{currentGas}</StateValue>
         </StateView>
       </StateContainer>
       <StateContainer>
-        <Ionicons
+        {/* <Ionicons
           name={Platform.OS == "ios" ? "ios-water" : "md-water"}
           size={30}
           color="blue"
-        />
+        /> */}
 
         <StateView>
-          <StateTitle>온도</StateTitle>
+          <StateTitle>몸무게</StateTitle>
           <StateValue>{currentTemp}</StateValue>
         </StateView>
       </StateContainer>
       <StateContainer>
-        <Ionicons
+        {/* <Ionicons
           name={Platform.OS == "ios" ? "ios-cloud" : "md-cloud"}
           size={30}
           color="grey"
-        />
+        /> */}
 
         <StateView>
-          <StateTitle>미세먼지</StateTitle>
+          <StateTitle>체온</StateTitle>
           <StateValue>{currentDust}</StateValue>
         </StateView>
       </StateContainer>

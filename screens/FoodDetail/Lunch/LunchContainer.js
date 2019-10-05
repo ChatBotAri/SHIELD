@@ -36,6 +36,22 @@ export default class LunchContainer extends React.Component {
       return;
     }
   };
+
+  deleteLunch = id =>{
+    this.setState(prevState=>{
+      const FoodList =prevState.FoodList;
+      delete FoodList[id];
+      const newState={
+        ...prevState,
+        ...FoodList
+      };
+      AsyncStorage.multiSet([
+        ["Lunch", JSON.stringify(newState.FoodList)],
+        ["LunchNut", JSON.stringify(this.state.LunchNut)],
+      ]);
+      return {...newState}
+    })
+  } 
   addLunch = newFood => {
     if (newFood !== null) {
       this.setState(prevState => {
@@ -79,6 +95,7 @@ export default class LunchContainer extends React.Component {
         changeValue={changeValue}
         changePartValue={this.changePartValue}
         addLunch={this.addLunch}
+        deleteLunch={this.deleteLunch}
       />
     );
   }

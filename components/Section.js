@@ -3,14 +3,15 @@ import propType from "prop-types";
 import styled from "styled-components";
 
 const Container = styled.View`
-  margin-vertical: 20px;
-  padding-vertical:20px;
+  /* margin-vertical: 20px; */
+  padding-vertical:15px;
   /* padding-horizontal:20px; */
 `;
 
 const Title = styled.Text`
   color: black;
   font-weight: 600;
+  font-size:17px;
   padding-left: 20px;
   margin-bottom: 15px;
 `;

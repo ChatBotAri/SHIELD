@@ -17,6 +17,8 @@ export default class HomeContainer extends React.Component {
     CurrentPosition: null,
     Weather: null,
     News: null,
+    Hospitals:null,
+    Pharmacys:null
   };
 
   refresh = () => {
@@ -30,6 +32,7 @@ export default class HomeContainer extends React.Component {
           position.coords.latitude,
           position.coords.longitude,
         );
+        console.log(position.coords.latitude,position.coords.longitude)
         CurrentPosition = local.documents[1].address_name;
         console.log(CurrentPosition);
 
@@ -46,8 +49,19 @@ export default class HomeContainer extends React.Component {
         console.log(Dust);
 
         const News = await this.getNews();
+        
+        const Hospitals = await this.getHospital(
+          position.coords.latitude,
+          position.coords.longitude
+        );
 
+        console.log(Hospitals)
 
+        const Pharmacys = await this.getPharmacy(
+          position.coords.latitude,
+          position.coords.longitude
+        )
+        console.log(Pharmacys)
 
         this.setState({
           Weather,
@@ -55,10 +69,23 @@ export default class HomeContainer extends React.Component {
           CurrentPosition,
           weatherLoaded: true,
           News,
+          Hospitals,
+          Pharmacys
         });
       },
       error => console.log(error),
     );
+  }
+
+  getPharmacy =async(lat,long)=>{
+    const {data:Pharmacys} = await axios.get(`http://apis.data.go.kr/B551182/pharmacyInfoService/getParmacyBasisList?serviceKey=${DATA_KEY}&numOfRows=10&xPos=${long}&yPos=${lat}&radius=3000`)
+
+    return Pharmacys.response.body.items.item;
+  }
+  getHospital =async(lat,long)=>{
+    const {data:Hospitals} =await axios.get(`http://apis.data.go.kr/B551182/hospInfoService/getHospBasisList?serviceKey=${DATA_KEY}&numOfRows=10&xPos=${long}&yPos=${lat}&radius=3000`);
+
+    return Hospitals.response.body.items.item;
   }
 
   
@@ -152,7 +179,7 @@ export default class HomeContainer extends React.Component {
   };
 
   render() {
-    const { weatherLoaded, Weather, Dust, CurrentPosition, News } = this.state;
+    const { weatherLoaded, Weather, Dust, CurrentPosition, News,Hospitals,Pharmacys } = this.state;
     return weatherLoaded ? (
       <HomePresenter
         CurrentPosition={CurrentPosition}
@@ -160,6 +187,8 @@ export default class HomeContainer extends React.Component {
         Weather={Weather}
         refresh={this.refresh}
         News={News}
+        Hospitals={Hospitals}
+        Pharmacys={Pharmacys}
       />
     ) : (
       <Loader />

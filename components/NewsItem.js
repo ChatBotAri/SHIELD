@@ -3,7 +3,6 @@ import { Text } from "react-native";
 import propType from "prop-types";
 import styled from "styled-components";
 import { TouchableOpacity } from "react-native-gesture-handler";
-import { Linking } from "expo";
 import { withNavigation,touch } from "react-navigation";
 
 const Container = styled.View`

@@ -35,7 +35,6 @@ const Slider = ({ Dust,Weather,CurrentPosition,refresh }) => (
       />
       <DustSlide Dust={Dust}
        CurrentPosition={CurrentPosition}/>
-      <Text>Third</Text>
     </Swiper>
   </SliderContainer>
 );
