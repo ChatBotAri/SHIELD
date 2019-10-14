@@ -2,11 +2,19 @@ import React from "react";
 import styled from "styled-components";
 import { AnimatedCircularProgress } from "react-native-circular-progress";
 import { withNavigation } from "react-navigation";
+import Layout from "../../constants/Layout";
 
 const Container = styled.View`
   flex:1;
 `;
+const Header = styled.View`
+  height:50%;
+`;
 
+const Bottom = styled.View`
+  height:50%;
+  justify-content:center;
+`;
 const TitleContainer = styled.View`
   align-items: center;
   padding-top: 15px;
@@ -35,7 +43,6 @@ const SubText = styled.Text`
 `;
 
 const NutContainer = styled.View`
-  padding-top: 10px;
   padding-bottom: 40px;
   flex-direction: row;
   justify-content: space-around;
@@ -71,10 +78,6 @@ const CycleBtn = styled.TouchableOpacity`
   height: 70px;
   border-radius: 50;
   background-color: #eeffcc;
-  /* border-style:solid; */
-  /* border-width:1px; */
-  /* border-color:#2dcf93; */
-  /* border-color:yellow; */
   align-items: center;
   justify-content: center;
 `;
@@ -100,12 +103,13 @@ const FoodPresenter = ({
   myNut = 2500,
 }) => (
   <Container>
+    <Header>
     <TitleContainer>
       <Title>권장칼로리 : {myNut} kcal</Title>
     </TitleContainer>
     <CircleContainer>
       <AnimatedCircularProgress
-        size={230}
+        size={Layout.width*0.65}
         width={20}
         fill={(nutrient.kcal / myNut) * 100}
         backgroundWidth={25}
@@ -121,6 +125,8 @@ const FoodPresenter = ({
         )}
       </AnimatedCircularProgress>
     </CircleContainer>
+    </Header>
+    <Bottom>
     <NutContainer>
       <NutBox>
         <NutName>탄수화물</NutName>
@@ -201,6 +207,7 @@ const FoodPresenter = ({
         <CycleText>간식</CycleText>
       </CycleBox>
     </CycleContainer>
+    </Bottom>
   </Container>
 );
 

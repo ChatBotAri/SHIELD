@@ -16,8 +16,6 @@ export default class HomeContainer extends React.Component {
     CurrentPosition: null,
     Weather: null,
     News: null,
-    Hospitals: null,
-    Pharmacys: null,
     FoodTip: null,
     HealthTip: null,
   };
@@ -51,19 +49,8 @@ export default class HomeContainer extends React.Component {
 
         const News = await this.getNews();
 
-        // const Hospitals = await this.getHospital(
-        //   position.coords.latitude,
-        //   position.coords.longitude
-        // );
-
-        // console.log(Hospitals)
-
-        // const Pharmacys = await this.getPharmacy(
-        //   position.coords.latitude,
-        //   position.coords.longitude
-        // )
-        // console.log(Pharmacys)
-
+        console.log(News);
+        
         const HealthTip = await this.getHealthTip();
 
         console.log(HealthTip);
@@ -78,8 +65,6 @@ export default class HomeContainer extends React.Component {
           CurrentPosition,
           weatherLoaded: true,
           News,
-          // Hospitals,
-          // Pharmacys,
           HealthTip,
           FoodTip,
         });
@@ -226,7 +211,6 @@ export default class HomeContainer extends React.Component {
     } = await axios.get(
       `https://newsapi.org/v2/top-headlines?country=kr&category=health&apiKey=${GOOGLE_KEY}`,
     );
-    console.log(news);
     return news;
   };
 
@@ -237,8 +221,6 @@ export default class HomeContainer extends React.Component {
       Dust,
       CurrentPosition,
       News,
-      Hospitals,
-      Pharmacys,
       FoodTip,
       HealthTip,
     } = this.state;
@@ -249,8 +231,6 @@ export default class HomeContainer extends React.Component {
         Weather={Weather}
         refresh={this.refresh}
         News={News}
-        Hospitals={Hospitals}
-        Pharmacys={Pharmacys}
         HealthTip={HealthTip}
         FoodTip={FoodTip}
       />

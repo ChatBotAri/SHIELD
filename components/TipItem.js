@@ -3,19 +3,21 @@ import { Text } from "react-native";
 import propType from "prop-types";
 import styled from "styled-components";
 import { TouchableOpacity } from "react-native-gesture-handler";
-import { withNavigation,touch } from "react-navigation";
+import { withNavigation, touch } from "react-navigation";
 
 const Container = styled.View`
-  margin-right: 20px;
   align-items: center;
   width: 140;
-  padding-left:20px;
+  padding-right: 20px;
+  padding-left: 20px;
 `;
 const Image = styled.Image`
   width: 120px;
   height: 120px;
-  border-radius: 2.5px;
-    
+  border-radius: 25px;
+  border-width:1px;
+  border-color:#ababab;
+  margin-bottom: 5px;
 `;
 
 const TipItem = ({ title, poster, navigation, author, description, url }) => (
@@ -28,7 +30,8 @@ const TipItem = ({ title, poster, navigation, author, description, url }) => (
         })
       }
     >
-      <Image source={{ uri: poster }} resizeMode="stretch"  />
+      <Image source={{ uri: poster }} />
+      <Text>{title.length > 20 ? `${title.substring(0, 19)}...` : title}</Text>
     </TouchableOpacity>
   </Container>
 );

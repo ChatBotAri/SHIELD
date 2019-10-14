@@ -96,7 +96,7 @@ const NewsPresenter = ({ title, poster, author, description, url,navigation }) =
       <MainImage source={{ uri: poster }}  />
     </Header>
     <Body>
-      <BodyContent>요약문 : {description}</BodyContent>
+      <BodyContent>요약문 : {description.replace("<b>","").replace("</b>","")}</BodyContent>
     </Body>
     <Author>
       <AuthorName>By {author}</AuthorName>

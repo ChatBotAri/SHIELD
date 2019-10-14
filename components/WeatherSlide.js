@@ -10,6 +10,9 @@ const Container = styled.View`
   flex: 1;
   position: relative;
   flex-direction: row;
+  /* width:${Layout.width*0.9}; */
+  margin-right:10px;
+  margin-left:10px;
 `;
 
 const BgImage = styled.Image`

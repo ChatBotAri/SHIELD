@@ -9,6 +9,9 @@ import { Entypo } from "@expo/vector-icons";
 const Container = styled.View`
   flex: 1;
   position: relative;
+  margin-right:10px;
+  margin-left:10px;
+  align-items:center;
 `;
 
 const BgView = styled.View`
@@ -17,25 +20,32 @@ const BgView = styled.View`
   background-color: #0f73d1;
   position: absolute;
   border-radius: 40;
+  justify-content:center;
 `;
 
 const MiddleContainer = styled.View`
+height:90%;
   padding-top: 10px;
   flex-direction: row;
+
 `;
 const LeftContainer = styled.View`
   width: 50%;
   align-items: center;
+  justify-content:space-around;
 `;
 
 const RightContainer = styled.View`
   width: 50%;
   align-items: center;
+  justify-content:space-around;
 `;
 const BottomContainer = styled.View`
   padding: 3px;
-  padding-right: 20px;
-  align-items: flex-end;
+  padding-right: 30px;
+  padding-bottom:10px;
+  align-items:flex-end;
+
 `;
 
 const DustSlide = ({ Dust, CurrentPosition }) => (

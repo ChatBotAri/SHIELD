@@ -1,13 +1,13 @@
 import React from "react";
-import { StyleSheet, Text, ScrollView, Platform } from "react-native";
+import { StyleSheet, Text, ScrollView, Platform,View } from "react-native";
 import { withNavigation } from "react-navigation";
 import styled from "styled-components";
 import Slider from "../../components/Slider";
 import Layout from "../../constants/Layout";
 import propType from "prop-types";
 import Section from "../../components/Section";
-import NewsItem from "../../components/NewsItem";
 import TipItem from "../../components/TipItem";
+import NewsItem from "../../components/NewsItem";
 import HospitalItem from "../../components/HospitalItem";
 import { Ionicons } from "@expo/vector-icons";
 
@@ -50,8 +50,6 @@ const HomePresenter = ({
   CurrentPosition,
   refresh,
   News,
-  // Hospitals,
-  // Pharmacys,
   HealthTip,
   FoodTip,
 }) => (
@@ -63,10 +61,9 @@ const HomePresenter = ({
         Weather={Weather}
         CurrentPosition={CurrentPosition}
       />
-
       {News ? (
         <Section title="건강뉴스">
-          {News.filter(news => news.urlToImage !== null).map(news => (
+         {News.filter(news => news.urlToImage !== null).map(news => (
             <NewsItem
               key={news.title}
               title={news.title}
@@ -82,24 +79,11 @@ const HomePresenter = ({
           ))}
         </Section>
       ) : null}
-      {/* {HealthTip ? (
-        <Section title="건강 Tip">
-          {HealthTip.map(tip => (
-            <TipItem
-              key={tip.title}
-              title={tip.title.replace("<b>", "").replace("</b>", "")}
-              poster={tip.thumbnail}
-              description={tip.contents.replace("<b>", "").replace("</b>", "")}
-              url={tip.url}
-            />
-          ))}
-        </Section>
-      ) : null} */}
-
+     
       {HealthTip ? (
         <Section title="건강정보 Tip">
           {HealthTip.map(tip => (
-            <NewsItem
+            <TipItem
               key={tip.title}
               title={tip.title.replace("<b>", "").replace("</b>", "")}
               poster={tip.thumbnail}
@@ -112,7 +96,7 @@ const HomePresenter = ({
       {FoodTip ? (
         <Section title="건강음식 Tip">
           {FoodTip.map(tip => (
-            <NewsItem
+            <TipItem
               key={tip.title}
               title={tip.title.replace("<b>", "").replace("</b>", "")}
               poster={tip.thumbnail}
@@ -123,35 +107,6 @@ const HomePresenter = ({
         </Section>
       ) : null}
 
-      {/* {Hospitals ? (
-      <Section title="가까운 병원">
-        {Hospitals.map(Hospital => (
-          <HospitalItem
-            key={Hospital.yadmNm}
-            name={Hospital.yadmNm}
-            addr={Hospital.addr}
-            distance={(Hospital.distance / 1000).toFixed(1)}
-            url={Hospital.hospUrl}
-            telno={Hospital.telno}
-          />
-        ))}
-      </Section>
-    ) : null}
-
-    {Pharmacys ? (
-      <Section title="가까운 약국">
-        {Pharmacys.map(Pharmacy => (
-          <HospitalItem
-            key={Pharmacy.yadmNm}
-            name={Pharmacy.yadmNm}
-            addr={Pharmacy.addr}
-            distance={(Pharmacy.distance / 1000).toFixed(1)}
-            url={Pharmacy.hospUrl}
-            telno={Pharmacy.telno}
-          />
-        ))}
-      </Section>
-    ) : null} */}
     </Container>
     <BotContainer>
       <BotText>약,병원정보가 필요하다면? </BotText>

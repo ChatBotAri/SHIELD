@@ -8,25 +8,28 @@ import { StyleSheet,Platform } from "react-native";
 import DustSlide from "./DustSlide";
 
 const SWIPER_HEIGHT = Layout.height / 3.3;
+const SWIPER_WIDTH = Layout.width * 0.9;
 
 const SliderContainer = styled.View`
   margin-top: 10;
   margin-bottom: 10;
-  padding-left: 10;
-  padding-right: 10;
+  /* padding-left: 10; */
+  /* padding-right: 10; */
+  /* width:${SWIPER_WIDTH}; */
   height: ${SWIPER_HEIGHT};
+  /* margin-right:10px; */
 `;
 
-const Text = styled.Text``;
 
 const Slider = ({ Dust,Weather,CurrentPosition,refresh }) => (
   <SliderContainer>
     <Swiper
       // height={40}
-      style={styles.a}
+      // style={{paddingRight:20}}
+      // style={styles.a}
       autoplay={true}
       autoplayTimeout={3}
-      useViewOverflow={Platform.OS==="ios"}
+      // useViewOverflow={Platform.OS==="ios"}
     >
       <WeatherSlide
         refresh={refresh}

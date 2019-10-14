@@ -1,5 +1,5 @@
 import React from "react";
-import { Text, Platform } from "react-native";
+import { Text, Platform,View } from "react-native";
 import styled from "styled-components";
 import propType from "prop-types";
 import { withNavigation } from "react-navigation";
@@ -13,12 +13,12 @@ const MainContainer = styled.View`
 `;
 
 const Container = styled.View`
-  height: 40%;
-  justify-content:center;
+  height: 55%;
+  justify-content:space-around;
 `;
 const ResultContainer = styled.ScrollView`
   padding-top:10px;
-  height: 60%;
+  height: 45%;
 `;
 
 const Header = styled.View`
@@ -83,9 +83,14 @@ const Title = styled.Text`
   font-weight: 500;
 `;
 
-const BtnText = styled.Text`
-  font-size: 20px;
-  font-weight: 600;
+const EmptyView= styled.View`
+  align-items:center;
+  padding-top:50px;
+`;
+
+const EmptyText = styled.Text`
+  color:#cccccc;
+  font-size:22px;
 `;
 
 const BreakfastPresenter = ({
@@ -156,7 +161,7 @@ const BreakfastPresenter = ({
       </Body>
     </Container>
     <ResultContainer>
-      {Object.values(FoodList).map(food => (
+      {JSON.stringify(FoodList)!=="{}"? Object.values(FoodList).map(food => (
         <FoodItem
           key={food.id}
           id={food.id}
@@ -167,7 +172,7 @@ const BreakfastPresenter = ({
           changeValue={changeValue}
           deleteFood={deleteBreakfast}
         />
-      ))}
+      )):<EmptyView><EmptyText>음식을 추가해주세요!</EmptyText></EmptyView>}
     </ResultContainer>
   </MainContainer>
 );
