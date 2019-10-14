@@ -66,7 +66,7 @@ const MainNavigation = createStackNavigator(
       navigationOptions: {
         ...headerStyles,
         title: "검색",
-        // headerLeft:()=> alert("abc") 
+        // headerLeft:()=> alert("abc")
       },
     },
     SearchDetailScreen: {

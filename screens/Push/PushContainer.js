@@ -11,9 +11,6 @@ init({
   sync: {},
 });
 
-var t_gas,
-  t_temp,
-  t_dust = 0;
 
 export default class PushContainer extends Component {
   constructor(props) {
@@ -100,7 +97,7 @@ export default class PushContainer extends Component {
     }
   };
   render() {
-    const { text, client, currentGas, currentDust, currentTemp } = this.state;
+    const { text, client, connect, currentGas, currentDust, currentTemp } = this.state;
     console.log(text);
 
     return (
