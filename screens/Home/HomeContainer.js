@@ -4,7 +4,6 @@ import Loader from "../../components/Loader";
 import axios from "axios";
 import { BaseDate, Hours } from "../../constants/Time";
 
-
 const KAKAO_KEY = "d8d67d3d69ab7f44bc09d1ecf85da1f8";
 const DATA_KEY =
   "ok5U7zvwJ2BXvndun5rYy%2BaKAKoWXLE0XXQAU5hAM7AWUimTgWQsEbsPf%2FOzPeegE3jn6iae6On07VQuTW8ZZA%3D%3D";
@@ -17,8 +16,10 @@ export default class HomeContainer extends React.Component {
     CurrentPosition: null,
     Weather: null,
     News: null,
-    Hospitals:null,
-    Pharmacys:null
+    Hospitals: null,
+    Pharmacys: null,
+    FoodTip: null,
+    HealthTip: null,
   };
 
   refresh = () => {
@@ -32,7 +33,7 @@ export default class HomeContainer extends React.Component {
           position.coords.latitude,
           position.coords.longitude,
         );
-        console.log(position.coords.latitude,position.coords.longitude)
+        console.log(position.coords.latitude, position.coords.longitude);
         CurrentPosition = local.documents[1].address_name;
         console.log(CurrentPosition);
 
@@ -49,19 +50,27 @@ export default class HomeContainer extends React.Component {
         console.log(Dust);
 
         const News = await this.getNews();
-        
-        const Hospitals = await this.getHospital(
-          position.coords.latitude,
-          position.coords.longitude
-        );
 
-        console.log(Hospitals)
+        // const Hospitals = await this.getHospital(
+        //   position.coords.latitude,
+        //   position.coords.longitude
+        // );
 
-        const Pharmacys = await this.getPharmacy(
-          position.coords.latitude,
-          position.coords.longitude
-        )
-        console.log(Pharmacys)
+        // console.log(Hospitals)
+
+        // const Pharmacys = await this.getPharmacy(
+        //   position.coords.latitude,
+        //   position.coords.longitude
+        // )
+        // console.log(Pharmacys)
+
+        const HealthTip = await this.getHealthTip();
+
+        console.log(HealthTip);
+
+        const FoodTip = await this.getFoodTip();
+
+        console.log(FoodTip);
 
         this.setState({
           Weather,
@@ -69,26 +78,69 @@ export default class HomeContainer extends React.Component {
           CurrentPosition,
           weatherLoaded: true,
           News,
-          Hospitals,
-          Pharmacys
+          // Hospitals,
+          // Pharmacys,
+          HealthTip,
+          FoodTip,
         });
       },
       error => console.log(error),
     );
   }
 
-  getPharmacy =async(lat,long)=>{
-    const {data:Pharmacys} = await axios.get(`http://apis.data.go.kr/B551182/pharmacyInfoService/getParmacyBasisList?serviceKey=${DATA_KEY}&numOfRows=10&xPos=${long}&yPos=${lat}&radius=3000`)
+  getFoodTip = async () => {
+    const { data: FoodTip } = await axios.get(
+      // `https://dapi.kakao.com/v2/search/blog?query=https://blog.naver.com/nhicblog 건강`,
+      `https://dapi.kakao.com/v2/search/blog?query=http://blog.daum.net/nhicblog 음식`,
+      {
+        headers: {
+          Authorization: `KakaoAK ${KAKAO_KEY}`,
+        },
+      },
+    );
+    return FoodTip.documents;
+  };
+
+  getHealthTip = async () => {
+    const { data: HealthTip } = await axios.get(
+      // `https://dapi.kakao.com/v2/search/blog?query=https://blog.naver.com/nhicblog`,
+      `https://dapi.kakao.com/v2/search/blog?query=http://blog.daum.net/nhicblog`,
+      {
+        headers: {
+          Authorization: `KakaoAK ${KAKAO_KEY}`,
+        },
+      },
+    );
+    return HealthTip.documents;
+  };
+  // getVideo = async() => {
+  //   const { data: Search } = await axios.get(
+  //     `https://openapi.naver.com/v1/search/news.json?query=${encodeURI("식습관")}`,
+  //     {
+  //       headers: {
+  //         'X-Naver-Client-Id':"tEhnGNsiusnBnhHv1GXs",
+  //          'X-Naver-Client-Secret':"4CaCsOAvht"
+  //       },
+  //     },
+  //   );
+  //   return Search;
+  // };
+
+  getPharmacy = async (lat, long) => {
+    const { data: Pharmacys } = await axios.get(
+      `http://apis.data.go.kr/B551182/pharmacyInfoService/getParmacyBasisList?serviceKey=${DATA_KEY}&numOfRows=10&xPos=${long}&yPos=${lat}&radius=3000`,
+    );
 
     return Pharmacys.response.body.items.item;
-  }
-  getHospital =async(lat,long)=>{
-    const {data:Hospitals} =await axios.get(`http://apis.data.go.kr/B551182/hospInfoService/getHospBasisList?serviceKey=${DATA_KEY}&numOfRows=10&xPos=${long}&yPos=${lat}&radius=3000`);
+  };
+  getHospital = async (lat, long) => {
+    const { data: Hospitals } = await axios.get(
+      `http://apis.data.go.kr/B551182/hospInfoService/getHospBasisList?serviceKey=${DATA_KEY}&numOfRows=10&xPos=${long}&yPos=${lat}&radius=3000`,
+    );
 
     return Hospitals.response.body.items.item;
-  }
+  };
 
-  
   getDust = async (lat, long) => {
     const { data: TM } = await axios.get(
       `https://dapi.kakao.com/v2/local/geo/transcoord.json?x=${long}&y=${lat}&input_coord=WGS84&output_coord=TM`,
@@ -179,7 +231,17 @@ export default class HomeContainer extends React.Component {
   };
 
   render() {
-    const { weatherLoaded, Weather, Dust, CurrentPosition, News,Hospitals,Pharmacys } = this.state;
+    const {
+      weatherLoaded,
+      Weather,
+      Dust,
+      CurrentPosition,
+      News,
+      Hospitals,
+      Pharmacys,
+      FoodTip,
+      HealthTip,
+    } = this.state;
     return weatherLoaded ? (
       <HomePresenter
         CurrentPosition={CurrentPosition}
@@ -189,6 +251,8 @@ export default class HomeContainer extends React.Component {
         News={News}
         Hospitals={Hospitals}
         Pharmacys={Pharmacys}
+        HealthTip={HealthTip}
+        FoodTip={FoodTip}
       />
     ) : (
       <Loader />

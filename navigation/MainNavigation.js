@@ -30,7 +30,7 @@ const MainNavigation = createStackNavigator(
       screen: NewsContainer,
       navigationOptions: {
         ...headerStyles,
-        title: "건강뉴스",
+        title: "건강정보",
       },
     },
     BreakfastScreen: {

@@ -3,9 +3,7 @@ import propType from "prop-types";
 import styled from "styled-components";
 
 const Container = styled.View`
-  /* margin-vertical: 20px; */
   padding-vertical:15px;
-  /* padding-horizontal:20px; */
 `;
 
 const Title = styled.Text`
@@ -17,13 +15,14 @@ const Title = styled.Text`
 `;
 
 const ScrollView = styled.ScrollView`
-  padding-left: 20px;
+  /* padding-right:20px; */
+  
 `;
 
 const Section = ({ title, children, horizontal = true }) => (
   <Container>
     <Title>{title}</Title>
-    <ScrollView horizontal={horizontal}>{children}</ScrollView>
+    <ScrollView showsHorizontalScrollIndicator={false} horizontal={horizontal}>{children}</ScrollView>
   </Container>
 );
 
