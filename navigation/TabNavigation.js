@@ -10,6 +10,7 @@ import MyTabBar from "../constants/TabBar";
 import ChatContainer from "../screens/Chat/ChatContainer";
 import {TabBar} from "react-native-animated-nav-tab-bar"
 import FoodContainer from "../screens/Food/FoodContainer";
+import HealthContainer from "../screens/Health/HealthContainer";
 
 const TabNavigation = createBottomTabNavigator(
   {
@@ -48,7 +49,7 @@ const TabNavigation = createBottomTabNavigator(
     },
     Exercise: {
       // screen: () => null,
-      screen: ChatContainer,
+      screen: HealthContainer,
       backBehavior: "order",
       navigationOptions: {
         // tabBarVisible:false,

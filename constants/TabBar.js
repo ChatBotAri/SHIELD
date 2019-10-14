@@ -58,7 +58,7 @@ export default class extends React.Component {
             },
             {
               title: "Chat",
-              icon: require("../assets/chat.png"),
+              icon: require("../assets/walk.png"),
               tintColor: focused == 3 ? "#2dcf93":"white",
             }
           ]}
