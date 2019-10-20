@@ -87,6 +87,7 @@ const HomePresenter = ({
               key={tip.title}
               title={tip.title.replace("<b>", "").replace("</b>", "")}
               poster={tip.thumbnail}
+              author={"국민건강보험"}
               description={tip.contents.replace("<b>", "").replace("</b>", "")}
               url={tip.url}
             />
@@ -100,6 +101,7 @@ const HomePresenter = ({
               key={tip.title}
               title={tip.title.replace("<b>", "").replace("</b>", "")}
               poster={tip.thumbnail}
+              author={"국민건강보험"}
               description={tip.contents.replace("<b>", "").replace("</b>", "")}
               url={tip.url}
             />
