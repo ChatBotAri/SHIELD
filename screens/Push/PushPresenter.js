@@ -1,10 +1,11 @@
 import React from "react";
-import { StyleSheet, Text, TouchableOpacity } from "react-native";
+import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import styled from "styled-components";
-import { withNavigation } from "react-navigation";
+import { withNavigation, withNavigationFocus } from "react-navigation";
 import ProgressBarAnimated from "react-native-progress-bar-animated";
 import Layout from "../../constants/Layout";
 import AwesomeButton from "react-native-really-awesome-button";
+import Dialog from "../../components/Dialog";
 
 const Container = styled.ScrollView`
   padding-left: 10px;
@@ -133,6 +134,7 @@ const BtnText = styled.Text`
 `;
 
 const PushPresenter = ({
+  nutrient,
   navigation,
   connect,
   currentGas,
@@ -141,10 +143,17 @@ const PushPresenter = ({
 }) => (
   <Container>
     <TitleBox>
+      {/* <Dialog btnName="Mine" /> */}
       <TitleText>My condition</TitleText>
-      {/* <AwesomeButton width={100} height={30} borderRadius={20}>
-        <Text>+ 측정하기</Text>
-      </AwesomeButton> */}
+
+      <AwesomeButton
+        onPress={() => {}}
+        width={100}
+        height={30}
+        borderRadius={20}
+      >
+        <Text>사용Tip</Text>
+      </AwesomeButton>
     </TitleBox>
     <Header>
       <KcalContainer>
@@ -160,7 +169,7 @@ const PushPresenter = ({
           </KcalBox>
           <KcalBox>
             <KcalName>섭취칼로리</KcalName>
-            <KcalValue>2111</KcalValue>
+            <KcalValue>{Math.floor(nutrient.kcal)}</KcalValue>
           </KcalBox>
         </DataContainer>
       </KcalContainer>
@@ -181,68 +190,70 @@ const PushPresenter = ({
     </Header>
     <Body>
       <ComponentContainer>
-        <Component>
+        <Component style={{ borderWidth: 2, borderColor: "green" }}>
           <Image source={require("../../assets/age.png")} />
           <TextBox>
-            <ComponentText>나이</ComponentText>
+            <ComponentText>나이 *</ComponentText>
             <ComponentText>25세</ComponentText>
           </TextBox>
         </Component>
-        <AwesomeButton
-          width={70}
-          height={40}
-          borderRadius={50}
-          style={{ marginRight: 10 }}
-        >
-          <BtnText>입력</BtnText>
-        </AwesomeButton>
+
+        <Dialog btnName="직접입력" name="나이" />
       </ComponentContainer>
       <ComponentContainer>
-        <Component>
+        <Component style={{ borderWidth: 2, borderColor: "green" }}>
           <Image source={require("../../assets/gender.png")} />
           <TextBox>
-            <ComponentText>성별</ComponentText>
+            <ComponentText>성별 *</ComponentText>
             <ComponentText>남</ComponentText>
           </TextBox>
         </Component>
-        <AwesomeButton
+        <Dialog btnName="직접입력" name="성별"/>
+
+        {/* <AwesomeButton
           width={70}
           height={40}
           borderRadius={50}
           style={{ marginRight: 10 }}
         >
           <BtnText>입력</BtnText>
-        </AwesomeButton>
+        </AwesomeButton> */}
       </ComponentContainer>
       <ComponentContainer>
-        <Component>
+        <Component style={{ borderWidth: 2, borderColor: "green" }}>
           <Image source={require("../../assets/height.png")} />
           <TextBox>
-            <ComponentText>키</ComponentText>
+            <ComponentText>키 *</ComponentText>
             <ComponentText>180cm</ComponentText>
           </TextBox>
         </Component>
-        <AwesomeButton width={40} height={40} borderRadius={50}>
+        <Dialog btnName="측정" name="키"/>
+        <Dialog btnName="입력" name="키"/>
+
+
+        {/* <AwesomeButton width={40} height={40} borderRadius={50}>
           <BtnText>측정</BtnText>
         </AwesomeButton>
         <AwesomeButton width={40} height={40} borderRadius={50}>
           <BtnText>입력</BtnText>
-        </AwesomeButton>
+        </AwesomeButton> */}
       </ComponentContainer>
       <ComponentContainer>
-        <Component>
+        <Component style={{ borderWidth: 2, borderColor: "green" }}>
           <Image source={require("../../assets/weight.png")} />
           <TextBox>
-            <ComponentText>몸무게</ComponentText>
+            <ComponentText>몸무게 *</ComponentText>
             <ComponentText>75kg</ComponentText>
           </TextBox>
         </Component>
-        <AwesomeButton width={40} height={40} borderRadius={50}>
+        <Dialog btnName="측정" name="몸무게"/>
+        <Dialog btnName="입력" name="몸무게"/>
+        {/* <AwesomeButton width={40} height={40} borderRadius={50}>
           <BtnText>측정</BtnText>
         </AwesomeButton>
         <AwesomeButton width={40} height={40} borderRadius={50}>
           <BtnText>입력</BtnText>
-        </AwesomeButton>
+        </AwesomeButton> */}
       </ComponentContainer>
       <ComponentContainer>
         <Component>
@@ -252,14 +263,15 @@ const PushPresenter = ({
             <ComponentText>15%</ComponentText>
           </TextBox>
         </Component>
-        <AwesomeButton
+        {/* <AwesomeButton
           width={70}
           height={40}
           borderRadius={50}
           style={{ marginRight: 10 }}
         >
           <BtnText>계산</BtnText>
-        </AwesomeButton>
+        </AwesomeButton> */}
+        <Dialog btnName="계산" name="계산"/>
       </ComponentContainer>
       <ComponentContainer>
         <Component>
@@ -269,12 +281,14 @@ const PushPresenter = ({
             <ComponentText>{"36.5도"}</ComponentText>
           </TextBox>
         </Component>
-        <AwesomeButton width={40} height={40} borderRadius={50}>
+        {/* <AwesomeButton width={40} height={40} borderRadius={50}>
           <BtnText>측정</BtnText>
         </AwesomeButton>
         <AwesomeButton width={40} height={40} borderRadius={50}>
           <BtnText>입력</BtnText>
-        </AwesomeButton>
+        </AwesomeButton> */}
+        <Dialog btnName="측정" name="체온" />
+        <Dialog btnName="입력" name="체온"/>
       </ComponentContainer>
       <ComponentContainer>
         <Component>
@@ -284,12 +298,14 @@ const PushPresenter = ({
             <ComponentText>55회/분</ComponentText>
           </TextBox>
         </Component>
-        <AwesomeButton width={40} height={40} borderRadius={50}>
+        {/* <AwesomeButton width={40} height={40} borderRadius={50}>
           <BtnText>측정</BtnText>
         </AwesomeButton>
         <AwesomeButton width={40} height={40} borderRadius={50}>
           <BtnText>입력</BtnText>
-        </AwesomeButton>
+        </AwesomeButton> */}
+        <Dialog btnName="측정" name="심박수"/>
+        <Dialog btnName="입력" name="심박수"/>
       </ComponentContainer>
     </Body>
   </Container>

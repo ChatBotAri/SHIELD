@@ -1,16 +1,16 @@
 import React, { Component } from "react";
 import PushPresenter from "./PushPresenter";
 import client from "../../mqtt";
-
+import { AsyncStorage } from "react-native";
 
 export default class PushContainer extends Component {
   constructor(props) {
     super(props);
+    this.loadData();
     console.log(client);
-    client.subscribe("sensor/#")
+    client.subscribe("sensor/#");
     client.onMessageArrived = this.onMessageArrived;
 
-      
     this.state = {
       client,
       text: ["..."],
@@ -19,32 +19,49 @@ export default class PushContainer extends Component {
       currentWeight: 0,
       currentTemp: 0,
       currentHeart: 0,
+      nutrient: { kcal: 0, carbs: 0, protein: 0, fat: 0 },
     };
 
     // client.subscribe("sensor/#");
   }
+
+  componentDidMount() {
+    const { navigation } = this.props;
+    this.focusListener = navigation.addListener("didFocus", () => {
+      this.loadData();
+    });
+  }
+  
+  loadData = async () => {
+    const Data = await AsyncStorage.getItem("Nut");
+    const JsonData = JSON.parse(Data);
+    if (JsonData) {
+      this.setState({ nutrient: JsonData });
+    } else {
+      this.setState({ nutrient: { kcal: 0, carbs: 0, protein: 0, fat: 0 } });
+    }
+  };
+
   onConnectionLost = responseObject => {
     if (responseObject.errorCode !== 0) {
-       console.log("connection lost");
-       }
+      console.log("connection lost");
+    }
   };
   onConnect = () => {
     const { client } = this.state;
     console.log("success");
-  };   
-  
+  };
+
   onFailure = error => {
     console.log(error);
     console.log("fail");
   };
 
-
-
   onMessageArrived = message => {
     if (message.destinationName === "sensor/height") {
       this.updatePayload(`${parseInt(message.payloadString)}`, "height");
       // t_height = message.payloadString;
-       console.log(message.payloadString);
+      console.log(message.payloadString);
     } else if (message.destinationName === "sensor/weight") {
       this.updatePayload(`${parseInt(message.payloadString)}`, "weight");
       // t_temp = message.payloadString;
@@ -58,7 +75,12 @@ export default class PushContainer extends Component {
   };
   updatePayload = (Message, topic) => {
     const Current = {
-      Data: ({ currentHeight, currentWeight, currentTemp, currentHeart } = this.state),
+      Data: ({
+        currentHeight,
+        currentWeight,
+        currentTemp,
+        currentHeart,
+      } = this.state),
     };
     if (topic === "height") {
       if (Current.Data.currentHeight !== Message) {
@@ -90,11 +112,22 @@ export default class PushContainer extends Component {
     }
   };
   render() {
-    const { text, client, connect, currentHeight, currentWeight, currentTemp, currentHeart } = this.state;
+    const {
+      text,
+      client,
+      connect,
+      currentHeight,
+      currentWeight,
+      currentTemp,
+      currentHeart,
+      nutrient,
+    } = this.state;
     console.log(text);
 
     return (
       <PushPresenter
+        loadData={this.loadData}
+        nutrient={nutrient}
         Subconsole={this.Subconsole}
         refresh={this.refresh}
         text={this.text}
