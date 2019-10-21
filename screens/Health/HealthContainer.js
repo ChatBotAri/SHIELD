@@ -6,6 +6,7 @@ import {AsyncStorage} from "react-native";
 import { Pedometer } from "expo-sensors";
 import HealthPresenter from "./HealthPresenter";
 import Layout from "../../constants/Layout";
+import Dialog from "react-native-dialog";
 
 const ASPECT_RATIO = Layout.width / Layout.height;
 const LATITUDE_DELTA = 0.0922;
@@ -32,8 +33,12 @@ export default class HealthContainer extends React.Component {
       ],
       latitudeDelta: LATITUDE_DELTA,
       longitudeDelta: LONGITUDE_DELTA,
+      goalWalk: 0,
+      dialogVisible: false
     }
     this.mapView = null;
+    
+    
   }
   onMapPress = (e) => {
     this.setState({
@@ -44,6 +49,8 @@ export default class HealthContainer extends React.Component {
     });
   }
 
+
+  
   loadData =async()=>{
     const Data =await AsyncStorage.getItem("Steps");
     const JsonData = JSON.parse(Data);
@@ -57,6 +64,7 @@ export default class HealthContainer extends React.Component {
   
 };
 componentDidMount() {
+  console.log(22222222222222222222222222222);
   navigator.geolocation.getCurrentPosition(
     ({ coords: { latitude, longitude } }) =>
       this.setState({ latitude, longitude }),
@@ -73,6 +81,24 @@ componentDidMount() {
   componentWillUnmount() {
     // this._unsubscribe();
   }
+  
+  showDialog = () => {
+    this.setState({ dialogVisible: true });
+  };
+  handleCancel = () => {
+    this.setState({ dialogVisible: false });
+  };
+ 
+  handleDelete = () => {
+    // The user has pressed the "Delete" button, so here you can do your own logic.
+    // ...Your logic
+    this.setState({ dialogVisible: false });
+  };
+
+  setGoalWalk = () =>{
+    this.showDialog();
+
+  }
 
   _subscribe = () => {
     console.log("실행스")
@@ -84,6 +110,7 @@ componentDidMount() {
         currentStepCount,
       });
     });
+    
 
     Pedometer.isAvailableAsync().then(
       result => {
@@ -131,7 +158,10 @@ componentDidMount() {
       latitude,
       longitude,
       latitudeDelta,
-      longitudeDelta
+      longitudeDelta,
+      goalWalk,
+      dialogVisible
+      
     } = this.state;
     return (
       <HealthPresenter
@@ -143,6 +173,11 @@ componentDidMount() {
         latitudeDelta = {latitudeDelta}
         longitudeDelta = {longitudeDelta}
         onMapPress ={this.onMapPress}
+        goalWalk = {goalWalk}
+        setGoalWalk = {this.setGoalWalk}
+        dialogVisible = {dialogVisible}
+        handleCancel = {this.handleCancel}
+        handleDelete = {this.handleDelete}
       ></HealthPresenter>
     );
   }
