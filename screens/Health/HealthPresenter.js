@@ -34,7 +34,11 @@ const CircleText = styled.Text`
   font-size: 50px;
   font-weight: bold;
 `;
-
+const SubText = styled.Text`
+  color: #2dcf93;
+  font-size: 20px;
+  font-weight: 400;
+`;
 const HealthPresenter = ({
   isPedometerAvailable,
   pastStepCount,
