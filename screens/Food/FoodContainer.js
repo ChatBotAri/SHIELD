@@ -8,7 +8,6 @@ export default class FoodContainer extends React.Component {
     // AsyncStorage.clear();
     this.loadData();
     this.state = {
-      fill: 60,
       nutrient: { kcal: 0, carbs: 0, protein: 0, fat: 0 },
       BreakfastNut: { kcal: 0, carbs: 0, protein: 0, fat: 0 },
       LunchNut: { kcal: 0, carbs: 0, protein: 0, fat: 0 },
@@ -43,7 +42,6 @@ export default class FoodContainer extends React.Component {
   render() {
     const {
       nutrient,
-      fill,
       BreakfastNut,
       LunchNut,
       DinnerNut,
@@ -52,7 +50,6 @@ export default class FoodContainer extends React.Component {
     return (
       <FoodPresenter
         changeValue={this.changeValue.bind(this)}
-        fill={fill}
         nutrient={nutrient}
         BreakfastNut={BreakfastNut}
         LunchNut={LunchNut}
