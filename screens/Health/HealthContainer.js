@@ -1,8 +1,16 @@
 import React from "react";
+import { Dimensions, StyleSheet } from 'react-native';
+import MapView from 'react-native-maps';
+import MapViewDirections from 'react-native-maps-directions';
 import {AsyncStorage} from "react-native";
 import { Pedometer } from "expo-sensors";
 import HealthPresenter from "./HealthPresenter";
+import Layout from "../../constants/Layout";
 
+const ASPECT_RATIO = Layout.width / Layout.height;
+const LATITUDE_DELTA = 0.0922;
+const LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO;
+const GOOGLE_MAPS_APIKEY = "AIzaSyD4Ug5uJJIuzhTb2TZpbpXSe1GvZsKPNPE";
 export default class HealthContainer extends React.Component {
   constructor(){
     super();
@@ -12,10 +20,29 @@ export default class HealthContainer extends React.Component {
       isPedometerAvailable: "checking",
       pastStepCount: 0,
       currentStepCount:0,
+      coordinates: [
+        {
+          latitude: 0,
+          longitude: 0,
+        },
+        {
+          latitude: 0,
+          longitude: 0,
+        },
+      ],
+      latitudeDelta: LATITUDE_DELTA,
+      longitudeDelta: LONGITUDE_DELTA,
     }
-
+    this.mapView = null;
   }
-
+  onMapPress = (e) => {
+    this.setState({
+      coordinates: [
+        ...this.state.coordinates,
+        e.nativeEvent.coordinate,
+      ],
+    });
+  }
 
   loadData =async()=>{
     const Data =await AsyncStorage.getItem("Steps");
@@ -29,9 +56,14 @@ export default class HealthContainer extends React.Component {
     }
   
 };
-  componentDidMount() {
+componentDidMount() {
+  navigator.geolocation.getCurrentPosition(
+    ({ coords: { latitude, longitude } }) =>
+      this.setState({ latitude, longitude }),
+    error => console.log(error)
+    );
     this._subscribe();
-  }
+}
 
   componentWillMount(){
     this.loadData();
@@ -96,12 +128,21 @@ export default class HealthContainer extends React.Component {
       isPedometerAvailable,
       pastStepCount,
       currentStepCount,
+      latitude,
+      longitude,
+      latitudeDelta,
+      longitudeDelta
     } = this.state;
     return (
       <HealthPresenter
         isPedometerAvailable ={isPedometerAvailable}
         pastStepCount = {pastStepCount}
         currentStepCount ={currentStepCount}
+        latitude = {latitude}
+        longitude = {longitude}
+        latitudeDelta = {latitudeDelta}
+        longitudeDelta = {longitudeDelta}
+        onMapPress ={this.onMapPress}
       ></HealthPresenter>
     );
   }

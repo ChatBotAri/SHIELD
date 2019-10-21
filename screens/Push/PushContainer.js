@@ -1,83 +1,76 @@
 import React, { Component } from "react";
-import { AsyncStorage, StyleSheet, Text, View } from "react-native";
-import init from "react_native_mqtt";
 import PushPresenter from "./PushPresenter";
-
-init({
-  size: 10000,
-  storageBackend: AsyncStorage,
-  defaultExpires: 1000 * 3600 * 24,
-  enableCache: true,
-  sync: {},
-});
+import client from "../../mqtt";
 
 
 export default class PushContainer extends Component {
   constructor(props) {
     super(props);
-
-    const client = new Paho.MQTT.Client("192.168.1.21", 9001, "/mqtt", "uname");
     console.log(client);
-    client.onConnectionLost = this.onConnectionLost;
+    client.subscribe("sensor/#")
     client.onMessageArrived = this.onMessageArrived;
-    client.connect({
-      onSuccess: this.onConnect,
-      useSSL: false,
-      onFailure: this.onFailure,
-    });
 
+      
     this.state = {
-      text: ["..."],
       client,
+      text: ["..."],
       connect: false,
-      currentGas: 0,
+      currentHeight: 0,
+      currentWeight: 0,
       currentTemp: 0,
-      currentDust: 0,
+      currentHeart: 0,
     };
+
+    // client.subscribe("sensor/#");
   }
-
-  Subconsole = entry => {
-    const { text } = this.state;
-    console.log(text);
+  onConnectionLost = responseObject => {
+    if (responseObject.errorCode !== 0) {
+       console.log("connection lost");
+       }
   };
-
   onConnect = () => {
     const { client } = this.state;
     console.log("success");
-    client.subscribe("sensor/#");
-    //client.publish('aaa','bbb');
-  };
+  };   
+  
   onFailure = error => {
     console.log(error);
     console.log("fail");
   };
 
-  onConnectionLost = responseObject => {
-    if (responseObject.errorCode !== 0) {
-      console.log("connection lost");
-    }
-  };
+
 
   onMessageArrived = message => {
-    if (message.destinationName === "sensor/gas") {
-      this.updatePayload(`${parseInt(message.payloadString)}`, "gas");
-      t_gas = message.payloadString;
+    if (message.destinationName === "sensor/height") {
+      this.updatePayload(`${parseInt(message.payloadString)}`, "height");
+      // t_height = message.payloadString;
+       console.log(message.payloadString);
+    } else if (message.destinationName === "sensor/weight") {
+      this.updatePayload(`${parseInt(message.payloadString)}`, "weight");
+      // t_temp = message.payloadString;
     } else if (message.destinationName === "sensor/temp") {
       this.updatePayload(`${parseInt(message.payloadString)}`, "temp");
-      t_temp = message.payloadString;
-    } else if (message.destinationName === "sensor/dust") {
-      this.updatePayload(`${parseInt(message.payloadString)}`, "dust");
-      t_dust = message.payloadString;
+      // t_dust = message.payloadString;
+    } else if (message.destinationName === "sensor/heart") {
+      this.updatePayload(`${parseInt(message.payloadString)}`, "heart");
+      // t_dust = message.payloadString;
     }
   };
   updatePayload = (Message, topic) => {
     const Current = {
-      Data: ({ currentTemp, currentGas, currentDust } = this.state),
+      Data: ({ currentHeight, currentWeight, currentTemp, currentHeart } = this.state),
     };
-    if (topic === "gas") {
-      if (Current.Data.currentGas !== Message) {
+    if (topic === "height") {
+      if (Current.Data.currentHeight !== Message) {
         this.setState({
-          currentGas: Message,
+          currentHeight: Message,
+        });
+      }
+    }
+    if (topic === "weight") {
+      if (Current.Data.currentWeight !== Message) {
+        this.setState({
+          currentWeight: Message,
         });
       }
     }
@@ -88,16 +81,16 @@ export default class PushContainer extends Component {
         });
       }
     }
-    if (topic === "dust") {
-      if (Current.Data.currentDust !== Message) {
+    if (topic === "heart") {
+      if (Current.Data.currentHeart !== Message) {
         this.setState({
-          currentDust: Message,
+          currentHeart: Message,
         });
       }
     }
   };
   render() {
-    const { text, client, connect, currentGas, currentDust, currentTemp } = this.state;
+    const { text, client, connect, currentHeight, currentWeight, currentTemp, currentHeart } = this.state;
     console.log(text);
 
     return (
@@ -105,9 +98,10 @@ export default class PushContainer extends Component {
         Subconsole={this.Subconsole}
         refresh={this.refresh}
         text={this.text}
-        currentGas={currentGas}
+        currentHeight={currentHeight}
+        currentWeight={currentWeight}
         currentTemp={currentTemp}
-        currentDust={currentDust}
+        currentHeart={currentHeart}
       />
     );
   }

@@ -3,6 +3,7 @@ import HomePresenter from "./HomePresenter";
 import Loader from "../../components/Loader";
 import axios from "axios";
 import { BaseDate, Hours } from "../../constants/Time";
+import client from "../../mqtt"
 
 const KAKAO_KEY = "d8d67d3d69ab7f44bc09d1ecf85da1f8";
 const DATA_KEY =
@@ -10,21 +11,50 @@ const DATA_KEY =
 const GOOGLE_KEY = "097d07bd00774c47988512cbecace037";
 
 export default class HomeContainer extends React.Component {
-  state = {
-    weatherLoaded: false,
-    Dust: null,
-    CurrentPosition: null,
-    Weather: null,
-    News: null,
-    FoodTip: null,
-    HealthTip: null,
+  constructor(props){
+    super(props);
+    client.connect({
+        onSuccess: this.onConnect,
+        useSSL: false,
+        onFailure: this.onFailure,
+      });    
+      client.onConnectionLost = this.onConnectionLost;
+
+    this.state = {
+      client,
+      weatherLoaded: false,
+      Dust: null,
+      CurrentPosition: null,
+      Weather: null,
+      News: null,
+      FoodTip: null,
+      HealthTip: null,
+    };
+  }
+  onConnectionLost = responseObject => {
+    if (responseObject.errorCode !== 0) {
+       console.log("connection lost");
+       }
   };
+  onConnect = () => {
+    const { client } = this.state;
+    console.log("success");
+  };   
+  
+  onFailure = error => {
+    console.log(error);
+    console.log("fail");
+  };
+  
+  
 
   refresh = () => {
     this.componentDidMount();
   };
 
+
   componentDidMount() {
+    const {client} = this.state;
     navigator.geolocation.getCurrentPosition(
       async position => {
         const local = await this.getLocalname(
@@ -58,7 +88,8 @@ export default class HomeContainer extends React.Component {
         const FoodTip = await this.getFoodTip();
 
         console.log(FoodTip);
-
+        client.publish("dust", Number(Dust.list[0].pm10Value).toString())
+        client.publish("semidust", Number(Dust.list[0].pm25Value).toString())
         this.setState({
           Weather,
           Dust,
@@ -213,6 +244,7 @@ export default class HomeContainer extends React.Component {
     );
     return news;
   };
+  
 
   render() {
     const {
