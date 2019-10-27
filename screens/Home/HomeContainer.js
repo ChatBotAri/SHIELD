@@ -4,6 +4,7 @@ import Loader from "../../components/Loader";
 import axios from "axios";
 import { BaseDate, Hours } from "../../constants/Time";
 import client from "../../mqtt"
+import {AsyncStorage} from "react-native";
 
 const KAKAO_KEY = "d8d67d3d69ab7f44bc09d1ecf85da1f8";
 const DATA_KEY =
@@ -62,6 +63,8 @@ export default class HomeContainer extends React.Component {
           position.coords.longitude,
         );
         console.log(position.coords.latitude, position.coords.longitude);
+        AsyncStorage.setItem("latitude", String(position.coords.latitude));
+        AsyncStorage.setItem("longitude", String(position.coords.longitude));
         CurrentPosition = local.documents[1].address_name;
         console.log(CurrentPosition);
 
