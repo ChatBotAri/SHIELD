@@ -109,7 +109,7 @@ const SnackPresenter = ({
       <Header>
         <KcalBax>
           <MyKcal>{SnackNut.kcal}</MyKcal>
-          <Kcal> / {myNut * 0.05} kcal(권장)</Kcal>
+          <Kcal> / {Math.floor(myNut * 0.05)} kcal(권장)</Kcal>
         </KcalBax>
         <ProgressBarAnimated
           width={Layout.width / 1.2}

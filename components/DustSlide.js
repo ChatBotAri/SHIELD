@@ -5,6 +5,7 @@ import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
 import Layout from "../constants/Layout";
 import SemiCircleProgress from "../constants/SemiCircleProgress/SemiCircleProgress";
 import { Entypo } from "@expo/vector-icons";
+import {LinearGradient} from "expo-linear-gradient"
 
 const Container = styled.View`
   flex: 1;
@@ -17,7 +18,7 @@ const Container = styled.View`
 const BgView = styled.View`
   width: 100%;
   height: ${Layout.height / 3.3};
-  background-color: #0f73d1;
+  background-color:#c2a334;
   position: absolute;
   border-radius: 40;
   justify-content:center;
@@ -63,8 +64,8 @@ const DustSlide = ({ Dust, CurrentPosition }) => (
           <SemiCircleProgress
             circleRadius={50}
             progressWidth={10}
-            progressShadowColor="#d4d4d4"
-            interiorCircleColor="#0f73d1"
+            progressShadowColor="#e6e6e6"
+            interiorCircleColor="#c2a334"
             percentage={Number(Dust.list[0].pm10Value) / 1.8}
             progressColor={DustOptions[Dust.list[0].pm10Grade1h].Color}
             interiorCircleStyle={{ paddingBottom: 3 }}
@@ -88,8 +89,8 @@ const DustSlide = ({ Dust, CurrentPosition }) => (
           <SemiCircleProgress
             circleRadius={50}
             progressWidth={10}
-            progressShadowColor="#d4d4d4"
-            interiorCircleColor="#0f73d1"
+            progressShadowColor="#e6e6e6"
+            interiorCircleColor="#c2a334"
             percentage={Number(Dust.list[0].pm25Value)}
             progressColor={DustOptions[Dust.list[0].pm25Grade1h].Color}
             interiorCircleStyle={{ paddingBottom: 3 }}
@@ -118,32 +119,35 @@ DustSlide.propType = {
 const styles = StyleSheet.create({
   text: {
     color: "white",
-    paddingBottom: 5
+    paddingTop:10,
+    paddingBottom: 5,
+    fontSize:15,
+    fontWeight:"bold"
   }
 });
 const DustOptions = {
   1: {
-    Color: "green",
+    Color: "#81defc",
     State: "좋음",
     iconName:"emoji-flirt"
   },
   2: {
-    Color: "blue",
+    Color: "#a4d143",
     State: "보통",
     iconName:"emoji-happy"
   },
   3: {
-    Color: "yellow",
+    Color: "#d68533",
     State: "나쁨",
     iconName:"emoji-sad"
   },
   4: {
-    Color: "red",
+    Color: "#ed3737",
     State: "매우나쁨",
     iconName:"emoji-sad"
   },
   "":{
-    Color: "green",
+    Color: "#81defc",
     State: "좋음",
     iconName:"emoji-flirt"
   }

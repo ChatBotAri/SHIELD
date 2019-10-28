@@ -7,15 +7,10 @@ export default class PushContainer extends Component {
   constructor(props) {
     super(props);
     // AsyncStorage.clear();
-    // console.log(client);
-    // client.subscribe("sensor/#");
-    // client.onMessageArrived = this.onMessageArrived;
-  
 
     this.state = {
-      // client,
-      text: ["..."],
-      connect: false,
+      // text: ["..."],
+      // connect: false,
       currentHeight: 0,
       currentWeight: 0,
       currentTemp: 0,
@@ -27,10 +22,9 @@ export default class PushContainer extends Component {
       weight: 0,
       activity:null,
       currentPosition: 0,
+      connected:null
     };
     this.loadData();
-    
-    // client.subscribe("sensor/#");
   }
 
   onPageChange() {
@@ -105,99 +99,95 @@ export default class PushContainer extends Component {
   loadData = async () => {
     const Data = await AsyncStorage.getItem("Nut");
     const JsonData = JSON.parse(Data);
-    if (await AsyncStorage.getItem("Weight")) {
+    if (await AsyncStorage.getItem("Activity")) {
       this.setState({
         age: await AsyncStorage.getItem("Age"),
         gender: await AsyncStorage.getItem("Gender"),
         height: await AsyncStorage.getItem("Height"),
         weight: await AsyncStorage.getItem("Weight"),
         activity: await AsyncStorage.getItem("Activity"),
-        currentPosition:5
+        currentPosition:5,
+        connected:await AsyncStorage.getItem("Connected")
       });
-      AsyncStorage.setItem("CurrentPosition",String(5))
-
+      AsyncStorage.setItem("CurrentPosition",String(5));
+      console.log("연결:"+this.state.connected)
     }
     if(JsonData){
       this.setState({nutrient:JsonData})
     }else{
       this.setState({nutrient:{kcal:0, carbs: 0, protein: 0, fat: 0}})
     }
+
+    const connected = await AsyncStorage.getItem("Connected");
+
+    if(connected===1){
+      client.subscribe("sensor/#");
+      client.onMessageArrived = this.onMessageArrived;
+    }
   };
 
-  // onConnectionLost = responseObject => {
-  //   if (responseObject.errorCode !== 0) {
-  //     console.log("connection lost");
-  //   }
-  // };
-  // onConnect = () => {
-  //   const { client } = this.state;
-  //   console.log("success");
-  // };
 
-  // onFailure = error => {
-  //   console.log(error);
-  //   console.log("fail");
-  // };
+  onMessageArrived = message => {
+    if (message.destinationName === "sensor/distance") {
+      this.updatePayload(`${parseInt(message.payloadString)}`, "height");
+      // t_height = message.payloadString;
+      // console.log(message.payloadString);
+    } else if (message.destinationName === "sensor/weight") {
+      this.updatePayload(`${parseInt(message.payloadString)}`, "weight");
+      // t_temp = message.payloadString;
+    } else if (message.destinationName === "sensor/temp") {
+      this.updatePayload(`${parseInt(message.payloadString)}`, "temp");
+      // t_dust = message.payloadString;
+    } else if (message.destinationName === "sensor/heart") {
+      this.updatePayload(`${parseInt(message.payloadString)}`, "heart");
+      // t_dust = message.payloadString;
+    }
+  };
+  updatePayload = (Message, topic) => {
+    const Current = {
+      Data: ({
+        currentHeight,
+        currentWeight,
+        currentTemp,
+        currentHeart,
+      } = this.state),
+    };
+    if (topic === "height") {
+      if (Current.Data.currentHeight !== Message) {
+        this.setState({
+          currentHeight: Message,
+        });
+      }
+    }
+    if (topic === "weight") {
+      if (Current.Data.currentWeight !== Message) {
+        this.setState({
+          currentWeight: Message,
+        });
+      }
+    }
+    if (topic === "temp") {
+      if (Current.Data.currentTemp !== Message) {
+        this.setState({
+          currentTemp: Message,
+        });
+      }
+    }
+    if (topic === "heart") {
+      if (Current.Data.currentHeart !== Message) {
+        this.setState({
+          currentHeart: Message,
+        });
+      }
+    }
+  };
 
-  // onMessageArrived = message => {
-  //   if (message.destinationName === "sensor/height") {
-  //     this.updatePayload(`${parseInt(message.payloadString)}`, "height");
-  //     // t_height = message.payloadString;
-  //     console.log(message.payloadString);
-  //   } else if (message.destinationName === "sensor/weight") {
-  //     this.updatePayload(`${parseInt(message.payloadString)}`, "weight");
-  //     // t_temp = message.payloadString;
-  //   } else if (message.destinationName === "sensor/temp") {
-  //     this.updatePayload(`${parseInt(message.payloadString)}`, "temp");
-  //     // t_dust = message.payloadString;
-  //   } else if (message.destinationName === "sensor/heart") {
-  //     this.updatePayload(`${parseInt(message.payloadString)}`, "heart");
-  //     // t_dust = message.payloadString;
-  //   }
-  // };
-  // updatePayload = (Message, topic) => {
-  //   const Current = {
-  //     Data: ({
-  //       currentHeight,
-  //       currentWeight,
-  //       currentTemp,
-  //       currentHeart,
-  //     } = this.state),
-  //   };
-  //   if (topic === "height") {
-  //     if (Current.Data.currentHeight !== Message) {
-  //       this.setState({
-  //         currentHeight: Message,
-  //       });
-  //     }
-  //   }
-  //   if (topic === "weight") {
-  //     if (Current.Data.currentWeight !== Message) {
-  //       this.setState({
-  //         currentWeight: Message,
-  //       });
-  //     }
-  //   }
-  //   if (topic === "temp") {
-  //     if (Current.Data.currentTemp !== Message) {
-  //       this.setState({
-  //         currentTemp: Message,
-  //       });
-  //     }
-  //   }
-  //   if (topic === "heart") {
-  //     if (Current.Data.currentHeart !== Message) {
-  //       this.setState({
-  //         currentHeart: Message,
-  //       });
-  //     }
-  //   }
-  // };
+
   render() {
     const {
-      text,
-      client,
-      connect,
+      // text,
+      // client,
+      // connect,
       currentHeight,
       currentWeight,
       currentTemp,
@@ -209,7 +199,12 @@ export default class PushContainer extends Component {
       weight,
       activity,
       currentPosition,
+      connected
     } = this.state;
+    // console.log("h:",currentHeight)
+    // console.log("w:",currentWeight)
+    // console.log("t:",currentTemp)
+    // console.log("b:",currentHeart)
     
     return (
       <PushPresenter
@@ -232,12 +227,13 @@ export default class PushContainer extends Component {
         nutrient={nutrient}
         Subconsole={this.Subconsole}
         refresh={this.refresh}
-        text={this.text}
+        // text={this.text}
         currentHeight={currentHeight}
         currentWeight={currentWeight}
         currentTemp={currentTemp}
         currentHeart={currentHeart}
         currentPosition={currentPosition}
+        connected={connected}
       />
     );
   }

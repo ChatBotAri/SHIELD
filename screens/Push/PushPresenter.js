@@ -175,9 +175,10 @@ const PushPresenter = ({
   nutrient,
   navigation,
   connect,
-  currentGas,
+  currentHeight,
+  currentWeight,
   currentTemp,
-  currentDust,
+  currentHeart,
   BMR,
   age,
   gender,
@@ -190,6 +191,7 @@ const PushPresenter = ({
   changeWeight,
   changeActivity,
   currentPosition,
+  connected
 }) => (
   <Container>
     <TitleBox>
@@ -292,7 +294,7 @@ const PushPresenter = ({
             <CompValue>
               <Value>{height}</Value>
               <Unit>cm</Unit>
-              <Dialog type="선택" name="키" changeValue={changeHeight} />
+              <Dialog type="선택" name="키" changeValue={changeHeight} sensorValue={currentHeight} connected={connected}/>
             </CompValue>
           </CompBottom>
         </Component>
@@ -305,7 +307,7 @@ const PushPresenter = ({
             <CompValue>
               <Value>{weight}</Value>
               <Unit>kg</Unit>
-              <Dialog type="선택" name="몸무게" changeValue={changeWeight} />
+              <Dialog type="선택" name="몸무게" changeValue={changeWeight} sensorValue={currentWeight} connected={connected} />
             </CompValue>
           </CompBottom>
         </Component>

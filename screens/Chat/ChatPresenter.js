@@ -12,14 +12,14 @@ import propType from "prop-types";
 import Message from "../../components/Message";
 
 const Container = styled.ScrollView`
-  background-color: ${BG_COLOR};
+  /* background-color: ${BG_COLOR}; */
   /* flex-direction: column-reverse; */
 `;
 
 const InputContainer = styled.View`
   flex-direction: row;
   align-items: center;
-  background-color: rgba(255, 255, 255, 1);
+  background-color: #d4d4d4;
 `;
 const Input = styled.TextInput`
   background-color: #f2f2f2;
@@ -58,11 +58,14 @@ const DanbeeMsg = styled.View`
   max-width: 220px;
 `;
 
-const DanbeeText = styled.Text``;
+const DanbeeText = styled.Text`
+  font-weight:600;
+  
+`;
 
 const TimeText = styled.Text`
-  font-size: 10px;
-  color: ${GREY_COLOR};
+  font-size: 12px;
+  color:#808080;
 `;
 
 const ChatPresenter = ({
@@ -89,11 +92,11 @@ const ChatPresenter = ({
     >
       <DanbeeContainer>
         <DanbeeMsg>
-          <Text>
+          <DanbeeText>
             {welcomeResult
               ? welcomeResult.data.responseSet.result.result[0].message
               : null}
-          </Text>
+          </DanbeeText>
         </DanbeeMsg>
         <TimeText>
           {date.getHours() < 13
