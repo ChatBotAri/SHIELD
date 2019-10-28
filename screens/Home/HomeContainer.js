@@ -4,6 +4,7 @@ import Loader from "../../components/Loader";
 import axios from "axios";
 import { BaseDate, Hours } from "../../constants/Time";
 import client from "../../mqtt"
+import {AsyncStorage} from "react-native";
 
 const KAKAO_KEY = "d8d67d3d69ab7f44bc09d1ecf85da1f8";
 const DATA_KEY =
