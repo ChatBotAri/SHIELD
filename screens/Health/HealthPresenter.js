@@ -15,6 +15,7 @@ import AwesomeButton from "react-native-really-awesome-button";
 import Dialog from "react-native-dialog";
 import MapView, { Polyline } from "react-native-maps";
 import { Stopwatch, Timer } from "react-native-stopwatch-timer";
+import ProgressBarAnimated from "react-native-progress-bar-animated";
 
 const ASPECT_RATIO = Layout.width / Layout.height;
 const LATITUDE_DELTA = 0.0009;
@@ -28,51 +29,43 @@ const Container = styled.ScrollView``;
 
 const MapContainer = styled.View`
   height: ${Layout.height * 0.4};
-  margin: 10px;
+  width: ${Layout.width * 0.9};
+  margin: 0 20px 0 20px;
   border-radius: 15px;
   border: 1px solid black;
 `;
 const TimerDistanceContatiner = styled.View`
-  height: ${Layout.height * 0.2};
+  height: ${Layout.height * 0.15};
+  width: ${Layout.width * 0.9};
   border-radius: 15px;
   border: 1px solid black;
-`;
-
-const CircleContainer = styled.View`
-  padding-top: 12px;
-  align-items: center;
-  padding-bottom: 25px;
-`;
-
-const CircleText = styled.Text`
-  color: #2dcf93;
-  font-size: 50px;
-  font-weight: bold;
-`;
-const SubText = styled.Text`
-  color: #2dcf93;
-  font-size: 20px;
-  font-weight: 400;
-`;
-const TitleContainer = styled.View`
-  align-items: center;
-  padding-top: 15px;
-`;
-const Title = styled.Text`
-  font-size: 15px;
-  font-weight: 600;
-`;
-const BtnText = styled.Text`
-  font-weight: bold;
+  margin: 20px;
 `;
 
 const SliderView = styled.View`
   flex: 1;
   flex-direction: column;
   justify-content: center;
+  align-items: center;
+  margin-bottom: 10px;
 `;
+
 const SliderText = styled.Text`
-  align-text: center;
+  font-size: 13px;
+  margin-bottom: 3px;
+`;
+
+const ComponentTitleContainer = styled.View`
+  margin: 20px 20px 10px 20px;
+  width: ${Layout.width * 0.7};
+`;
+// border-bottom-width: 1;
+// border-bottom-color: black;
+
+const ComponentTitleText = styled.Text`
+  font-size: 15px;
+  font-weight: 600;
+  padding-left: 20px;
 `;
 
 const ComponentContainer = styled.View`
@@ -83,7 +76,7 @@ const ComponentContainer = styled.View`
 `;
 
 const Component = styled.View`
-  width: 70%;
+  width: ${Layout.width * 0.9};
   background-color: #eeffcc;
   border-radius: 25px;
   padding: 10px 30px;
@@ -97,15 +90,41 @@ const ComponentText = styled.Text`
   font-size: 15px;
 `;
 const Body = styled.View`
-  padding-top: 30px;
+  padding-top: 10px;
   width: 100%;
   padding-bottom: 30px;
+  margin-left: 20px;
 `;
 
 const TextBox = styled.View`
   width: 80%;
   flex-direction: row;
   justify-content: space-between;
+`;
+
+const TimeContainer = styled.View`
+  width: 100%;
+  align-items: center;
+  justify-content: center;
+  margin-top: 20px;
+`;
+const StartStopContainer = styled.View`
+  margin: 10px;
+  flex-direction: row;
+  justify-content: space-around;
+`;
+const TitleBox = styled.View`
+  padding-left: 20px;
+  padding-top: 15px;
+  flex-direction: row;
+  justify-content: space-between;
+  padding-right: 20px;
+`;
+
+const TitleText = styled.Text`
+  font-size: 20px;
+  font-weight: 600;
+  color: black;
 `;
 
 const handleTimerComplete = () => alert("Custom Completion Function");
@@ -118,7 +137,7 @@ const options = {
     alignItems: "center",
   },
   text: {
-    fontSize: 30,
+    fontSize: 28,
     color: "black",
     marginLeft: 7,
   },
@@ -154,138 +173,55 @@ const HealthPresenter = ({
   isDisabled,
   fullTime,
   getFullTime,
-  speed
+  speed,
+  movingDistance,
+  kcal
 }) => (
   <MainContainer>
     <Container>
-      {/* <TitleContainer>
-        <Title>걸음 수 목표 :
-        <AwesomeButton
-          width={70}
-          height={40}
-          borderRadius={50}
-          style={{ marginRight: 10 }}
-          onPress={() => {
-            showDialog();
-          }}
-        >
-          <BtnText>입력</BtnText>
-        </AwesomeButton>
-        <Dialog.Container visible={dialogVisible}>
-          <Dialog.Input
-            label="걸음 수 목표 설정"
-            onChangeText
-          
-            }}
-          ></Dialog.Input>
-          <Dialog.Button
-            label="Cancel"
-            onPress={() => {
-              handleCancel();
-            }}
-          />
-          <Dialog.Button
-            label="Change"
-            onPress={() => {
-              setGoalWal
-            }}
-          />
-        </Dialog.Container>
-      </TitleContainer> */}
-      {/* <CircleContainer>
-        <AnimatedCircularProgress
-          size={Layout.width * 0.65}
-          width={20}
-          fill={currentStepCount}
-          backgroundWidth={25}
-          backgroundColor="#eeffcc"
-          tintColor="#2dcf93"
-          rotation={0}
-        >
-        {fill => (
-          <>
-          <CircleText>{Math.floor(currentStepCount)}</CircleText>
-          <SubText>walks</SubText>
-          </>
-          )}
-          </AnimatedCircularProgress>
-        </CircleContainer> */}
+      <TitleBox>
+        <TitleText>Training</TitleText>
+      </TitleBox>
       <TimerDistanceContatiner>
-        <View
-          style={{ flex: 1, justifyContent: "center", alignItems: "center" }}
-        >
-          <View
-            style={{
-              flex: 1,
-              marginTop: 32,
-              alignItems: "center",
-              justifyContent: "center",
-            }}
-          >
-            <Stopwatch
-              laps
-              msecs
-              start={isStopwatchStart}
-              //To start
-              reset={resetStopwatch}
-              //To reset
-              options={options}
-              //options for the styling
-              getTime={time => {
-                getFormattedTime();
-                fullTime = time;
-              }}
-            />
-            <SliderView>
-              {currentDistance ? (
-                <Text>{String(currentDistance / 1000) + "km"}</Text>
-              ) : (
-                <Text>{String(goalDistance / 1000) + "km"}</Text>
-              )}
-              <Slider
-                width={Layout.width * 0.7}
-                step={100}
-                maximumValue={10000}
-                onValueChange={value => {
-                  value == 10000 || value == 0
-                    ? setGoalDistance(value)
-                    : setGoalDistance(value + 100);
-                }}
-                disabled={isDisabled}
-                value={goalDistance}
-              ></Slider>
-            </SliderView>
-          </View>
-          {/* <View
-            style={{
-              flex: 1,
-              marginTop: 32,
-              alignItems: "center",
-              justifyContent: "center",
-            }}
-          >
-            <Timer 
-            totalDuration={this.state.timerDuration} msecs 
-            //Time Duration
-            start={this.state.isTimerStart}
+        <TimeContainer>
+          <Stopwatch
+            laps
+            start={isStopwatchStart}
             //To start
-            reset={this.state.resetTimer}
+            reset={resetStopwatch}
             //To reset
             options={options}
             //options for the styling
-            handleFinish={handleTimerComplete}
-            //can call a function On finish of the time 
-            getTime={this.getFormattedTime} />
-          <TouchableHighlight onPress={this.startStopTimer}>
-            <Text style={{fontSize: 20, marginTop:10}}>
-               {!this.state.isTimerStart ? "START" : "STOP"}
+            getTime={time => {
+              getFormattedTime();
+              fullTime = time;
+            }}
+          />
+        </TimeContainer>
+
+        <StartStopContainer>
+          <TouchableHighlight
+            onPress={() => {
+              startStopStopWatch();
+              repeat();
+            }}
+          >
+            <Text style={{ fontSize: 20, marginTop: 10 }}>
+              {!isStopwatchStart ? "START" : "STOP"}
             </Text>
           </TouchableHighlight>
-          <TouchableHighlight onPress={this.resetTimer}>
-            <Text style={{fontSize: 20, marginTop:10}}>RESET</Text>
+          <TouchableHighlight
+            onPress={() => {
+              Promise.all([funcresetStopwatch(), getFullTime(fullTime)]).then(
+                () => {
+                  finish();
+                },
+              );
+            }}
+          >
+            <Text style={{ fontSize: 20, marginTop: 10 }}>RESET</Text>
           </TouchableHighlight>
-          </View> */}
-        </View>
+        </StartStopContainer>
       </TimerDistanceContatiner>
       <MapContainer>
         <MapView
@@ -312,75 +248,79 @@ const HealthPresenter = ({
           ></Polyline>
         </MapView>
       </MapContainer>
-      <View
-        style={{
-          flex: 1,
-          flexDirection: "row",
-          marginTop: 32,
-          alignItems: "center",
-          justifyContent: "space-around",
-        }}
-      >
-        <TouchableHighlight
-          onPress={() => {
-            startStopStopWatch();
-            repeat();
+      
+      
+      <ComponentTitleContainer>
+        <ComponentTitleText>목표거리</ComponentTitleText>
+      </ComponentTitleContainer>
+      <SliderView>
+        {currentDistance ? (
+          <Text>{String(currentDistance / 1000) + "km"}</Text>
+        ) : (
+          <Text>{String(goalDistance / 1000) + "km"}</Text>
+        )}
+        <Slider
+          width={Layout.width * 0.7}
+          step={100}
+          maximumValue={10000}
+          onValueChange={value => {
+            value == 10000 || value == 0
+              ? setGoalDistance(value)
+              : setGoalDistance(value + 100);
           }}
-        >
-          <Text style={{ fontSize: 20, marginTop: 10 }}>
-            {!isStopwatchStart ? "START" : "STOP"}
-          </Text>
-        </TouchableHighlight>
-        <TouchableHighlight
-          onPress={() => {
-            Promise.all([funcresetStopwatch(), getFullTime(fullTime)]).then(
-              () => {
-                finish();
-              },
-            );
-          }}
-        >
-          <Text style={{ fontSize: 20, marginTop: 10 }}>RESET</Text>
-        </TouchableHighlight>
-      </View>
-      <Body>
-        <ComponentContainer>
-          <Component style={{ borderWidth: 2, borderColor: "green" }}>
-            <TextBox>
-              <ComponentText>평균 속력 *</ComponentText>
-              <ComponentText>{speed} km/h</ComponentText>
-            </TextBox>
-          </Component>
-        </ComponentContainer>
-        <ComponentContainer>
-          <Component style={{ borderWidth: 2, borderColor: "green" }}>
-            <TextBox>
-              <ComponentText>나이 *</ComponentText>
-              <ComponentText>25세</ComponentText>
-            </TextBox>
-          </Component>
-        </ComponentContainer>
-        <ComponentContainer>
-          <Component style={{ borderWidth: 2, borderColor: "green" }}>
-            <TextBox>
-              <ComponentText>나이 *</ComponentText>
-              <ComponentText>25세</ComponentText>
-            </TextBox>
-          </Component>
-        </ComponentContainer>
-        <ComponentContainer>
-          <Component style={{ borderWidth: 2, borderColor: "green" }}>
-            <TextBox>
-              <ComponentText>나이 *</ComponentText>
-              <ComponentText>25세</ComponentText>
-            </TextBox>
-          </Component>
-        </ComponentContainer>
-
-      </Body>
+          disabled={isDisabled}
+          value={goalDistance}
+        ></Slider>
+      </SliderView>
+        {/* <ProgressBarAnimated
+          width={Layout.width /1.2}
+          value={
+            goalDistance
+          }
+          maxValue={goalDistance}
+          height={20}
+          backgroundColor="#2dcf93"
+          borderColor="#2dcf93"
+        /> */}
+          <ComponentTitleContainer>
+            <ComponentTitleText>운동 결과 </ComponentTitleText>
+          </ComponentTitleContainer>
+        <Body>
+          <ComponentContainer>
+            <Component style={{ borderWidth: 2, borderColor: "green" }}>
+              <TextBox>
+                <ComponentText>평균 속력 *</ComponentText>
+                <ComponentText>{speed} km/h</ComponentText>
+              </TextBox>
+            </Component>
+          </ComponentContainer>
+          <ComponentContainer>
+            <Component style={{ borderWidth: 2, borderColor: "green" }}>
+              <TextBox>
+                <ComponentText>소모 칼로리 *</ComponentText>
+                <ComponentText>{kcal} kcal</ComponentText>
+              </TextBox>
+            </Component>
+          </ComponentContainer>
+          <ComponentContainer>
+            <Component style={{ borderWidth: 2, borderColor: "green" }}>
+              <TextBox>
+                <ComponentText>운동 거리 *</ComponentText>
+                <ComponentText>{movingDistance} km</ComponentText>
+              </TextBox>
+            </Component>
+          </ComponentContainer>
+          <ComponentContainer>
+            <Component style={{ borderWidth: 2, borderColor: "green" }}>
+              <TextBox>
+                <ComponentText>오늘의 걸음 수 *</ComponentText>
+                <ComponentText>{currentStepCount}</ComponentText>
+              </TextBox>
+            </Component>
+          </ComponentContainer>
+        </Body>
       <Text>Pedometer.isAvailableAsync(): {isPedometerAvailable}</Text>
       <Text>Steps taken in the last 24 hours: {pastStepCount}</Text>
-      <Text>Walk! And watch this go up: {currentStepCount}</Text>
     </Container>
   </MainContainer>
 );

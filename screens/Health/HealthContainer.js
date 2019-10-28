@@ -41,6 +41,7 @@ export default class HealthContainer extends React.Component {
       fullTime: null,
       speed: 0,
       currentWeight: 0,
+      kcal: 0
     };
     this.startStopTimer = this.startStopTimer.bind(this);
     this.resetTimer = this.resetTimer.bind(this);
@@ -247,6 +248,7 @@ export default class HealthContainer extends React.Component {
     this.setState({ dialogVisible: false });
   };
 
+
   _subscribe = () => {
     console.log("실행스");
     this._subscription = Pedometer.watchStepCount(result => {
@@ -315,6 +317,8 @@ export default class HealthContainer extends React.Component {
       currentDistance,
       isDisabled,
       speed,
+      movingDistance,
+      kcal
     } = this.state;
     return (
       <HealthPresenter
@@ -349,6 +353,8 @@ export default class HealthContainer extends React.Component {
         isDisabled={isDisabled}
         getFullTime={this.getFullTime}
         speed={speed}
+        movingDistance ={ movingDistance}
+        kcal = {kcal}
       ></HealthPresenter>
     );
   }
