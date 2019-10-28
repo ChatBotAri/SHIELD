@@ -16,8 +16,6 @@ import Dialog from "react-native-dialog";
 import MapView, { Polyline } from "react-native-maps";
 import { Stopwatch, Timer } from "react-native-stopwatch-timer";
 
-const GOOGLE_MAPS_APIKEY = "AIzaSyCjvAvOMz5xNXfdBqxTxgDOohTA82eC0zo";
-
 const ASPECT_RATIO = Layout.width / Layout.height;
 const LATITUDE_DELTA = 0.0009;
 const LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO;
@@ -77,6 +75,39 @@ const SliderText = styled.Text`
   align-text: center;
 `;
 
+const ComponentContainer = styled.View`
+  flex-direction: row;
+  justify-content: space-between;
+  padding-bottom: 30px;
+  align-items: center;
+`;
+
+const Component = styled.View`
+  width: 70%;
+  background-color: #eeffcc;
+  border-radius: 25px;
+  padding: 10px 30px;
+  flex-direction: row;
+  align-items: center;
+`;
+
+const ComponentText = styled.Text`
+  font-weight: bold;
+  color: green;
+  font-size: 15px;
+`;
+const Body = styled.View`
+  padding-top: 30px;
+  width: 100%;
+  padding-bottom: 30px;
+`;
+
+const TextBox = styled.View`
+  width: 80%;
+  flex-direction: row;
+  justify-content: space-between;
+`;
+
 const handleTimerComplete = () => alert("Custom Completion Function");
 const options = {
   container: {
@@ -97,8 +128,6 @@ const HealthPresenter = ({
   isPedometerAvailable,
   pastStepCount,
   currentStepCount,
-  goalWalk,
-  setGoalWalk,
   dialogVisible,
   handleCancel,
   handleDelete,
@@ -122,12 +151,15 @@ const HealthPresenter = ({
   goalDistance,
   isPolyline,
   currentDistance,
-  isDisabled
+  isDisabled,
+  fullTime,
+  getFullTime,
+  speed
 }) => (
   <MainContainer>
     <Container>
       {/* <TitleContainer>
-        <Title>걸음 수 목표 : {goalWalk} walk</Title>
+        <Title>걸음 수 목표 :
         <AwesomeButton
           width={70}
           height={40}
@@ -142,8 +174,8 @@ const HealthPresenter = ({
         <Dialog.Container visible={dialogVisible}>
           <Dialog.Input
             label="걸음 수 목표 설정"
-            onChangeText={goalWalk => {
-              goalWalk = goalWalk;
+            onChangeText
+          
             }}
           ></Dialog.Input>
           <Dialog.Button
@@ -155,7 +187,7 @@ const HealthPresenter = ({
           <Dialog.Button
             label="Change"
             onPress={() => {
-              setGoalWalk(goalWalk);
+              setGoalWal
             }}
           />
         </Dialog.Container>
@@ -199,7 +231,10 @@ const HealthPresenter = ({
               //To reset
               options={options}
               //options for the styling
-              getTime={getFormattedTime}
+              getTime={time => {
+                getFormattedTime();
+                fullTime = time;
+              }}
             />
             <SliderView>
               {currentDistance ? (
@@ -212,9 +247,9 @@ const HealthPresenter = ({
                 step={100}
                 maximumValue={10000}
                 onValueChange={value => {
-                  value == 10000 || value == 0 ?
-                  setGoalDistance(value):
-                  setGoalDistance(value+100)
+                  value == 10000 || value == 0
+                    ? setGoalDistance(value)
+                    : setGoalDistance(value + 100);
                 }}
                 disabled={isDisabled}
                 value={goalDistance}
@@ -298,14 +333,51 @@ const HealthPresenter = ({
         </TouchableHighlight>
         <TouchableHighlight
           onPress={() => {
-            funcresetStopwatch();
-            finish();
-            
+            Promise.all([funcresetStopwatch(), getFullTime(fullTime)]).then(
+              () => {
+                finish();
+              },
+            );
           }}
         >
           <Text style={{ fontSize: 20, marginTop: 10 }}>RESET</Text>
         </TouchableHighlight>
       </View>
+      <Body>
+        <ComponentContainer>
+          <Component style={{ borderWidth: 2, borderColor: "green" }}>
+            <TextBox>
+              <ComponentText>평균 속력 *</ComponentText>
+              <ComponentText>{speed} km/h</ComponentText>
+            </TextBox>
+          </Component>
+        </ComponentContainer>
+        <ComponentContainer>
+          <Component style={{ borderWidth: 2, borderColor: "green" }}>
+            <TextBox>
+              <ComponentText>나이 *</ComponentText>
+              <ComponentText>25세</ComponentText>
+            </TextBox>
+          </Component>
+        </ComponentContainer>
+        <ComponentContainer>
+          <Component style={{ borderWidth: 2, borderColor: "green" }}>
+            <TextBox>
+              <ComponentText>나이 *</ComponentText>
+              <ComponentText>25세</ComponentText>
+            </TextBox>
+          </Component>
+        </ComponentContainer>
+        <ComponentContainer>
+          <Component style={{ borderWidth: 2, borderColor: "green" }}>
+            <TextBox>
+              <ComponentText>나이 *</ComponentText>
+              <ComponentText>25세</ComponentText>
+            </TextBox>
+          </Component>
+        </ComponentContainer>
+
+      </Body>
       <Text>Pedometer.isAvailableAsync(): {isPedometerAvailable}</Text>
       <Text>Steps taken in the last 24 hours: {pastStepCount}</Text>
       <Text>Walk! And watch this go up: {currentStepCount}</Text>

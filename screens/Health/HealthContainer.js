@@ -25,7 +25,6 @@ export default class HealthContainer extends React.Component {
       initLongitude: 0,
       latitudeDelta: LATITUDE_DELTA,
       longitudeDelta: LONGITUDE_DELTA,
-      goalWalk: 0,
       dialogVisible: false,
       coordinates: [],
       count: 0,
@@ -39,6 +38,9 @@ export default class HealthContainer extends React.Component {
       movingDistance: 0,
       currentDistance: 0,
       isDisabled: false,
+      fullTime: null,
+      speed: 0,
+      currentWeight: 0,
     };
     this.startStopTimer = this.startStopTimer.bind(this);
     this.resetTimer = this.resetTimer.bind(this);
@@ -48,6 +50,26 @@ export default class HealthContainer extends React.Component {
     this.getCurrent();
   }
 
+  getFullTime = time => {
+    let hour, minutes, seconds, fullseconds;
+    hour = time.split(":")[0];
+    minutes = time.split(":")[1];
+    seconds = time.split(":")[2];
+    fullseconds =
+      parseInt(hour) * 60 * 60 + parseInt(minutes) * 60 + parseInt(seconds);
+
+    Promise.all([this.setState({ fullTime: fullseconds })]).then(() => {
+      console.log(this.state.fullTime);
+      this.setState({
+        speed: parseFloat(
+          ((this.state.movingDistance * 1000) / fullseconds / 60 / 60).toFixed(
+            3,
+          ),
+        ),
+      });
+      console.log(this.state.speed);
+    });
+  };
   setGoalDistance = value => {
     console.log(value);
     this.setState({
@@ -108,14 +130,25 @@ export default class HealthContainer extends React.Component {
     !this.state.isPolyline
       ? this.setState({ isPolyline: true })
       : this.setState({ isPolyline: false });
-    this.setState({isDisabled : true});
+    this.setState({ isDisabled: true });
   };
   finish = () => {
     clearInterval(this.timer);
-    this.setState({ coordinates: [], isPolyline: false, movingDistance: 0 , isDisabled: false});
-
+    this.setState({
+      coordinates: [],
+      isPolyline: false,
+      movingDistance: 0,
+      isDisabled: false,
+    });
 
     console.log("finish");
+    if (this.state.speed < 8) {
+      this.setState((prevState) => ({kcal: prevState.kcal + 0.9 * (this.state.currentWeight-8) * 4 / this.state.time /60/60}));
+    }
+    else {
+      this.setState((prevState) => ({kcal: prevState.kcal + 2 * (this.state.currentWeight-8) * 4 / this.state.time /60/60}));
+    }
+    
   };
   getCurrent = () => {
     //setInterval(()=>{
@@ -127,7 +160,12 @@ export default class HealthContainer extends React.Component {
           longitude: position.coords.longitude,
         };
 
-        this.state.isPolyline ? this.addCoord(coords) : null;
+        this.state.isPolyline &&
+        JSON.stringify(
+          this.state.coordinates[this.state.coordinates.length - 1],
+        ) !== JSON.stringify(coords)
+          ? this.addCoord(coords)
+          : null;
 
         if (this.state.initLatitude == 0) {
           this.setState({
@@ -209,10 +247,6 @@ export default class HealthContainer extends React.Component {
     this.setState({ dialogVisible: false });
   };
 
-  setGoalWalk = () => {
-    this.setState({ goalWalk });
-  };
-
   _subscribe = () => {
     console.log("실행스");
     this._subscription = Pedometer.watchStepCount(result => {
@@ -272,7 +306,6 @@ export default class HealthContainer extends React.Component {
       isPedometerAvailable,
       pastStepCount,
       currentStepCount,
-      goalWalk,
       dialogVisible,
       coordinates,
       initLatitude,
@@ -281,6 +314,7 @@ export default class HealthContainer extends React.Component {
       isPolyline,
       currentDistance,
       isDisabled,
+      speed,
     } = this.state;
     return (
       <HealthPresenter
@@ -288,8 +322,6 @@ export default class HealthContainer extends React.Component {
         pastStepCount={pastStepCount}
         currentStepCount={currentStepCount}
         onMapPress={this.onMapPress}
-        goalWalk={goalWalk}
-        setGoalWalk={this.setGoalWalk}
         dialogVisible={dialogVisible}
         handleCancel={this.handleCancel}
         handleDelete={this.handleDelete}
@@ -315,6 +347,8 @@ export default class HealthContainer extends React.Component {
         isPolyline={isPolyline}
         currentDistance={currentDistance}
         isDisabled={isDisabled}
+        getFullTime={this.getFullTime}
+        speed={speed}
       ></HealthPresenter>
     );
   }
