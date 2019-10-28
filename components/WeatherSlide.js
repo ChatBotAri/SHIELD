@@ -18,7 +18,7 @@ const Container = styled.View`
 const BgImage = styled.Image`
   width: 100%;
   height: ${Layout.height / 3.3};
-  opacity: 0.8;
+  opacity: 0.9;
   position: absolute;
   border-radius: 40;
 `;
@@ -78,8 +78,7 @@ const WeatherSlide = ({ Weather, CurrentPosition, refresh }) => (
   <Container>
     <BgImage
       source={{
-        uri:
-          "https://images.unsplash.com/photo-1500740516770-92bd004b996e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1952&q=80",
+        uri:WeatherOptions[CheakSKY(Weather)].URL
       }}
       resizeMode="cover"
     />
@@ -145,21 +144,27 @@ const WeatherSlide = ({ Weather, CurrentPosition, refresh }) => (
 const WeatherOptions = {
   맑음: {
     iconName: "weather-sunny",
+    URL:"https://images.unsplash.com/photo-1542017900534-7cdb716ec291?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1050&q=80"
   },
   비: {
-    iconName: "weather-rainy",
+    iconName: "weather-pouring",
+    URL:"https://images.unsplash.com/photo-1516469727881-f4458e7cee17?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1050&q=80"
   },
   소나기: {
     iconName: "weather-pouring",
+    URL:"https://images.unsplash.com/photo-1516469727881-f4458e7cee17?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1050&q=80"
   },
   눈: {
     iconName: "weather-snowy",
+    URL:"https://images.unsplash.com/photo-1544274411-a7afe6230711?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1050&q=80"
   },
   구름많음: {
     iconName: "weather-cloudy",
+    URL:"https://images.unsplash.com/photo-1509803874385-db7c23652552?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1050&q=80"
   },
   흐림: {
     iconName: "weather-fog",
+    URL:"https://images.unsplash.com/photo-1500740516770-92bd004b996e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1952&q=80"
   },
   error: {
     iconName: "alert",

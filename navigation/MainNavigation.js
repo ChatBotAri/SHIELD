@@ -9,8 +9,6 @@ import DinnerContainer from "../screens/FoodDetail/Dinner/DinnerContainer";
 import SnackContainer from "../screens/FoodDetail/Snack/SnackContainer";
 import SearchContainer from "../screens/Search/SearchContainer";
 import SearchDetailContainer from "../screens/SearchDetail/SearchDetailContainer";
-import {Alert,Button} from "react-native";
-import React from "react";
 import HealthContainer from "../screens/Health/HealthContainer";
 
 const MainNavigation = createStackNavigator(
@@ -23,7 +21,7 @@ const MainNavigation = createStackNavigator(
       screen: ChatContainer,
       navigationOptions: {
         ...headerStyles,
-        title: "Chat Bot",
+        title: "챗봇",
       },
     },
     NewsScreen: {
@@ -66,7 +64,6 @@ const MainNavigation = createStackNavigator(
       navigationOptions: {
         ...headerStyles,
         title: "검색",
-        // headerLeft:()=> alert("abc")
       },
     },
     SearchDetailScreen: {
@@ -87,7 +84,6 @@ const MainNavigation = createStackNavigator(
   {
     headerBackTitleVisible: false,
     navigationOptions: {
-      // header:null
     },
   },
 );

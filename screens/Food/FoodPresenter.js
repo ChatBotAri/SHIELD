@@ -101,7 +101,6 @@ const FoodPresenter = ({
   LunchNut,
   DinnerNut,
   SnackNut,
-  myNut = 2500,
   recommend,
   stored,
 }) => (
@@ -118,13 +117,13 @@ const FoodPresenter = ({
     ) : (
       <Header>
         <TitleContainer>
-          <Title>권장칼로리 : {recommend} kcal</Title>
+          <Title>권장칼로리 : {Math.floor(recommend)} kcal</Title>
         </TitleContainer>
         <CircleContainer>
           <AnimatedCircularProgress
             size={Layout.width * 0.65}
             width={20}
-            fill={(nutrient.kcal / recommend) * 100}
+            fill={(nutrient.kcal / Math.floor(recommend)) * 100}
             backgroundWidth={25}
             backgroundColor="#eeffcc"
             tintColor="#2dcf93"
@@ -164,7 +163,7 @@ const FoodPresenter = ({
                 params: {
                   changeValue,
                   BreakfastNut,
-                  myNut:recommend,
+                  myNut:Math.floor(recommend),
                 },
               })
             }
@@ -178,7 +177,7 @@ const FoodPresenter = ({
             onPress={() =>
               navigation.navigate({
                 routeName: "LunchScreen",
-                params: { changeValue, LunchNut, myNut:recommend },
+                params: { changeValue, LunchNut, myNut:Math.floor(recommend) },
               })
             }
           >
@@ -194,7 +193,7 @@ const FoodPresenter = ({
                 params: {
                   changeValue,
                   DinnerNut,
-                  myNut:recommend,
+                  myNut:Math.floor(recommend),
                 },
               })
             }
@@ -211,7 +210,7 @@ const FoodPresenter = ({
                 params: {
                   changeValue,
                   SnackNut,
-                  myNut:recommend,
+                  myNut:Math.floor(recommend),
                 },
               })
             }

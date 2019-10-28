@@ -15,9 +15,10 @@ export default class HomeContainer extends React.Component {
   constructor(props){
     super(props);
     client.connect({
-        onSuccess: this.onConnect,
+        timeout:7,
+        onSuccess:this.onConnect,
         useSSL: false,
-        onFailure: this.onFailure,
+        onFailure:this.onFailure,
       });    
       client.onConnectionLost = this.onConnectionLost;
 
@@ -37,14 +38,16 @@ export default class HomeContainer extends React.Component {
        console.log("connection lost");
        }
   };
-  onConnect = () => {
+  onConnect = async() => {
     const { client } = this.state;
+    await AsyncStorage.setItem("Connected","1");
     console.log("success");
   };   
   
-  onFailure = error => {
-    console.log(error);
+  onFailure = async(error) => {
+    await AsyncStorage.setItem("Connected","0");
     console.log("fail");
+    console.log(error);
   };
   
   
@@ -54,63 +57,67 @@ export default class HomeContainer extends React.Component {
   };
 
 
-  // componentDidMount() {
-  //   const {client} = this.state;
-  //   navigator.geolocation.getCurrentPosition(
-  //     async position => {
-  //       const local = await this.getLocalname(
-  //         position.coords.latitude,
-  //         position.coords.longitude,
-  //       );
-  //       console.log(position.coords.latitude, position.coords.longitude);
-  //       CurrentPosition = local.documents[1].address_name;
-  //       console.log(CurrentPosition);
+  componentDidMount() {
+    const {client} = this.state;
+    navigator.geolocation.getCurrentPosition(
+      async position => {
+        const local = await this.getLocalname(
+          position.coords.latitude,
+          position.coords.longitude,
+        );
+        console.log(position.coords.latitude, position.coords.longitude);
+        CurrentPosition = local.documents[1].address_name;
+        console.log(CurrentPosition);
 
-  //       const Weather = await this.getWeather(
-  //         local.documents[1].code,
-  //         local.documents[1].region_3depth_name,
-  //       );
-  //       console.log(Weather);
+        const Weather = await this.getWeather(
+          local.documents[1].code,
+          local.documents[1].region_3depth_name,
+        );
+        console.log(Weather);
 
-  //       const Dust = await this.getDust(
-  //         position.coords.latitude,
-  //         position.coords.longitude,
-  //       );
-  //       console.log(Dust);
+        const Dust = await this.getDust(
+          position.coords.latitude,
+          position.coords.longitude,
+        );
+        console.log(Dust);
 
-  //       const News = await this.getNews();
+        const News = await this.getNews();
 
-  //       console.log(News);
+        console.log(News);
         
-  //       const HealthTip = await this.getHealthTip();
+        const HealthTip = await this.getHealthTip();
 
-  //       console.log(HealthTip);
+        console.log(HealthTip);
 
-  //       const FoodTip = await this.getFoodTip();
+        const FoodTip = await this.getFoodTip();
 
-  //       console.log(FoodTip);
-  //       client.publish("dust", Number(Dust.list[0].pm10Value).toString())
-  //       client.publish("semidust", Number(Dust.list[0].pm25Value).toString())
+        console.log(FoodTip);
 
-  //       // const test = await axios.get(`http://sickchatbot.shop/position/positionSave?latitude=${position.coords.latitude}&longitude=${position.coords.longitude}`)
+        const connected= await AsyncStorage.getItem("Connected")
+
+        if(connected===1){
+        client.publish("dust", Number(Dust.list[0].pm10Value).toString())
+        client.publish("semidust", Number(Dust.list[0].pm25Value).toString())
+        }
+
+        // const test = await axios.get(`http://sickchatbot.shop/position/positionSave?latitude=${position.coords.latitude}&longitude=${position.coords.longitude}`)
         
-  //       this.setState({
-  //         Weather,
-  //         Dust,
-  //         CurrentPosition,
-  //         weatherLoaded: true,
-  //         News,
-  //         HealthTip,
-  //         FoodTip,
-  //       });
-  //     },
-  //     error => console.log(error),
-  //   );
-  // }
+        this.setState({
+          Weather,
+          Dust,
+          CurrentPosition,
+          weatherLoaded: true,
+          News,
+          HealthTip,
+          FoodTip,
+        });
+      },
+      error => console.log(error),
+    );
+  }
 
   getFoodTip = async () => {
     const { data: FoodTip } = await axios.get(
-      // `https://dapi.kakao.com/v2/search/blog?query=https://blog.naver.com/nhicblog 건강`,
       `https://dapi.kakao.com/v2/search/blog?query=http://blog.daum.net/nhicblog 음식`,
       {
         headers: {
@@ -123,7 +130,6 @@ export default class HomeContainer extends React.Component {
 
   getHealthTip = async () => {
     const { data: HealthTip } = await axios.get(
-      // `https://dapi.kakao.com/v2/search/blog?query=https://blog.naver.com/nhicblog`,
       `https://dapi.kakao.com/v2/search/blog?query=http://blog.daum.net/nhicblog`,
       {
         headers: {
@@ -133,34 +139,7 @@ export default class HomeContainer extends React.Component {
     );
     return HealthTip.documents;
   };
-  // getVideo = async() => {
-  //   const { data: Search } = await axios.get(
-  //     `https://openapi.naver.com/v1/search/news.json?query=${encodeURI("식습관")}`,
-  //     {
-  //       headers: {
-  //         'X-Naver-Client-Id':"tEhnGNsiusnBnhHv1GXs",
-  //          'X-Naver-Client-Secret':"4CaCsOAvht"
-  //       },
-  //     },
-  //   );
-  //   return Search;
-  // };
-
-  getPharmacy = async (lat, long) => {
-    const { data: Pharmacys } = await axios.get(
-      `http://apis.data.go.kr/B551182/pharmacyInfoService/getParmacyBasisList?serviceKey=${DATA_KEY}&numOfRows=10&xPos=${long}&yPos=${lat}&radius=3000`,
-    );
-
-    return Pharmacys.response.body.items.item;
-  };
-  getHospital = async (lat, long) => {
-    const { data: Hospitals } = await axios.get(
-      `http://apis.data.go.kr/B551182/hospInfoService/getHospBasisList?serviceKey=${DATA_KEY}&numOfRows=10&xPos=${long}&yPos=${lat}&radius=3000`,
-    );
-
-    return Hospitals.response.body.items.item;
-  };
-
+ 
   getDust = async (lat, long) => {
     const { data: TM } = await axios.get(
       `https://dapi.kakao.com/v2/local/geo/transcoord.json?x=${long}&y=${lat}&input_coord=WGS84&output_coord=TM`,
@@ -235,7 +214,7 @@ export default class HomeContainer extends React.Component {
         Hours,
       )}&nx=${x}&ny=${y}&_type=json&ServiceKey=${DATA_KEY}&numOfRows=10`,
     );
-    // console.log(BaseDate);
+    console.log(BaseDate);
     console.log(Weather);
     return Weather.response.body.items;
   };

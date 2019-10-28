@@ -31,14 +31,17 @@ export default class Message extends React.Component {
         margin: 10
       },
       time: {
-        fontSize: 10,
-        color: GREY_COLOR
+        fontSize: 12,
+        color: "#808080"
+      },
+      MsgText:{
+        fontWeight:"600"
       }
     });
     return (
       <View style={styles.Main}>
         <View style={styles.Msg}>
-          <Text>{text}</Text>
+          <Text style={styles.MsgText}>{text}</Text>
         </View>
         <Text style={styles.time}>
           {createAt.getHours() < 13

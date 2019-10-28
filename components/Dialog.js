@@ -14,9 +14,9 @@ export default class DialogTester extends Component {
     };
   }
 
-  handleActivity = value =>{
+  handleActivity = value => {
     this.props.changeValue(value);
-  }
+  };
 
   handleGender = value => {
     this.props.changeValue(value);
@@ -38,8 +38,20 @@ export default class DialogTester extends Component {
   showDialog = () => {
     this.setState({ dialogVisible: true });
   };
+
   handleMeasure = () => {
-    this.setState({});
+    if (this.props.connected === "1") {
+      this.props.changeValue(this.props.sensorValue);
+      this.setState({ dialogVisible: false });
+    } else {
+      console.log("연결 안됨");
+      Alert.alert("Error", "연결이 원활하지 않습니다.", {
+        text: "확인",
+        onPress:this.handleCancel
+      });
+    
+    }
+
   };
 
   handleCancel = () => {
@@ -59,7 +71,7 @@ export default class DialogTester extends Component {
         <View>
           <TouchableOpacity
             onPress={() =>
-              Alert.alert("선택","", [
+              Alert.alert("선택", "", [
                 {
                   text: "측정하기",
                   onPress: () => {
@@ -108,15 +120,16 @@ export default class DialogTester extends Component {
           ) : (
             <Dialog.Container visible={this.state.dialogVisible}>
               <Dialog.Title>{`${name}`}</Dialog.Title>
-              {name==="키"?
-              <Dialog.Description>{`체중계 위에 올라선 후 
+              {name === "키" ? (
+                <Dialog.Description>{`체중계 위에 올라선 후 
 허리를 곧게 피고  
 "측정" 을 눌러주세요.`}</Dialog.Description>
-              :
-              <Dialog.Description>{`체중계 위에 올라선 후 
-"측정" 을 눌러주세요.`}</Dialog.Description>}
+              ) : (
+                <Dialog.Description>{`체중계 위에 올라선 후 
+"측정" 을 눌러주세요.`}</Dialog.Description>
+              )}
               <Dialog.Button label="취소" onPress={this.handleCancel} />
-              <Dialog.Button label="측정" onPress={this.handleInput} />
+              <Dialog.Button label="측정" onPress={this.handleMeasure} />
             </Dialog.Container>
           )}
         </View>
@@ -161,15 +174,16 @@ export default class DialogTester extends Component {
           </TouchableOpacity>
           <Dialog.Container visible={this.state.dialogVisible}>
             <Dialog.Title>{`${name}`}</Dialog.Title>
-            {name==="체온"?
+            {name === "체온" ? (
               <Dialog.Description>{`체온센서에 손을 근접시킨 후  
 "측정" 을 눌러주세요.`}</Dialog.Description>
-              :
+            ) : (
               <Dialog.Description>{`심박수센서에 검지손가락을 댄 후 
-"측정" 을 눌러주세요.`}</Dialog.Description>}
+"측정" 을 눌러주세요.`}</Dialog.Description>
+            )}
 
             <Dialog.Button label="취소" onPress={this.handleCancel} />
-            <Dialog.Button label="측정" onPress={this.handleInput} />
+            <Dialog.Button label="측정" onPress={this.handleMeasure} />
           </Dialog.Container>
         </View>
       );
@@ -203,60 +217,55 @@ export default class DialogTester extends Component {
           </Dialog.Container>
         </View>
       );
-    }else if(type==="활동량"){
+    } else if (type === "활동량") {
       return (
         <View>
-        <TouchableOpacity
-          onPress={() =>
-            Alert.alert("하루 활동량","", [
-              {
-                text: "(1)활동이 적거나 운동을 안할 경우",
-                onPress:()=>
-                  this.props.changeValue("거의 없음")                
-              },
-              {
-                text: "(2)가벼운 활동 및 운동",
-                onPress: () => {
-                  this.props.changeValue("조금 있음");
+          <TouchableOpacity
+            onPress={() =>
+              Alert.alert("하루 활동량", "", [
+                {
+                  text: "(1)활동이 적거나 운동을 안할 경우",
+                  onPress: () => this.props.changeValue("거의 없음"),
                 },
-              },
-              {
-                text: "(3)보통의 활동 및 운동",
-                onPress: () => {
-                  this.props.changeValue("보통");
+                {
+                  text: "(2)가벼운 활동 및 운동",
+                  onPress: () => {
+                    this.props.changeValue("조금 있음");
+                  },
                 },
-              },
-              {
-                text: "(4)적극적인 활동 및 운동",
-                onPress: () => {
-                  this.props.changeValue("많음");
-
+                {
+                  text: "(3)보통의 활동 및 운동",
+                  onPress: () => {
+                    this.props.changeValue("보통");
+                  },
                 },
-              },
-              {
-                text: "(5)아주 적극적인 활동 및 운동",
-                onPress: () => {
-                  this.props.changeValue("아주 많음");
-
+                {
+                  text: "(4)적극적인 활동 및 운동",
+                  onPress: () => {
+                    this.props.changeValue("많음");
+                  },
                 },
-              },
-              {
-                text: "Cancel",
-                style: "cancel",
-              },
-            ])
-          }
-        >
-          <Image
-            source={require("../assets/btn.png")}
-            style={{ width: 30, height: 30 }}
-          />
-        </TouchableOpacity>
+                {
+                  text: "(5)아주 적극적인 활동 및 운동",
+                  onPress: () => {
+                    this.props.changeValue("아주 많음");
+                  },
+                },
+                {
+                  text: "Cancel",
+                  style: "cancel",
+                },
+              ])
+            }
+          >
+            <Image
+              source={require("../assets/btn.png")}
+              style={{ width: 30, height: 30 }}
+            />
+          </TouchableOpacity>
         </View>
-
       );
-
-    }else {
+    } else {
       return null;
     }
   }
