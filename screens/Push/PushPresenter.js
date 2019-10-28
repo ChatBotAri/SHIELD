@@ -1,11 +1,19 @@
 import React from "react";
-import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import {
+  StyleSheet,
+  TouchableOpacity,
+  View,
+  Alert,
+  AsyncStorage,
+} from "react-native";
 import styled from "styled-components";
 import { withNavigation, withNavigationFocus } from "react-navigation";
 import ProgressBarAnimated from "react-native-progress-bar-animated";
 import Layout from "../../constants/Layout";
-import AwesomeButton from "react-native-really-awesome-button";
 import Dialog from "../../components/Dialog";
+import StepIndicator from "react-native-step-indicator";
+import { BarChart, Grid } from "react-native-svg-charts";
+import { Text, Circle, G, Line } from "react-native-svg";
 
 const Container = styled.ScrollView`
   padding-left: 10px;
@@ -23,8 +31,8 @@ const TitleBox = styled.View`
 
 const TitleText = styled.Text`
   font-size: 20px;
-  font-weight: bold;
-  color: green;
+  font-weight: 600;
+  color: black;
 `;
 
 const Header = styled.View`
@@ -32,63 +40,6 @@ const Header = styled.View`
   border-radius: 25px;
   padding: 10px;
 `;
-
-const KcalContainer = styled.View`
-  padding: 10px;
-  flex-direction: row;
-`;
-
-const DataContainer = styled.View`
-  flex-direction: row;
-  justify-content: space-around;
-  width: 80%;
-  align-items: center;
-`;
-
-const KcalBarContainer = styled.View`
-  width: 100%;
-  align-items: center;
-  padding-bottom: 20px;
-`;
-
-const MainKcalBox = styled.View`
-  flex-direction: row;
-  align-items: flex-end;
-  justify-content: center;
-`;
-
-const MyKcal = styled.Text`
-  font-size: 40px;
-  font-weight: bold;
-`;
-
-const Kcal = styled.Text`
-  padding-bottom: 15px;
-  font-size: 15px;
-  font-weight: bold;
-`;
-
-const KcalBox = styled.View`
-  align-items: center;
-`;
-
-const KcalName = styled.Text`
-  font-weight: bold;
-  font-size: 15px;
-  padding-bottom: 15px;
-  color: #2dcf93;
-`;
-
-const KcalValue = styled.Text`
-  font-size: 17px;
-  font-weight: 500;
-`;
-
-const MainImage = styled.Image`
-  width: 80px;
-  height: 80px;
-`;
-
 const Image = styled.Image`
   width: 30px;
   height: 30px;
@@ -109,29 +60,116 @@ const ComponentContainer = styled.View`
 `;
 
 const Component = styled.View`
-  width: 70%;
+  width: 48%;
+  background-color: #7bb8a4;
+  border-radius: 25px;
+  padding: 10px;
+  align-items: center;
+`;
+
+const CompTop = styled.View`
   background-color: #eeffcc;
   border-radius: 25px;
-  padding: 10px 30px;
+  flex-direction: row;
+  width: 70%;
+  align-items: center;
+  justify-content: center;
+  padding: 5px;
+  margin-bottom: 5px;
+`;
+
+const CompName = styled.Text`
+  font-size: 15px;
+  font-weight: 600;
+`;
+
+const CompBottom = styled.View`
   flex-direction: row;
   align-items: center;
 `;
 
-const TextBox = styled.View`
-  width: 80%;
+const CompValue = styled.View`
+  background-color: white;
+  padding: 6px;
+  border-radius: 50px;
+  margin-right: 2px;
+  /* width: 40%; */
+  align-items: center;
   flex-direction: row;
+`;
+
+const Value = styled.Text`
+  font-size: 16px;
+  font-weight: bold;
+`;
+
+const Unit = styled.Text`
+  font-size: 16px;
+  font-weight: 400;
+  margin-right: 5px;
+`;
+
+const BarNameBox = styled.View`
+  width: 23%;
+  height: ${Layout.height * 0.35};
   justify-content: space-between;
+  align-items: center;
+  padding: 12px 0px;
 `;
-
-const ComponentText = styled.Text`
-  font-weight: bold;
-  color: green;
+const BarView = styled.View`
+  width: 100%;
+  background-color: green;
+  padding: 5px;
+  border-radius: 50;
+`;
+const BarName = styled.Text`
   font-size: 15px;
+  font-weight: bold;
+  color: white;
 `;
-
-const BtnText = styled.Text`
+const Warning = styled.Text`
+  color: #fe7013;
+  font-size: 20;
   font-weight: bold;
 `;
+
+const CUT_OFF = 1000;
+
+const Labels = ({ x, y, bandwidth, data }) =>
+  data.map((value, index) => (
+    <Text
+      key={index}
+      x={value > CUT_OFF ? x(value) - 80 : x(value) + 10}
+      y={y(index) + bandwidth / 2}
+      fontSize={15}
+      fill={value > CUT_OFF ? "white" : "black"}
+      alignmentBaseline={"middle"}
+    >
+      {value}kcal
+    </Text>
+  ));
+
+const calcAM = (BMR, activity) => {
+  if (activity === "거의 없음") {
+    AsyncStorage.setItem("BMR+AM", String(BMR * 0.2 + BMR));
+    return BMR * 0.2;
+  } else if (activity === "조금 있음") {
+    AsyncStorage.setItem("BMR+AM", String(BMR * 0.375 + BMR));
+
+    return BMR * 0.375;
+  } else if (activity === "보통") {
+    AsyncStorage.setItem("BMR+AM", String(BMR * 0.555 + BMR));
+    return BMR * 0.555;
+  } else if (activity === "많음") {
+    AsyncStorage.setItem("BMR+AM", String(BMR * 0.725 + BMR));
+    return BMR * 0.725;
+  } else if (activity === "아주 많음") {
+    AsyncStorage.setItem("BMR+AM", String(BMR * 0.9 + BMR));
+    return BMR * 0.9;
+  } else {
+    return null;
+  }
+};
 
 const PushPresenter = ({
   nutrient,
@@ -140,174 +178,225 @@ const PushPresenter = ({
   currentGas,
   currentTemp,
   currentDust,
+  BMR,
+  age,
+  gender,
+  height,
+  weight,
+  activity,
+  changeAge,
+  changeGender,
+  changeHeight,
+  changeWeight,
+  changeActivity,
+  currentPosition,
 }) => (
   <Container>
     <TitleBox>
-      {/* <Dialog btnName="Mine" /> */}
       <TitleText>My condition</TitleText>
-
-      <AwesomeButton
-        onPress={() => {}}
-        width={100}
-        height={30}
-        borderRadius={20}
-      >
-        <Text>사용Tip</Text>
-      </AwesomeButton>
     </TitleBox>
-    <Header>
-      <KcalContainer>
-        <MainImage source={require("../../assets/kcal.png")} />
-        <DataContainer>
-          <KcalBox>
-            <KcalName>기초대사량</KcalName>
-            <KcalValue>2511</KcalValue>
-          </KcalBox>
-          <KcalBox>
-            <KcalName>소비칼로리</KcalName>
-            <KcalValue>3011</KcalValue>
-          </KcalBox>
-          <KcalBox>
-            <KcalName>섭취칼로리</KcalName>
-            <KcalValue>{Math.floor(nutrient.kcal)}</KcalValue>
-          </KcalBox>
-        </DataContainer>
-      </KcalContainer>
-      <KcalBarContainer>
-        <MainKcalBox>
-          <MyKcal>2111</MyKcal>
-          <Kcal> / 5000 kcal</Kcal>
-        </MainKcalBox>
-        <ProgressBarAnimated
-          width={Layout.width * 0.85}
-          value={50}
-          maxValue={1000}
-          height={20}
-          backgroundColor="#2dcf93"
-          borderColor="#2dcf93"
+    {currentPosition < 5 ? (
+      <Header>
+        <View
+          style={{
+            alignItems: "center",
+            justifyContent: "center",
+            padding: 20,
+          }}
+        >
+          <Warning>필수 값들을 입력해주세요!</Warning>
+        </View>
+        <StepIndicator
+          customStyles={customStyles}
+          currentPosition={currentPosition}
+          labels={labels}
         />
-      </KcalBarContainer>
-    </Header>
+      </Header>
+    ) : (
+      <Header>
+        <View
+          style={{
+            flexDirection: "row",
+            height: Layout.height * 0.38,
+            paddingVertical: 10,
+          }}
+        >
+          <BarNameBox>
+            <BarView>
+              <BarName>기초대사량</BarName>
+            </BarView>
+            <BarView>
+              <BarName>활동대사량</BarName>
+            </BarView>
+            <BarView>
+              <BarName>섭취칼로리</BarName>
+            </BarView>
+            <BarView>
+              <BarName>소비칼로리</BarName>
+            </BarView>
+          </BarNameBox>
+          <BarChart
+            style={{ flex: 1, marginLeft: 8 }}
+            data={[BMR, AM=Math.round(calcAM(BMR, activity)), nutrient.kcal, 500]}
+            horizontal={true}
+            svg={{ fill: "rgba(45, 	207, 	147, 0.8)" }}
+            contentInset={{ top: 0, bottom: 0 }}
+            spacing={0.2}
+            gridMin={0}
+            spacingInner={0.5}
+            spacingOuter={0.1}
+          >
+            <Grid direction={Grid.Direction.VERTICAL} />
+            <Labels />
+          </BarChart>
+        </View>
+      </Header>
+    )}
     <Body>
       <ComponentContainer>
-        <Component style={{ borderWidth: 2, borderColor: "green" }}>
-          <Image source={require("../../assets/age.png")} />
-          <TextBox>
-            <ComponentText>나이 *</ComponentText>
-            <ComponentText>25세</ComponentText>
-          </TextBox>
+        <Component>
+          <CompTop>
+            <Image source={require("../../assets/age.png")} />
+            <CompName>나이 *</CompName>
+          </CompTop>
+          <CompBottom>
+            <CompValue>
+              <Value>{age}</Value>
+              <Unit>세</Unit>
+              <Dialog type="입력" name="나이" changeValue={changeAge} />
+            </CompValue>
+          </CompBottom>
         </Component>
-
-        <Dialog btnName="직접입력" name="나이" />
+        <Component>
+          <CompTop>
+            <Image source={require("../../assets/gender.png")} />
+            <CompName>성별 *</CompName>
+          </CompTop>
+          <CompBottom>
+            <CompValue>
+              <Value>{gender}</Value>
+              <Unit> </Unit>
+              <Dialog type="성별" name="성별" changeValue={changeGender} />
+            </CompValue>
+          </CompBottom>
+        </Component>
       </ComponentContainer>
-      <ComponentContainer>
-        <Component style={{ borderWidth: 2, borderColor: "green" }}>
-          <Image source={require("../../assets/gender.png")} />
-          <TextBox>
-            <ComponentText>성별 *</ComponentText>
-            <ComponentText>남</ComponentText>
-          </TextBox>
-        </Component>
-        <Dialog btnName="직접입력" name="성별"/>
 
-        {/* <AwesomeButton
-          width={70}
-          height={40}
-          borderRadius={50}
-          style={{ marginRight: 10 }}
-        >
-          <BtnText>입력</BtnText>
-        </AwesomeButton> */}
-      </ComponentContainer>
       <ComponentContainer>
-        <Component style={{ borderWidth: 2, borderColor: "green" }}>
-          <Image source={require("../../assets/height.png")} />
-          <TextBox>
-            <ComponentText>키 *</ComponentText>
-            <ComponentText>180cm</ComponentText>
-          </TextBox>
+        <Component>
+          <CompTop>
+            <Image source={require("../../assets/height.png")} />
+            <CompName>키 *</CompName>
+          </CompTop>
+          <CompBottom>
+            <CompValue>
+              <Value>{height}</Value>
+              <Unit>cm</Unit>
+              <Dialog type="선택" name="키" changeValue={changeHeight} />
+            </CompValue>
+          </CompBottom>
         </Component>
-        <Dialog btnName="측정" name="키"/>
-        <Dialog btnName="입력" name="키"/>
-
-
-        {/* <AwesomeButton width={40} height={40} borderRadius={50}>
-          <BtnText>측정</BtnText>
-        </AwesomeButton>
-        <AwesomeButton width={40} height={40} borderRadius={50}>
-          <BtnText>입력</BtnText>
-        </AwesomeButton> */}
-      </ComponentContainer>
-      <ComponentContainer>
-        <Component style={{ borderWidth: 2, borderColor: "green" }}>
-          <Image source={require("../../assets/weight.png")} />
-          <TextBox>
-            <ComponentText>몸무게 *</ComponentText>
-            <ComponentText>75kg</ComponentText>
-          </TextBox>
+        <Component>
+          <CompTop>
+            <Image source={require("../../assets/weight.png")} />
+            <CompName>몸무게 *</CompName>
+          </CompTop>
+          <CompBottom>
+            <CompValue>
+              <Value>{weight}</Value>
+              <Unit>kg</Unit>
+              <Dialog type="선택" name="몸무게" changeValue={changeWeight} />
+            </CompValue>
+          </CompBottom>
         </Component>
-        <Dialog btnName="측정" name="몸무게"/>
-        <Dialog btnName="입력" name="몸무게"/>
-        {/* <AwesomeButton width={40} height={40} borderRadius={50}>
-          <BtnText>측정</BtnText>
-        </AwesomeButton>
-        <AwesomeButton width={40} height={40} borderRadius={50}>
-          <BtnText>입력</BtnText>
-        </AwesomeButton> */}
       </ComponentContainer>
       <ComponentContainer>
         <Component>
-          <Image source={require("../../assets/BMI.png")} />
-          <TextBox>
-            <ComponentText>BMI</ComponentText>
-            <ComponentText>15%</ComponentText>
-          </TextBox>
+          <CompTop>
+            <Image source={require("../../assets/activity.png")} />
+            <CompName>활동량 *</CompName>
+          </CompTop>
+          <CompBottom>
+            <CompValue>
+              <Value>{activity}</Value>
+              <Unit></Unit>
+              <Dialog
+                type="활동량"
+                name="활동량"
+                changeValue={changeActivity}
+              />
+            </CompValue>
+          </CompBottom>
         </Component>
-        {/* <AwesomeButton
-          width={70}
-          height={40}
-          borderRadius={50}
-          style={{ marginRight: 10 }}
-        >
-          <BtnText>계산</BtnText>
-        </AwesomeButton> */}
-        <Dialog btnName="계산" name="계산"/>
+        <Component>
+          <CompTop>
+            <Image source={require("../../assets/BMI.png")} />
+            <CompName>비만도</CompName>
+          </CompTop>
+          <CompBottom>
+            <CompValue>
+              <Value>{age}</Value>
+              <Unit>%</Unit>
+            </CompValue>
+          </CompBottom>
+        </Component>
       </ComponentContainer>
       <ComponentContainer>
         <Component>
-          <Image source={require("../../assets/temperture.png")} />
-          <TextBox>
-            <ComponentText>체온</ComponentText>
-            <ComponentText>{"36.5도"}</ComponentText>
-          </TextBox>
+          <CompTop>
+            <Image source={require("../../assets/temperture.png")} />
+            <CompName>체온</CompName>
+          </CompTop>
+          <CompBottom>
+            <CompValue>
+              <Value>{"0"}</Value>
+              <Unit>도</Unit>
+              <Dialog type="측정" name="체온" changeValue={changeAge} />
+            </CompValue>
+          </CompBottom>
         </Component>
-        {/* <AwesomeButton width={40} height={40} borderRadius={50}>
-          <BtnText>측정</BtnText>
-        </AwesomeButton>
-        <AwesomeButton width={40} height={40} borderRadius={50}>
-          <BtnText>입력</BtnText>
-        </AwesomeButton> */}
-        <Dialog btnName="측정" name="체온" />
-        <Dialog btnName="입력" name="체온"/>
-      </ComponentContainer>
-      <ComponentContainer>
         <Component>
-          <Image source={require("../../assets/heart-rate.png")} />
-          <TextBox>
-            <ComponentText>심박수</ComponentText>
-            <ComponentText>55회/분</ComponentText>
-          </TextBox>
+          <CompTop>
+            <Image source={require("../../assets/heart-rate.png")} />
+            <CompName>심박수</CompName>
+          </CompTop>
+          <CompBottom>
+            <CompValue>
+              <Value>{"0"}</Value>
+              <Unit>회/분</Unit>
+              <Dialog type="측정" name="심박수" changeValue={changeAge} />
+            </CompValue>
+          </CompBottom>
         </Component>
-        {/* <AwesomeButton width={40} height={40} borderRadius={50}>
-          <BtnText>측정</BtnText>
-        </AwesomeButton>
-        <AwesomeButton width={40} height={40} borderRadius={50}>
-          <BtnText>입력</BtnText>
-        </AwesomeButton> */}
-        <Dialog btnName="측정" name="심박수"/>
-        <Dialog btnName="입력" name="심박수"/>
       </ComponentContainer>
     </Body>
   </Container>
 );
+
+const labels = ["나이", "성별", "키", "몸무게", "활동량"];
+
+const customStyles = {
+  stepIndicatorSize: 35,
+  currentStepIndicatorSize: 40,
+  separatorStrokeWidth: 3,
+  currentStepStrokeWidth: 4,
+  stepStrokeCurrentColor: "#fe7013",
+  stepStrokeWidth: 3,
+  stepStrokeFinishedColor: "#fe7013",
+  stepStrokeUnFinishedColor: "#aaaaaa",
+  separatorFinishedColor: "#fe7013",
+  separatorUnFinishedColor: "#aaaaaa",
+  stepIndicatorFinishedColor: "#fe7013",
+  stepIndicatorUnFinishedColor: "#ffffff",
+  stepIndicatorCurrentColor: "#ffffff",
+  stepIndicatorLabelFontSize: 14,
+  currentStepIndicatorLabelFontSize: 15,
+  stepIndicatorLabelCurrentColor: "#fe7013",
+  stepIndicatorLabelFinishedColor: "#ffffff",
+  stepIndicatorLabelUnFinishedColor: "#aaaaaa",
+  labelColor: "#999999",
+  labelSize: 14,
+  currentStepLabelColor: "#fe7013",
+};
+
 export default withNavigation(PushPresenter);

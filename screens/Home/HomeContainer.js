@@ -53,56 +53,59 @@ export default class HomeContainer extends React.Component {
   };
 
 
-  componentDidMount() {
-    const {client} = this.state;
-    navigator.geolocation.getCurrentPosition(
-      async position => {
-        const local = await this.getLocalname(
-          position.coords.latitude,
-          position.coords.longitude,
-        );
-        console.log(position.coords.latitude, position.coords.longitude);
-        CurrentPosition = local.documents[1].address_name;
-        console.log(CurrentPosition);
+  // componentDidMount() {
+  //   const {client} = this.state;
+  //   navigator.geolocation.getCurrentPosition(
+  //     async position => {
+  //       const local = await this.getLocalname(
+  //         position.coords.latitude,
+  //         position.coords.longitude,
+  //       );
+  //       console.log(position.coords.latitude, position.coords.longitude);
+  //       CurrentPosition = local.documents[1].address_name;
+  //       console.log(CurrentPosition);
 
-        const Weather = await this.getWeather(
-          local.documents[1].code,
-          local.documents[1].region_3depth_name,
-        );
-        console.log(Weather);
+  //       const Weather = await this.getWeather(
+  //         local.documents[1].code,
+  //         local.documents[1].region_3depth_name,
+  //       );
+  //       console.log(Weather);
 
-        const Dust = await this.getDust(
-          position.coords.latitude,
-          position.coords.longitude,
-        );
-        console.log(Dust);
+  //       const Dust = await this.getDust(
+  //         position.coords.latitude,
+  //         position.coords.longitude,
+  //       );
+  //       console.log(Dust);
 
-        const News = await this.getNews();
+  //       const News = await this.getNews();
 
-        console.log(News);
+  //       console.log(News);
         
-        const HealthTip = await this.getHealthTip();
+  //       const HealthTip = await this.getHealthTip();
 
-        console.log(HealthTip);
+  //       console.log(HealthTip);
 
-        const FoodTip = await this.getFoodTip();
+  //       const FoodTip = await this.getFoodTip();
 
-        console.log(FoodTip);
-        client.publish("dust", Number(Dust.list[0].pm10Value).toString())
-        client.publish("semidust", Number(Dust.list[0].pm25Value).toString())
-        this.setState({
-          Weather,
-          Dust,
-          CurrentPosition,
-          weatherLoaded: true,
-          News,
-          HealthTip,
-          FoodTip,
-        });
-      },
-      error => console.log(error),
-    );
-  }
+  //       console.log(FoodTip);
+  //       client.publish("dust", Number(Dust.list[0].pm10Value).toString())
+  //       client.publish("semidust", Number(Dust.list[0].pm25Value).toString())
+
+  //       // const test = await axios.get(`http://sickchatbot.shop/position/positionSave?latitude=${position.coords.latitude}&longitude=${position.coords.longitude}`)
+        
+  //       this.setState({
+  //         Weather,
+  //         Dust,
+  //         CurrentPosition,
+  //         weatherLoaded: true,
+  //         News,
+  //         HealthTip,
+  //         FoodTip,
+  //       });
+  //     },
+  //     error => console.log(error),
+  //   );
+  // }
 
   getFoodTip = async () => {
     const { data: FoodTip } = await axios.get(

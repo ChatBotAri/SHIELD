@@ -3,6 +3,7 @@ import ChatPresenter from "./ChatPresenter";
 import { StyleSheet } from "react-native";
 import { DanbeeApi } from "../../api";
 import uuidv1 from "uuid/v1";
+import axios from "axios";
 
 export default class ChatContainer extends React.Component {
   state = {
