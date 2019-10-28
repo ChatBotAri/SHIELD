@@ -7,13 +7,13 @@ import {
   AsyncStorage,
 } from "react-native";
 import styled from "styled-components";
-import { withNavigation, withNavigationFocus } from "react-navigation";
-import ProgressBarAnimated from "react-native-progress-bar-animated";
+import { withNavigation } from "react-navigation";
 import Layout from "../../constants/Layout";
 import Dialog from "../../components/Dialog";
 import StepIndicator from "react-native-step-indicator";
 import { BarChart, Grid } from "react-native-svg-charts";
 import { Text, Circle, G, Line } from "react-native-svg";
+import AwesomeButton from "react-native-really-awesome-button";
 
 const Container = styled.ScrollView`
   padding-left: 10px;
@@ -31,7 +31,7 @@ const TitleBox = styled.View`
 
 const TitleText = styled.Text`
   font-size: 20px;
-  font-weight: 600;
+  font-weight: bold;
   color: black;
 `;
 
@@ -95,6 +95,7 @@ const CompValue = styled.View`
   margin-right: 2px;
   /* width: 40%; */
   align-items: center;
+  justify-content: center;
   flex-direction: row;
 `;
 
@@ -133,6 +134,10 @@ const Warning = styled.Text`
   font-weight: bold;
 `;
 
+const BtnText = styled.Text`
+  font-weight: bold;
+`;
+
 const CUT_OFF = 1000;
 
 const Labels = ({ x, y, bandwidth, data }) =>
@@ -144,6 +149,7 @@ const Labels = ({ x, y, bandwidth, data }) =>
       fontSize={15}
       fill={value > CUT_OFF ? "white" : "black"}
       alignmentBaseline={"middle"}
+      fontWeight={"bold"}
     >
       {value}kcal
     </Text>
@@ -185,17 +191,34 @@ const PushPresenter = ({
   height,
   weight,
   activity,
+  temp,
+  heart,
   changeAge,
   changeGender,
   changeHeight,
   changeWeight,
   changeActivity,
+  changeTemp,
+  changeHeart,
   currentPosition,
-  connected
+  connected,
 }) => (
   <Container>
     <TitleBox>
       <TitleText>My condition</TitleText>
+      <AwesomeButton
+        onPress={() =>
+          Alert.alert(
+            "사용법",
+            `사용자의 기초대사량, 활동대사량 등
+기본정보를 위해 필수 값( * )을 입력해주세요.`,
+          )
+        }
+        width={80}
+        height={30}
+      >
+        <BtnText>사용 Tip</BtnText>
+      </AwesomeButton>
     </TitleBox>
     {currentPosition < 5 ? (
       <Header>
@@ -239,7 +262,12 @@ const PushPresenter = ({
           </BarNameBox>
           <BarChart
             style={{ flex: 1, marginLeft: 8 }}
-            data={[BMR, AM=Math.round(calcAM(BMR, activity)), nutrient.kcal, 500]}
+            data={[
+              BMR,
+              (AM = Math.round(calcAM(BMR, activity))),
+              nutrient.kcal,
+              500,
+            ]}
             horizontal={true}
             svg={{ fill: "rgba(45, 	207, 	147, 0.8)" }}
             contentInset={{ top: 0, bottom: 0 }}
@@ -294,7 +322,13 @@ const PushPresenter = ({
             <CompValue>
               <Value>{height}</Value>
               <Unit>cm</Unit>
-              <Dialog type="선택" name="키" changeValue={changeHeight} sensorValue={currentHeight} connected={connected}/>
+              <Dialog
+                type="선택"
+                name="키"
+                changeValue={changeHeight}
+                sensorValue={currentHeight}
+                connected={connected}
+              />
             </CompValue>
           </CompBottom>
         </Component>
@@ -307,7 +341,13 @@ const PushPresenter = ({
             <CompValue>
               <Value>{weight}</Value>
               <Unit>kg</Unit>
-              <Dialog type="선택" name="몸무게" changeValue={changeWeight} sensorValue={currentWeight} connected={connected} />
+              <Dialog
+                type="선택"
+                name="몸무게"
+                changeValue={changeWeight}
+                sensorValue={currentWeight}
+                connected={connected}
+              />
             </CompValue>
           </CompBottom>
         </Component>
@@ -336,9 +376,26 @@ const PushPresenter = ({
             <CompName>비만도</CompName>
           </CompTop>
           <CompBottom>
-            <CompValue>
-              <Value>{age}</Value>
-              <Unit>%</Unit>
+            <CompValue style={{ marginRight: 0, paddingRight: 0 }}>
+              <Value>{Math.round(weight / ((height * height) / 10000))}</Value>
+              <Unit></Unit>
+              <TouchableOpacity
+                onPress={() =>
+                  Alert.alert(
+                    "비만도",
+                    `저체중 -> 18.5이하 
+정상 -> 18.5 ~ 22.9
+과체중 -> 23 ~ 24.9
+경도비만 -> 25 ~ 29.9
+고도비만 -> 30 이상`,
+                  )
+                }
+              >
+                <Image
+                  source={require("../../assets/btn.png")}
+                  style={{ width: 30, height: 30 }}
+                />
+              </TouchableOpacity>
             </CompValue>
           </CompBottom>
         </Component>
@@ -351,9 +408,15 @@ const PushPresenter = ({
           </CompTop>
           <CompBottom>
             <CompValue>
-              <Value>{"0"}</Value>
+              <Value>{temp}</Value>
               <Unit>도</Unit>
-              <Dialog type="측정" name="체온" changeValue={changeAge} />
+              <Dialog
+                type="측정"
+                name="체온"
+                changeValue={changeTemp}
+                sensorValue={currentTemp}
+                connected={connected}
+              />
             </CompValue>
           </CompBottom>
         </Component>
@@ -364,9 +427,15 @@ const PushPresenter = ({
           </CompTop>
           <CompBottom>
             <CompValue>
-              <Value>{"0"}</Value>
+              <Value>{heart}</Value>
               <Unit>회/분</Unit>
-              <Dialog type="측정" name="심박수" changeValue={changeAge} />
+              <Dialog
+                type="측정"
+                name="심박수"
+                changeValue={changeHeart}
+                sensorValue={currentHeart}
+                connected={connected}
+              />
             </CompValue>
           </CompBottom>
         </Component>
