@@ -21,6 +21,8 @@ export default class PushContainer extends Component {
       height: 0,
       weight: 0,
       activity:null,
+      temp:0,
+      heart:0,
       currentPosition: 0,
       connected:null
     };
@@ -59,34 +61,44 @@ export default class PushContainer extends Component {
     }
   }
 
+  changeTemp = async(value)=>{
+    await this.setState({temp:value});
+    AsyncStorage.setItem("Temp",String(value));
+  }
+
+  changeHeart = async(value)=>{
+    await this.setState({heart:value});
+    AsyncStorage.setItem("Heart",String(value));
+  }
+
   changeActivity = async(value)=>{
     await this.setState({activity:value});
     this.onPageChange();
-    AsyncStorage.setItem("Activity",value);
+    AsyncStorage.setItem("Activity",String(value));
   }
 
   changeHeight = async value => {
     await this.setState({ height: value });
     this.onPageChange();
-    AsyncStorage.setItem("Height", value);
+    AsyncStorage.setItem("Height", String(value));
   };
 
   changeWeight = async value => {
     await this.setState({ weight: value });
     this.onPageChange();
-    AsyncStorage.setItem("Weight", value);
+    AsyncStorage.setItem("Weight", String(value));
   };
 
   changeGender = async value => {
     await this.setState({ gender: value });
     this.onPageChange();
-    AsyncStorage.setItem("Gender", value);
+    AsyncStorage.setItem("Gender", String(value));
   };
 
   changeAge = async value => {
     await this.setState({ age: value});
     this.onPageChange();
-    AsyncStorage.setItem("Age", value);
+    AsyncStorage.setItem("Age",String(value));
   };
 
   componentDidMount() {
@@ -106,6 +118,8 @@ export default class PushContainer extends Component {
         height: await AsyncStorage.getItem("Height"),
         weight: await AsyncStorage.getItem("Weight"),
         activity: await AsyncStorage.getItem("Activity"),
+        temp:await AsyncStorage.getItem("Temp"),
+        heart: await AsyncStorage.getItem("Heart"),
         currentPosition:5,
         connected:await AsyncStorage.getItem("Connected")
       });
@@ -198,6 +212,8 @@ export default class PushContainer extends Component {
       height,
       weight,
       activity,
+      temp,
+      heart,
       currentPosition,
       connected
     } = this.state;
@@ -218,11 +234,15 @@ export default class PushContainer extends Component {
         height={height}
         weight={weight}
         activity={activity}
+        temp={temp}
+        heart={heart}
         changeAge={this.changeAge}
         changeGender={this.changeGender}
         changeHeight={this.changeHeight}
         changeWeight={this.changeWeight}
         changeActivity={this.changeActivity}
+        changeTemp={this.changeTemp}
+        changeHeart={this.changeHeart}
         loadData={this.loadData}
         nutrient={nutrient}
         Subconsole={this.Subconsole}

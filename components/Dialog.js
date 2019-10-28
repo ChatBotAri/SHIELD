@@ -41,6 +41,7 @@ export default class DialogTester extends Component {
 
   handleMeasure = () => {
     if (this.props.connected === "1") {
+      console.log(this.props.sensorValue);
       this.props.changeValue(this.props.sensorValue);
       this.setState({ dialogVisible: false });
     } else {
@@ -53,6 +54,18 @@ export default class DialogTester extends Component {
     }
 
   };
+  directMeasure = ()=>{
+    if(this.props.connected==="1"){
+      this.props.changeValue(this.props.sensorValue);
+      this.setState({dialogVisible:false});
+
+    }else{
+      Alert.alert("Error", "연결이 원활하지 않습니다.", {
+        text: "확인",
+        onPress:this.handleCancel
+      });
+    }
+  }
 
   handleCancel = () => {
     this.setState({ dialogVisible: false });

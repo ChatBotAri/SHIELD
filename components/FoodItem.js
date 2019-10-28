@@ -1,5 +1,5 @@
 import React from "react";
-import { Text,TouchableOpacity,Button } from "react-native";
+import { Text,TouchableOpacity,Button,Alert } from "react-native";
 import propType from "prop-types";
 import styled from "styled-components";
 import { withNavigation } from "react-navigation";
@@ -92,6 +92,7 @@ const FoodItem = ({
               parseInt(result.NUTR_CONT4[0]),
             );
             addFood(result);
+            Alert.alert("추가완료","",{text: "확인"})
           }}
         >
           <CheckText>☑</CheckText>
