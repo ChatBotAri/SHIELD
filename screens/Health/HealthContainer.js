@@ -65,7 +65,7 @@ export default class HealthContainer extends React.Component {
       parseInt(hour) * 60 * 60 + parseInt(minutes) * 60 + parseInt(seconds);
       this.setState({
         speed: parseFloat(
-          ((this.state.movingDistance * 1000) / fullseconds / 60 / 60).toFixed(
+          ((this.state.movingDistance * 1000) / fullseconds / 60 ).toFixed(
             3,
           ),
         ),
@@ -90,7 +90,7 @@ export default class HealthContainer extends React.Component {
           prevState.kcal +
           parseInt(
             (
-              (2 * (this.state.currentWeight - 8) * 4) /
+              (1000*2 * (this.state.currentWeight - 8) * 4) /
               fullseconds /
               60 /
               60

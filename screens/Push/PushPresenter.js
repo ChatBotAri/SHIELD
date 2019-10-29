@@ -120,13 +120,11 @@ const BarNameBox = styled.View`
 const BarView = styled.View`
   width: 100%;
   background-color: green;
-  padding: 4px;
+  padding: 5px;
   border-radius: 50;
-  align-items:center;
-  justify-content:center;
 `;
 const BarName = styled.Text`
-  font-size: 14px;
+  font-size: 15px;
   font-weight: bold;
   color: white;
 `;
@@ -224,7 +222,7 @@ const PushPresenter = ({
       </AwesomeButton>
     </TitleBox>
     {currentPosition < 5 ? (
-      <Header style={{backgroundColor:"#e3e3e3"}}>
+      <Header>
         <View
           style={{
             alignItems: "center",
@@ -232,7 +230,7 @@ const PushPresenter = ({
             padding: 20,
           }}
         >
-          <Warning>필수 값을 입력해주세요!</Warning>
+          <Warning>필수 값들을 입력해주세요!</Warning>
         </View>
         <StepIndicator
           customStyles={customStyles}
@@ -314,6 +312,7 @@ const PushPresenter = ({
           </CompBottom>
         </Component>
       </ComponentContainer>
+
       <ComponentContainer>
         <Component>
           <CompTop>
@@ -330,7 +329,6 @@ const PushPresenter = ({
                 changeValue={changeHeight}
                 sensorValue={currentHeight}
                 connected={connected}
-            
               />
             </CompValue>
           </CompBottom>

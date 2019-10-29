@@ -38,9 +38,9 @@ export default class HomeContainer extends React.Component {
        console.log("connection lost");
        }
   };
-  onConnect = () => {
+  onConnect = async() => {
     const { client } = this.state;
-    AsyncStorage.setItem("Connected","1");
+    await AsyncStorage.setItem("Connected","1");
     console.log("success");
   };   
   

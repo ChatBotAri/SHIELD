@@ -6,7 +6,7 @@ import Layout from "../../constants/Layout";
 import { LinearGradient } from "expo-linear-gradient";
 import { Linking } from "expo";
 
-const Container = styled.View`
+const Container = styled.ScrollView`
   position: relative;
   flex: 1;
 `;

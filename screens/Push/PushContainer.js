@@ -1,8 +1,8 @@
 import React, { Component } from "react";
 import PushPresenter from "./PushPresenter";
 import client from "../../mqtt";
-import { AsyncStorage, Alert } from "react-native";
-
+import { AsyncStorage } from "react-native";
+import axios from "axios";
 export default class PushContainer extends Component {
   constructor(props) {
     super(props);
@@ -21,15 +21,14 @@ export default class PushContainer extends Component {
       gender: null,
       height: 0,
       weight: 0,
-      activity: null,
-      temp: 0,
-      heart: 0,
+      activity:null,
+      temp:0,
+      heart:0,
       currentPosition: 0,
-      connected: null,
+      connected:null
     };
     this.loadData();
   }
-
 
   onPageChange() {
     if (this.state.age === 0) {
@@ -39,45 +38,45 @@ export default class PushContainer extends Component {
     } else if (
       this.state.age !== 0 &&
       this.state.gender !== null &&
-      this.state.height === 0 && this.state.currentPosition!==5
+      this.state.height === 0
     ) {
       this.setState({ currentPosition: 2 });
     } else if (
       this.state.age !== 0 &&
       this.state.gender !== null &&
       this.state.height !== 0 &&
-      this.state.weight === 0 && this.state.currentPosition!==5
+      this.state.weight === 0
     ) {
       this.setState({ currentPosition: 3 });
-    } else if (
-      this.state.age !== 0 &&
+    } 
+    else if(this.state.age !== 0 &&
       this.state.gender !== null &&
       this.state.height !== 0 &&
       this.state.weight !== 0 &&
-      this.state.activity === null
-    ) {
-      this.setState({ currentPosition: 4 });
-    } else {
+      this.state.activity ===null){
+        this.setState({currentPosition:4});
+    } 
+    else {
       this.setState({ currentPosition: 5 });
-      AsyncStorage.setItem("CurrentPosition", String(5));
+      AsyncStorage.setItem("CurrentPosition",String(5))
     }
   }
 
-  changeTemp = async value => {
-    await this.setState({ temp: value });
-    AsyncStorage.setItem("Temp", String(value));
-  };
+  changeTemp = async(value)=>{
+    await this.setState({temp:value});
+    AsyncStorage.setItem("Temp",String(value));
+  }
 
-  changeHeart = async value => {
-    await this.setState({ heart: value });
-    AsyncStorage.setItem("Heart", String(value));
-  };
+  changeHeart = async(value)=>{
+    await this.setState({heart:value});
+    AsyncStorage.setItem("Heart",String(value));
+  }
 
-  changeActivity = async value => {
-    await this.setState({ activity: value });
+  changeActivity = async(value)=>{
+    await this.setState({activity:value});
     this.onPageChange();
-    AsyncStorage.setItem("Activity", String(value));
-  };
+    AsyncStorage.setItem("Activity",String(value));
+  }
 
   changeHeight = async value => {
     await this.setState({ height: value });
@@ -98,9 +97,9 @@ export default class PushContainer extends Component {
   };
 
   changeAge = async value => {
-    await this.setState({ age: value });
+    await this.setState({ age: value});
     this.onPageChange();
-    AsyncStorage.setItem("Age", String(value));
+    AsyncStorage.setItem("Age",String(value));
   };
 
   componentDidMount() {
@@ -120,22 +119,21 @@ export default class PushContainer extends Component {
         height: await AsyncStorage.getItem("Height"),
         weight: await AsyncStorage.getItem("Weight"),
         activity: await AsyncStorage.getItem("Activity"),
-        temp: await AsyncStorage.getItem("Temp"),
+        temp:await AsyncStorage.getItem("Temp"),
         heart: await AsyncStorage.getItem("Heart"),
-        currentPosition: 5,
+        currentPosition:5,
+        connected:await AsyncStorage.getItem("Connected")
       });
-      AsyncStorage.setItem("CurrentPosition", String(5));
-      // console.log("연결:"+this.state.connected)
+      AsyncStorage.setItem("CurrentPosition",String(5));
+      console.log("연결:"+this.state.connected)
     }
-
-    if (JsonData) {
-      this.setState({ nutrient: JsonData });
-    } else {
-      this.setState({ nutrient: { kcal: 0, carbs: 0, protein: 0, fat: 0 } });
+    if(JsonData){
+      this.setState({nutrient:JsonData})
+    }else{
+      this.setState({nutrient:{kcal:0, carbs: 0, protein: 0, fat: 0}})
     }
 
     const connected = await AsyncStorage.getItem("Connected");
-
     const PastKcal = await AsyncStorage.getItem("Kcal");
     if(isNaN(PastKcal) || !PastKcal){
       this.setState({spendKcal: 0})
@@ -147,13 +145,12 @@ export default class PushContainer extends Component {
       })
     }
     console.log("pastKcal: "+PastKcal)
-    if(connected==1){
-      this.setState({ connected });
-      console.log("상태바뀜 완료");
+    if(connected===1){
       client.subscribe("sensor/#");
       client.onMessageArrived = this.onMessageArrived;
     }
   };
+
 
   onMessageArrived = message => {
     if (message.destinationName === "sensor/distance") {
@@ -171,7 +168,7 @@ export default class PushContainer extends Component {
       // t_dust = message.payloadString;
     }
   };
-  updatePayload = (Message, topic) => {
+  updatePayload = async (Message, topic) => {
     const Current = {
       Data: ({
         currentHeight,
@@ -185,6 +182,11 @@ export default class PushContainer extends Component {
         this.setState({
           currentHeight: Message,
         });
+        await axios.get('http://sickchatbot.shop/mqtt/mqttSaveHeight',{
+          params: {
+            height: Message
+          }
+        })
       }
     }
     if (topic === "weight") {
@@ -192,6 +194,11 @@ export default class PushContainer extends Component {
         this.setState({
           currentWeight: Message,
         });
+        await axios.get('http://sickchatbot.shop/mqtt/mqttSaveWeight',{
+          params: {
+            weight: Message
+          }
+        })
       }
     }
     if (topic === "temp") {
@@ -199,6 +206,11 @@ export default class PushContainer extends Component {
         this.setState({
           currentTemp: Message,
         });
+        await axios.get('http://sickchatbot.shop/mqtt/mqttSaveTemperate',{
+          params: {
+            temperature: Message
+          }
+        })
       }
     }
     if (topic === "heart") {
@@ -206,9 +218,15 @@ export default class PushContainer extends Component {
         this.setState({
           currentHeart: Message,
         });
+        await axios.get('http://sickchatbot.shop/mqtt/mqttSaveBmi',{
+          params: {
+            bpm: Message
+          }
+        })
       }
     }
   };
+
 
   render() {
     const {
@@ -235,7 +253,7 @@ export default class PushContainer extends Component {
     // console.log("w:",currentWeight)
     // console.log("t:",currentTemp)
     // console.log("b:",currentHeart)
-
+    
     return (
       <PushPresenter
         BMR={
