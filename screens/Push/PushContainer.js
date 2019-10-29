@@ -6,7 +6,7 @@ import { AsyncStorage, Alert } from "react-native";
 export default class PushContainer extends Component {
   constructor(props) {
     super(props);
-    AsyncStorage.clear();
+    // AsyncStorage.clear();
 
     this.state = {
       // text: ["..."],

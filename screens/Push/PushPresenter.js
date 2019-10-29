@@ -14,7 +14,6 @@ import StepIndicator from "react-native-step-indicator";
 import { BarChart, Grid } from "react-native-svg-charts";
 import { Text, Circle, G, Line } from "react-native-svg";
 import AwesomeButton from "react-native-really-awesome-button";
-import Spinner from 'react-native-loading-spinner-overlay';
 
 const Container = styled.ScrollView`
   padding-left: 10px;
@@ -286,11 +285,6 @@ const PushPresenter = ({
         </View>
       </Header>
     )}
-     <Spinner
-          visible={spinner}
-          textContent={"측정중..."}
-          textStyle={{color:"#fff"}}
-        />
     <Body>
       <ComponentContainer>
         <Component>
