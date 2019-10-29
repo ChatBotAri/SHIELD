@@ -14,6 +14,7 @@ import StepIndicator from "react-native-step-indicator";
 import { BarChart, Grid } from "react-native-svg-charts";
 import { Text, Circle, G, Line } from "react-native-svg";
 import AwesomeButton from "react-native-really-awesome-button";
+import Spinner from 'react-native-loading-spinner-overlay';
 
 const Container = styled.ScrollView`
   padding-left: 10px;
@@ -120,11 +121,13 @@ const BarNameBox = styled.View`
 const BarView = styled.View`
   width: 100%;
   background-color: green;
-  padding: 5px;
+  padding: 4px;
   border-radius: 50;
+  align-items:center;
+  justify-content:center;
 `;
 const BarName = styled.Text`
-  font-size: 15px;
+  font-size: 14px;
   font-weight: bold;
   color: white;
 `;
@@ -202,6 +205,7 @@ const PushPresenter = ({
   changeHeart,
   currentPosition,
   connected,
+  spinner,
 }) => (
   <Container>
     <TitleBox>
@@ -221,7 +225,7 @@ const PushPresenter = ({
       </AwesomeButton>
     </TitleBox>
     {currentPosition < 5 ? (
-      <Header>
+      <Header style={{backgroundColor:"#e3e3e3"}}>
         <View
           style={{
             alignItems: "center",
@@ -229,7 +233,7 @@ const PushPresenter = ({
             padding: 20,
           }}
         >
-          <Warning>필수 값들을 입력해주세요!</Warning>
+          <Warning>필수 값을 입력해주세요!</Warning>
         </View>
         <StepIndicator
           customStyles={customStyles}
@@ -282,6 +286,11 @@ const PushPresenter = ({
         </View>
       </Header>
     )}
+     <Spinner
+          visible={spinner}
+          textContent={"측정중..."}
+          textStyle={{color:"#fff"}}
+        />
     <Body>
       <ComponentContainer>
         <Component>
@@ -311,7 +320,6 @@ const PushPresenter = ({
           </CompBottom>
         </Component>
       </ComponentContainer>
-
       <ComponentContainer>
         <Component>
           <CompTop>
@@ -328,6 +336,7 @@ const PushPresenter = ({
                 changeValue={changeHeight}
                 sensorValue={currentHeight}
                 connected={connected}
+            
               />
             </CompValue>
           </CompBottom>
