@@ -2,11 +2,11 @@ import React, { Component } from "react";
 import PushPresenter from "./PushPresenter";
 import client from "../../mqtt";
 import { AsyncStorage } from "react-native";
-
+import axios from "axios";
 export default class PushContainer extends Component {
   constructor(props) {
     super(props);
-    AsyncStorage.clear();
+    // AsyncStorage.clear();
 
     this.state = {
       // text: ["..."],
@@ -168,7 +168,7 @@ export default class PushContainer extends Component {
       // t_dust = message.payloadString;
     }
   };
-  updatePayload = (Message, topic) => {
+  updatePayload = async (Message, topic) => {
     const Current = {
       Data: ({
         currentHeight,
@@ -182,6 +182,11 @@ export default class PushContainer extends Component {
         this.setState({
           currentHeight: Message,
         });
+        await axios.get('http://sickchatbot.shop/mqtt/mqttSaveHeight',{
+          params: {
+            height: Message
+          }
+        })
       }
     }
     if (topic === "weight") {
@@ -189,6 +194,11 @@ export default class PushContainer extends Component {
         this.setState({
           currentWeight: Message,
         });
+        await axios.get('http://sickchatbot.shop/mqtt/mqttSaveWeight',{
+          params: {
+            weight: Message
+          }
+        })
       }
     }
     if (topic === "temp") {
@@ -196,6 +206,11 @@ export default class PushContainer extends Component {
         this.setState({
           currentTemp: Message,
         });
+        await axios.get('http://sickchatbot.shop/mqtt/mqttSaveTemperate',{
+          params: {
+            temperature: Message
+          }
+        })
       }
     }
     if (topic === "heart") {
@@ -203,6 +218,11 @@ export default class PushContainer extends Component {
         this.setState({
           currentHeart: Message,
         });
+        await axios.get('http://sickchatbot.shop/mqtt/mqttSaveBmi',{
+          params: {
+            bpm: Message
+          }
+        })
       }
     }
   };
