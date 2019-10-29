@@ -16,9 +16,11 @@ import Dialog from "react-native-dialog";
 import MapView, { Polyline } from "react-native-maps";
 import { Stopwatch, Timer } from "react-native-stopwatch-timer";
 import ProgressBarAnimated from "react-native-progress-bar-animated";
+import { Platform } from "@unimodules/core";
+import { TouchableOpacity } from "react-native-gesture-handler";
 
 const ASPECT_RATIO = Layout.width / Layout.height;
-const LATITUDE_DELTA = 0.0009;
+const LATITUDE_DELTA = 0.002;
 const LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO;
 
 const MainContainer = styled.View`
@@ -35,7 +37,7 @@ const MapContainer = styled.View`
   border: 1px solid black;
 `;
 const TimerDistanceContatiner = styled.View`
-  height: ${Layout.height * 0.15};
+  height: ${Layout.height * 0.18};
   width: ${Layout.width * 0.9};
   border-radius: 15px;
   border: 1px solid black;
@@ -104,12 +106,14 @@ const TextBox = styled.View`
 
 const TimeContainer = styled.View`
   width: 100%;
+  height: 50%;
   align-items: center;
   justify-content: center;
-  margin-top: 20px;
+  padding-top: 20px;
 `;
 const StartStopContainer = styled.View`
-  margin: 10px;
+  height: 50%;
+  padding: 10px;
   flex-direction: row;
   justify-content: space-around;
 `;
@@ -125,6 +129,9 @@ const TitleText = styled.Text`
   font-size: 20px;
   font-weight: 600;
   color: black;
+`;
+const Header = styled.View`
+  height: ${Layout.height * 0.3};
 `;
 
 const handleTimerComplete = () => alert("Custom Completion Function");
@@ -175,7 +182,9 @@ const HealthPresenter = ({
   getFullTime,
   speed,
   movingDistance,
-  kcal
+  kcal,
+  stored,
+  getKcal
 }) => (
   <MainContainer>
     <Container>
@@ -200,17 +209,21 @@ const HealthPresenter = ({
         </TimeContainer>
 
         <StartStopContainer>
-          <TouchableHighlight
+          <TouchableOpacity
             onPress={() => {
-              startStopStopWatch();
-              repeat();
+              Promise.all([startStopStopWatch()]).then(
+                () => {
+                  isStopwatchStart ? getKcal(fullTime) : null
+                  repeat();
+                },
+              );
             }}
           >
             <Text style={{ fontSize: 20, marginTop: 10 }}>
               {!isStopwatchStart ? "START" : "STOP"}
             </Text>
-          </TouchableHighlight>
-          <TouchableHighlight
+          </TouchableOpacity>
+          <TouchableOpacity
             onPress={() => {
               Promise.all([funcresetStopwatch(), getFullTime(fullTime)]).then(
                 () => {
@@ -220,7 +233,7 @@ const HealthPresenter = ({
             }}
           >
             <Text style={{ fontSize: 20, marginTop: 10 }}>RESET</Text>
-          </TouchableHighlight>
+          </TouchableOpacity>
         </StartStopContainer>
       </TimerDistanceContatiner>
       <MapContainer>
@@ -248,8 +261,7 @@ const HealthPresenter = ({
           ></Polyline>
         </MapView>
       </MapContainer>
-      
-      
+
       <ComponentTitleContainer>
         <ComponentTitleText>목표거리</ComponentTitleText>
       </ComponentTitleContainer>
@@ -272,7 +284,7 @@ const HealthPresenter = ({
           value={goalDistance}
         ></Slider>
       </SliderView>
-        {/* <ProgressBarAnimated
+      {/* <ProgressBarAnimated
           width={Layout.width /1.2}
           value={
             goalDistance
@@ -282,9 +294,18 @@ const HealthPresenter = ({
           backgroundColor="#2dcf93"
           borderColor="#2dcf93"
         /> */}
-          <ComponentTitleContainer>
-            <ComponentTitleText>운동 결과 </ComponentTitleText>
-          </ComponentTitleContainer>
+      <ComponentTitleContainer>
+        <ComponentTitleText>운동 결과 </ComponentTitleText>
+      </ComponentTitleContainer>
+
+      {!stored ? (
+        <Header style={{ alignItems: "center", justifyContent: "center" }}>
+          <Text style={{ color: "#cccccc", fontSize: 22 }}>
+            "Health" 탭의 사용자 정보를
+          </Text>
+          <Text style={{ color: "#cccccc", fontSize: 22 }}>입력해주세요!</Text>
+        </Header>
+      ) : (
         <Body>
           <ComponentContainer>
             <Component style={{ borderWidth: 2, borderColor: "green" }}>
@@ -314,13 +335,14 @@ const HealthPresenter = ({
             <Component style={{ borderWidth: 2, borderColor: "green" }}>
               <TextBox>
                 <ComponentText>오늘의 걸음 수 *</ComponentText>
-                <ComponentText>{currentStepCount}</ComponentText>
+                <ComponentText>
+                  {Platform.OS == "ios" ? pastStepCount : currentStepCount} 걸음
+                </ComponentText>
               </TextBox>
             </Component>
           </ComponentContainer>
         </Body>
-      <Text>Pedometer.isAvailableAsync(): {isPedometerAvailable}</Text>
-      <Text>Steps taken in the last 24 hours: {pastStepCount}</Text>
+      )}
     </Container>
   </MainContainer>
 );
