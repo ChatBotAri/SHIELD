@@ -76,7 +76,7 @@ export default class HealthContainer extends React.Component {
           prevState.kcal +
           parseInt(
             (
-              (0.9 * (this.state.currentWeight - 8) * 4) /
+              (1000*0.9 * (this.state.currentWeight - 8) * 4) /
               fullseconds /
               60 /
               60 
