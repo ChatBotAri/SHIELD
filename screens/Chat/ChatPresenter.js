@@ -81,8 +81,8 @@ const ChatPresenter = ({
   <KeyboardAvoidingView
     style={{ flex: 1 }}
     enabled
-    behavior="padding"
-    keyboardVerticalOffset={65}
+    behavior={"padding"}
+    keyboardVerticalOffset={80}
   >
     <Container
       ref={ref => (this.Container = ref)}

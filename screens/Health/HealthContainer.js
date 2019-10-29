@@ -6,6 +6,7 @@ import { Pedometer } from "expo-sensors";
 import HealthPresenter from "./HealthPresenter";
 import Layout from "../../constants/Layout";
 import Dialog from "react-native-dialog";
+import { Platform } from "@unimodules/core";
 
 const ASPECT_RATIO = Layout.width / Layout.height;
 const LATITUDE_DELTA = 0.0922;
@@ -41,7 +42,9 @@ export default class HealthContainer extends React.Component {
       fullTime: null,
       speed: 0,
       currentWeight: 0,
-      kcal: 0
+      stored: false,
+      kcal: 0,
+      tiemGap: 0,
     };
     this.startStopTimer = this.startStopTimer.bind(this);
     this.resetTimer = this.resetTimer.bind(this);
@@ -49,8 +52,61 @@ export default class HealthContainer extends React.Component {
     this.resetStopwatch = this.resetStopwatch.bind(this);
     this.timer = null;
     this.getCurrent();
+    this.loadData();
   }
 
+  getKcal = time => {
+    console.log(time);
+    let hour, minutes, seconds, fullseconds;
+    hour = time.split(":")[0];
+    minutes = time.split(":")[1];
+    seconds = time.split(":")[2];
+    fullseconds =
+      parseInt(hour) * 60 * 60 + parseInt(minutes) * 60 + parseInt(seconds);
+      this.setState({
+        speed: parseFloat(
+          ((this.state.movingDistance * 1000) / fullseconds / 60 / 60).toFixed(
+            3,
+          ),
+        ),
+      });
+    if (this.state.speed < 8) {
+      this.setState(prevState => ({
+        kcal:
+          prevState.kcal +
+          parseInt(
+            (
+              (0.9 * (this.state.currentWeight - 8) * 4) /
+              fullseconds /
+              60 /
+              60 
+              
+            ).toFixed(),
+          ),
+      }));
+    } else {
+      this.setState(prevState => ({
+        kcal:
+          prevState.kcal +
+          parseInt(
+            (
+              (2 * (this.state.currentWeight - 8) * 4) /
+              fullseconds /
+              60 /
+              60
+            ).toFixed(),
+          ),
+      }));
+    }
+
+    console.log(
+      (2 * (this.state.currentWeight - 8) * 4) / fullseconds / 60 / 60,
+    );
+    console.log(this.state.speed);
+    console.log(this.state.currentWeight);
+    console.log(this.state.kcal);
+    console.log(1111111111111);
+  };
   getFullTime = time => {
     let hour, minutes, seconds, fullseconds;
     hour = time.split(":")[0];
@@ -61,14 +117,7 @@ export default class HealthContainer extends React.Component {
 
     Promise.all([this.setState({ fullTime: fullseconds })]).then(() => {
       console.log(this.state.fullTime);
-      this.setState({
-        speed: parseFloat(
-          ((this.state.movingDistance * 1000) / fullseconds / 60 / 60).toFixed(
-            3,
-          ),
-        ),
-      });
-      console.log(this.state.speed);
+      
     });
   };
   setGoalDistance = value => {
@@ -133,24 +182,29 @@ export default class HealthContainer extends React.Component {
       : this.setState({ isPolyline: false });
     this.setState({ isDisabled: true });
   };
-  finish = () => {
+  finish = async () => {
+    let PastKcal;
+    PastKcal = await AsyncStorage.getItem("Kcal");
+
+    if (!isNaN(PastKcal)) {
+      await AsyncStorage.setItem(
+        "Kcal",
+        String(parseInt(PastKcal) + this.state.kcal),
+      );
+    }
     clearInterval(this.timer);
     this.setState({
       coordinates: [],
       isPolyline: false,
       movingDistance: 0,
       isDisabled: false,
+      kcal: 0,
     });
+    console.log(PastKcal)
 
     console.log("finish");
-    if (this.state.speed < 8) {
-      this.setState((prevState) => ({kcal: prevState.kcal + 0.9 * (this.state.currentWeight-8) * 4 / this.state.time /60/60}));
-    }
-    else {
-      this.setState((prevState) => ({kcal: prevState.kcal + 2 * (this.state.currentWeight-8) * 4 / this.state.time /60/60}));
-    }
-    
   };
+
   getCurrent = () => {
     //setInterval(()=>{
 
@@ -215,7 +269,18 @@ export default class HealthContainer extends React.Component {
 
   loadData = async () => {
     const Data = await AsyncStorage.getItem("Steps");
+    const weight = await AsyncStorage.getItem("Weight");
+    const num = await AsyncStorage.getItem("CurrentPosition");
+    const PastKcal = await AsyncStorage.getItem("Kcal");
     const JsonData = JSON.parse(Data);
+    if (isNaN(PastKcal)) {
+      AsyncStorage.setItem("Kcal", String(0));
+    }
+    if (Number(num) === 5) {
+      this.setState({ stored: true });
+    }
+    this.setState({ currentWeight: weight });
+
     console.log(JsonData);
     if (JsonData) {
       this.setState({ currentStepCount: JsonData });
@@ -223,13 +288,16 @@ export default class HealthContainer extends React.Component {
       this.setState({ currentStepCount: 0 });
     }
   };
+
   componentDidMount() {
     this._subscribe();
+    const { navigation } = this.props;
+    this.focusListener = navigation.addListener("didFocus", () => {
+      this.loadData();
+    });
   }
 
-  componentWillMount() {
-    this.loadData();
-  }
+  componentWillMount() {}
 
   componentWillUnmount() {
     // this._unsubscribe();
@@ -248,8 +316,8 @@ export default class HealthContainer extends React.Component {
     this.setState({ dialogVisible: false });
   };
 
-
-  _subscribe = () => {
+  _subscribe = async () => {
+    let PastKcal;
     console.log("실행스");
     this._subscription = Pedometer.watchStepCount(result => {
       let currentStepCount = this.state.currentStepCount + result.steps;
@@ -291,6 +359,23 @@ export default class HealthContainer extends React.Component {
         });
       },
     );
+    PastKcal = await AsyncStorage.getItem("Kcal");
+    if (!isNaN(PastKcal)) {
+      console.log(111111 + PastKcal);
+      Platform.OS == "ios"
+        ? AsyncStorage.setItem(
+            "Kcal",
+            String(
+              parseInt(PastKcal) + parseInt(this.state.pastStepCount / 30),
+            ),
+          )
+        : AsyncStorage.setItem(
+            "Kcal",
+            String(
+              parseInt(PastKcal) + parseInt(this.state.currentStepCount / 30),
+            ),
+          );
+    }
   };
 
   _unsubscribe = () => {
@@ -318,7 +403,8 @@ export default class HealthContainer extends React.Component {
       isDisabled,
       speed,
       movingDistance,
-      kcal
+      kcal,
+      stored,
     } = this.state;
     return (
       <HealthPresenter
@@ -353,8 +439,10 @@ export default class HealthContainer extends React.Component {
         isDisabled={isDisabled}
         getFullTime={this.getFullTime}
         speed={speed}
-        movingDistance ={ movingDistance}
-        kcal = {kcal}
+        movingDistance={movingDistance}
+        kcal={kcal}
+        stored={stored}
+        getKcal={this.getKcal}
       ></HealthPresenter>
     );
   }

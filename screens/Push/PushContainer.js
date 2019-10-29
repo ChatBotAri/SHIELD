@@ -6,7 +6,7 @@ import { AsyncStorage } from "react-native";
 export default class PushContainer extends Component {
   constructor(props) {
     super(props);
-    // AsyncStorage.clear();
+    AsyncStorage.clear();
 
     this.state = {
       // text: ["..."],
@@ -16,6 +16,7 @@ export default class PushContainer extends Component {
       currentTemp: 0,
       currentHeart: 0,
       nutrient: { kcal: 0, carbs: 0, protein: 0, fat: 0 },
+      spendKcal: 0,
       age: 0,
       gender: null,
       height: 0,
@@ -133,7 +134,17 @@ export default class PushContainer extends Component {
     }
 
     const connected = await AsyncStorage.getItem("Connected");
-
+    const PastKcal = await AsyncStorage.getItem("Kcal");
+    if(isNaN(PastKcal) || !PastKcal){
+      this.setState({spendKcal: 0})
+    }
+    else{
+      console.log(`11122222`+ PastKcal)
+      this.setState({
+        spendKcal: parseInt(PastKcal)
+      })
+    }
+    console.log("pastKcal: "+PastKcal)
     if(connected===1){
       client.subscribe("sensor/#");
       client.onMessageArrived = this.onMessageArrived;
@@ -215,7 +226,8 @@ export default class PushContainer extends Component {
       temp,
       heart,
       currentPosition,
-      connected
+      connected,
+      spendKcal
     } = this.state;
     // console.log("h:",currentHeight)
     // console.log("w:",currentWeight)
@@ -254,6 +266,7 @@ export default class PushContainer extends Component {
         currentHeart={currentHeart}
         currentPosition={currentPosition}
         connected={connected}
+        spendKcal={spendKcal}
       />
     );
   }

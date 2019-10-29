@@ -202,6 +202,7 @@ const PushPresenter = ({
   changeHeart,
   currentPosition,
   connected,
+  spendKcal,
 }) => (
   <Container>
     <TitleBox>
@@ -266,7 +267,7 @@ const PushPresenter = ({
               BMR,
               (AM = Math.round(calcAM(BMR, activity))),
               nutrient.kcal,
-              500,
+              spendKcal,
             ]}
             horizontal={true}
             svg={{ fill: "rgba(45, 	207, 	147, 0.8)" }}
