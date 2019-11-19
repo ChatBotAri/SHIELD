@@ -2,22 +2,16 @@ import React from "react";
 import {
   StyleSheet,
   Text,
-  View,
-  TouchableHighlight,
   Slider,
+  TouchableOpacity
 } from "react-native";
-import { Pedometer } from "expo-sensors";
-import { AnimatedCircularProgress } from "react-native-circular-progress";
 import { withNavigation, withNavigationFocus } from "react-navigation";
 import styled from "styled-components";
 import Layout from "../../constants/Layout";
-import AwesomeButton from "react-native-really-awesome-button";
-import Dialog from "react-native-dialog";
 import MapView, { Polyline } from "react-native-maps";
 import { Stopwatch, Timer } from "react-native-stopwatch-timer";
-import ProgressBarAnimated from "react-native-progress-bar-animated";
 import { Platform } from "@unimodules/core";
-import { TouchableOpacity } from "react-native-gesture-handler";
+
 
 const ASPECT_RATIO = Layout.width / Layout.height;
 const LATITUDE_DELTA = 0.002;
@@ -37,10 +31,10 @@ const MapContainer = styled.View`
   border: 1px solid black;
 `;
 const TimerDistanceContatiner = styled.View`
-  height: ${Layout.height * 0.18};
+  height: ${Layout.height * 0.2};
   width: ${Layout.width * 0.9};
-  border-radius: 15px;
-  border: 1px solid black;
+  border-radius: 35px;
+  border: 2px solid black;
   margin: 20px;
 `;
 
@@ -52,22 +46,15 @@ const SliderView = styled.View`
   margin-bottom: 10px;
 `;
 
-const SliderText = styled.Text`
-  font-size: 13px;
-  margin-bottom: 3px;
-`;
-
 const ComponentTitleContainer = styled.View`
   margin: 20px 20px 10px 20px;
   width: ${Layout.width * 0.7};
 `;
-// border-bottom-width: 1;
-// border-bottom-color: black;
 
 const ComponentTitleText = styled.Text`
-  font-size: 15px;
-  font-weight: 600;
-  padding-left: 20px;
+  font-size: 18px;
+  font-weight: bold;
+  padding-left: 10px;
 `;
 
 const ComponentContainer = styled.View`
@@ -79,17 +66,19 @@ const ComponentContainer = styled.View`
 
 const Component = styled.View`
   width: ${Layout.width * 0.9};
+  height:50px;
   background-color: #eeffcc;
   border-radius: 25px;
   padding: 10px 30px;
   flex-direction: row;
   align-items: center;
+  border:1px solid green;
 `;
 
 const ComponentText = styled.Text`
   font-weight: bold;
   color: green;
-  font-size: 15px;
+  font-size: 16px;
 `;
 const Body = styled.View`
   padding-top: 10px;
@@ -99,7 +88,7 @@ const Body = styled.View`
 `;
 
 const TextBox = styled.View`
-  width: 80%;
+  width: 100%;
   flex-direction: row;
   justify-content: space-between;
 `;
@@ -134,40 +123,37 @@ const Header = styled.View`
   height: ${Layout.height * 0.3};
 `;
 
-const handleTimerComplete = () => alert("Custom Completion Function");
+const Btn = styled.TouchableOpacity`
+  width:30%;
+  background-color:#2dcf93;
+  border-radius:20;
+  justify-content:center;
+  align-items:center;
+`;
+
 const options = {
   container: {
-    // backgroundColor: '#FF0000',
     padding: 5,
     borderRadius: 5,
     width: 200,
     alignItems: "center",
   },
   text: {
-    fontSize: 28,
+    fontSize: 30,
     color: "black",
+    fontWeight:"bold",
     marginLeft: 7,
   },
 };
 
 const HealthPresenter = ({
-  isPedometerAvailable,
   pastStepCount,
   currentStepCount,
-  dialogVisible,
-  handleCancel,
-  handleDelete,
-  showDialog,
   coordinates,
   repeat,
   finish,
-  isTimerStart,
   isStopwatchStart,
-  timerDuration,
-  resetTimer,
   resetStopwatch,
-  startStopTimer,
-  funcResetTimer,
   startStopStopWatch,
   funcresetStopwatch,
   getFormattedTime,
@@ -175,7 +161,6 @@ const HealthPresenter = ({
   initLongitude,
   setGoalDistance,
   goalDistance,
-  isPolyline,
   currentDistance,
   isDisabled,
   fullTime,
@@ -196,11 +181,9 @@ const HealthPresenter = ({
           <Stopwatch
             laps
             start={isStopwatchStart}
-            //To start
             reset={resetStopwatch}
-            //To reset
             options={options}
-            //options for the styling
+            
             getTime={time => {
               getFormattedTime();
               fullTime = time;
@@ -209,7 +192,7 @@ const HealthPresenter = ({
         </TimeContainer>
 
         <StartStopContainer>
-          <TouchableOpacity
+          <Btn
             onPress={() => {
               Promise.all([startStopStopWatch()]).then(
                 () => {
@@ -219,11 +202,11 @@ const HealthPresenter = ({
               );
             }}
           >
-            <Text style={{ fontSize: 20, marginTop: 10 }}>
+            <Text style={{ fontSize: 20,  fontWeight:"600",color:"white" }}>
               {!isStopwatchStart ? "START" : "STOP"}
             </Text>
-          </TouchableOpacity>
-          <TouchableOpacity
+          </Btn>
+          <Btn
             onPress={() => {
               Promise.all([funcresetStopwatch(), getFullTime(fullTime)]).then(
                 () => {
@@ -232,8 +215,8 @@ const HealthPresenter = ({
               );
             }}
           >
-            <Text style={{ fontSize: 20, marginTop: 10 }}>RESET</Text>
-          </TouchableOpacity>
+            <Text style={{ fontSize: 20,fontWeight:"600" ,color:"white" }}>RESET</Text>
+          </Btn>
         </StartStopContainer>
       </TimerDistanceContatiner>
       <MapContainer>
@@ -247,13 +230,6 @@ const HealthPresenter = ({
             longitudeDelta: LONGITUDE_DELTA,
           }}
         >
-          {/* <PolylineDirection
-            origin={origin}
-            destination={destination}
-            apiKey={GOOGLE_MAPS_APIKEY}
-            strokeWidth={4}
-            strokeColor="#12bc00"
-          /> */}
           <Polyline
             coordinates={coordinates}
             strokeColor={"#000"} // fallback for when `strokeColors` is not supported by the map-provider
@@ -267,9 +243,9 @@ const HealthPresenter = ({
       </ComponentTitleContainer>
       <SliderView>
         {currentDistance ? (
-          <Text>{String(currentDistance / 1000) + "km"}</Text>
+          <Text style={{fontSize:20,fontWeight:"bold"}}>{String(currentDistance / 1000) + " km"}</Text>
         ) : (
-          <Text>{String(goalDistance / 1000) + "km"}</Text>
+          <Text style={{fontSize:20,fontWeight:"bold"}}>{String(goalDistance / 1000) + " km"}</Text>
         )}
         <Slider
           width={Layout.width * 0.7}
@@ -284,16 +260,6 @@ const HealthPresenter = ({
           value={goalDistance}
         ></Slider>
       </SliderView>
-      {/* <ProgressBarAnimated
-          width={Layout.width /1.2}
-          value={
-            goalDistance
-          }
-          maxValue={goalDistance}
-          height={20}
-          backgroundColor="#2dcf93"
-          borderColor="#2dcf93"
-        /> */}
       <ComponentTitleContainer>
         <ComponentTitleText>운동 결과 </ComponentTitleText>
       </ComponentTitleContainer>
@@ -308,33 +274,33 @@ const HealthPresenter = ({
       ) : (
         <Body>
           <ComponentContainer>
-            <Component style={{ borderWidth: 2, borderColor: "green" }}>
+            <Component >
               <TextBox>
-                <ComponentText>평균 속력 *</ComponentText>
+                <ComponentText>평균 속력</ComponentText>
                 <ComponentText>{speed} km/h</ComponentText>
               </TextBox>
             </Component>
           </ComponentContainer>
           <ComponentContainer>
-            <Component style={{ borderWidth: 2, borderColor: "green" }}>
+            <Component >
               <TextBox>
-                <ComponentText>소모 칼로리 *</ComponentText>
+                <ComponentText>소모 칼로리</ComponentText>
                 <ComponentText>{kcal} kcal</ComponentText>
               </TextBox>
             </Component>
           </ComponentContainer>
           <ComponentContainer>
-            <Component style={{ borderWidth: 2, borderColor: "green" }}>
+            <Component >
               <TextBox>
-                <ComponentText>운동 거리 *</ComponentText>
+                <ComponentText>운동 거리</ComponentText>
                 <ComponentText>{movingDistance} km</ComponentText>
               </TextBox>
             </Component>
           </ComponentContainer>
           <ComponentContainer>
-            <Component style={{ borderWidth: 2, borderColor: "green" }}>
+            <Component >
               <TextBox>
-                <ComponentText>오늘의 걸음 수 *</ComponentText>
+                <ComponentText>오늘의 걸음 수</ComponentText>
                 <ComponentText>
                   {Platform.OS == "ios" ? pastStepCount : currentStepCount} 걸음
                 </ComponentText>

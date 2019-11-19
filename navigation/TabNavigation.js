@@ -2,12 +2,10 @@ import React from "react";
 import { Platform } from "react-native";
 import { createBottomTabNavigator, createAppContainer } from "react-navigation";
 import HomeContainer from "../screens/Home/HomeContainer";
-import MapContainer from "../screens/Map/MapContainer";
 import PushContainer from "../screens/Push/PushContainer";
 import { TAB_COLOR, GREY_COLOR, TINT_COLOR } from "../constants/Colors";
 import TabBarIcon from "../components/TabBarIcon";
 import MyTabBar from "../constants/TabBar";
-import ChatContainer from "../screens/Chat/ChatContainer";
 import {TabBar} from "react-native-animated-nav-tab-bar"
 import FoodContainer from "../screens/Food/FoodContainer";
 import HealthContainer from "../screens/Health/HealthContainer";

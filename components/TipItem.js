@@ -15,7 +15,7 @@ const Image = styled.Image`
   width: 120px;
   height: 120px;
   border-radius: 25px;
-  border-width:1px;
+  border-width:2px;
   border-color:#ababab;
   margin-bottom: 5px;
 `;
@@ -39,6 +39,9 @@ const TipItem = ({ title, poster, navigation, author, description, url }) => (
 TipItem.propType = {
   title: propType.string.isRequired,
   poster: propType.string.isRequired,
+  author:propType.string,
+  description:propType.string,
+  url:propType.string
 };
 
 export default withNavigation(TipItem);

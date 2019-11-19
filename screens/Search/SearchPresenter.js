@@ -1,9 +1,7 @@
 import React from "react";
 import { Text, Platform } from "react-native";
 import styled from "styled-components";
-import { BG_COLOR } from "../../constants/Colors";
 import Layout from "../../constants/Layout";
-import uuidv1 from "uuid/v1";
 import Loader from "../../components/Loader";
 import Icon from "../../components/TabBarIcon";
 import FoodItem from "../../components/FoodItem";
@@ -35,10 +33,15 @@ const SearchResults = styled.ScrollView`
   height: 87%;
 `;
 
-const Btn = styled.TouchableOpacity`
-  width: 50px;
-  height: 50px;
-  background-color: red;
+const Empty = styled.View`
+padding-top:50px;
+  justify-content:center;
+  align-items:center;
+`;
+
+const EmptyText = styled.Text`
+  font-size:20px;
+  font-weight:bold;
 `;
 
 const SearchPresenter = ({
@@ -85,7 +88,11 @@ const SearchPresenter = ({
           />
         ))
       ) : (
-        <Text>검색결과 없습니다</Text>
+        <Empty>
+          <EmptyText>
+            검색결과가 없습니다.
+          </EmptyText>
+          </Empty>
       )}
     </SearchResults>
   </MainContainer>

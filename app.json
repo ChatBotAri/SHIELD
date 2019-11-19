@@ -1,6 +1,6 @@
 {
   "expo": {
-    "name": "ChatBot",
+    "name": "SHIELD",
     "slug": "Project",
     "privacy": "public",
     "sdkVersion": "33.0.0",
@@ -11,9 +11,9 @@
     ],
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/icon.png",
+    "icon": "./assets/shield.png",
     "splash": {
-      "image": "./assets/splash.png",
+      "image": "./assets/shield2.png",
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
@@ -24,7 +24,15 @@
       "**/*"
     ],
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "config": {
+        "googleMapsApiKey": "<ios maps api key>"
+    }
+
+    },
+    "android":{
+      "package":"SHIELD.app",
+      "config": { "googleMaps": { "apiKey": "AIzaSyBrrGGnanM_EixhLFcFm33yNd68Gl8tyos" } }
     }
   }
 }

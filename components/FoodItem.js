@@ -92,7 +92,7 @@ const FoodItem = ({
               parseInt(result.NUTR_CONT4[0]),
             );
             addFood(result);
-            Alert.alert("추가완료","",{text: "확인"})
+            Alert.alert("추가완료","",[{text: "확인"}])
           }}
         >
           <CheckText>☑</CheckText>

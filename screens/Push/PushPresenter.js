@@ -36,7 +36,7 @@ const TitleText = styled.Text`
 `;
 
 const Header = styled.View`
-  background-color: #eeffcc;
+  background-color: #d6d6d6;
   border-radius: 25px;
   padding: 10px;
 `;

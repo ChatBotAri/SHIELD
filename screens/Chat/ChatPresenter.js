@@ -4,7 +4,8 @@ import {
   View,
   Text,
   KeyboardAvoidingView,
-  ScrollView
+  ScrollView,
+  Platform
 } from "react-native";
 import styled from "styled-components";
 import { BG_COLOR, GREY_COLOR } from "../../constants/Colors";
@@ -82,7 +83,7 @@ const ChatPresenter = ({
     style={{ flex: 1 }}
     enabled
     behavior={"padding"}
-    keyboardVerticalOffset={80}
+    keyboardVerticalOffset={Platform.OS==="ios"?64:80}
   >
     <Container
       ref={ref => (this.Container = ref)}

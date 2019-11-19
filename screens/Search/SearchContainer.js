@@ -62,9 +62,6 @@ export default class FoodContainer extends React.Component {
           results: foodJson,
           error,
         });
-        console.log(foodJson, 1);
-        console.log(foodJson[0].BGN_YEAR[0]);
-        console.log(foodJson[0].DESC_KOR[0]);
       }
     }
     return;

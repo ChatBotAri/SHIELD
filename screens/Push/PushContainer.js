@@ -9,8 +9,6 @@ export default class PushContainer extends Component {
     // AsyncStorage.clear();
 
     this.state = {
-      // text: ["..."],
-      // connect: false,
       currentHeight: 0,
       currentWeight: 0,
       currentTemp: 0,
@@ -110,6 +108,10 @@ export default class PushContainer extends Component {
   }
 
   loadData = async () => {
+    
+    this.setState({
+      connected:await AsyncStorage.getItem("Connected")
+    })
     const Data = await AsyncStorage.getItem("Nut");
     const JsonData = JSON.parse(Data);
     if (await AsyncStorage.getItem("Activity")) {
@@ -122,7 +124,6 @@ export default class PushContainer extends Component {
         temp:await AsyncStorage.getItem("Temp"),
         heart: await AsyncStorage.getItem("Heart"),
         currentPosition:5,
-        connected:await AsyncStorage.getItem("Connected")
       });
       AsyncStorage.setItem("CurrentPosition",String(5));
       console.log("연결:"+this.state.connected)
@@ -144,9 +145,9 @@ export default class PushContainer extends Component {
         spendKcal: parseInt(PastKcal)
       })
     }
-    console.log("pastKcal: "+PastKcal)
-    if(connected===1){
+    if(connected==1){
       client.subscribe("sensor/#");
+      console.log("#subscrib");
       client.onMessageArrived = this.onMessageArrived;
     }
   };

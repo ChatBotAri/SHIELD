@@ -10,7 +10,7 @@ init({
 });
 
 
-const client = new Paho.MQTT.Client("192.168.1.21", 9001, "/mqtt", "uname");
+const client = new Paho.MQTT.Client("192.168.0.6", 9001, "/mqtt", "uname");
     console.log(client);
     
       export default client;

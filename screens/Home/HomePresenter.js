@@ -8,7 +8,6 @@ import propType from "prop-types";
 import Section from "../../components/Section";
 import TipItem from "../../components/TipItem";
 import NewsItem from "../../components/NewsItem";
-import HospitalItem from "../../components/HospitalItem";
 import { Ionicons } from "@expo/vector-icons";
 
 const MainContainer = styled.View`
@@ -108,7 +107,6 @@ const HomePresenter = ({
           ))}
         </Section>
       ) : null}
-
     </Container>
     <BotContainer>
       <BotText>약,병원정보가 필요하다면? </BotText>
@@ -128,6 +126,9 @@ HomePresenter.propType = {
   CurrentPosition: propType.string.isRequired,
   refresh: propType.func.isRequired,
   Dust: propType.object.isRequired,
+  News:propType.array.isRequired,
+  HealthTip:propType.array.isRequired,
+  FoodTip:propType.array.isRequired,
 };
 
 export default withNavigation(HomePresenter);
